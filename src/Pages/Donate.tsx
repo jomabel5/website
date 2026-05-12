@@ -2,401 +2,237 @@ import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CampaignBanner from '../components/sections/CampaignBanner';
-import { Calendar, CheckCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle, RefreshCw, ArrowRight } from 'lucide-react';
 
-const donateStyles = `
-  /* ─── HERO ─────────────────────────────────────── */
-  .donate-hero {
-    position: relative;
-    min-height: 400px;
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
+/* ─────────────────────────────────────────────────────────────────────────────
+   SHARED STYLES
+───────────────────────────────────────────────────────────────────────────── */
+const globalStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:wght@700&display=swap');
+
+  .dn-page { font-family: var(--font-body); background: var(--color-bg); width: 100%; overflow-x: hidden; }
+
+  /* ── shared section label ── */
+  .dn-kicker {
+    font-family: var(--font-body);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--color-primary); margin: 0 0 10px;
   }
-  .donate-hero-content {
-    position: relative;
-    z-index: 2;
-    padding: clamp(32px, 5vw, 56px) clamp(20px, 5vw, 64px);
-    max-width: 680px;
+  .dn-kicker-light { color: rgba(255,255,255,0.55); }
+
+  /* ── section editorial header ── */
+  .dn-section-header {
+    border-left: 4px solid var(--color-navy);
+    padding-left: 20px;
+    margin-bottom: 52px;
   }
-  .donate-hero-btns {
-    display: flex;
-    gap: 14px;
+  .dn-section-header-light { border-left-color: var(--color-primary); }
+
+  .dn-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(26px, 3.5vw, 44px);
+    font-weight: 400; letter-spacing: 0.01em;
+    text-transform: uppercase; line-height: 1.1;
+    color: var(--color-navy); margin: 0 0 12px;
+  }
+  .dn-headline-light { color: #ffffff; }
+
+  .dn-sub {
+    font-family: var(--font-body);
+    font-size: clamp(13px, 1.2vw, 15px);
+    color: var(--color-text-muted); line-height: 1.75;
+    max-width: 560px; margin: 0;
+  }
+  .dn-sub-light { color: rgba(255,255,255,0.55); }
+
+  /* ── copy field ── */
+  .dn-copy-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: 6px; padding: 10px 14px; gap: 10px;
     flex-wrap: wrap;
   }
-  .dh-btn-primary {
-    background-color: var(--color-green);
-    color: #fff; border: none;
-    border-radius: var(--btn-radius);
-    padding: 12px 26px;
-    font-size: 13.5px; font-weight: 600; cursor: pointer;
-    font-family: inherit; transition: var(--transition);
+  .dn-copy-btn {
+    background: var(--color-navy); color: #fff; border: none;
+    border-radius: 4px; padding: 6px 14px; font-size: 12px;
+    font-weight: 700; cursor: pointer; white-space: nowrap;
+    font-family: inherit; transition: var(--transition); flex-shrink: 0;
   }
-  .dh-btn-primary:hover { background-color: var(--color-green-dark); }
-  .dh-btn-outline {
-    background-color: transparent; color: #fff;
-    border: 1.5px solid rgba(255,255,255,0.45);
-    border-radius: var(--btn-radius);
-    padding: 12px 26px;
-    font-size: 13.5px; font-weight: 600; cursor: pointer;
-    font-family: inherit; transition: var(--transition);
-  }
-  .dh-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+  .dn-copy-btn:hover { background: var(--color-primary); }
+  .dn-copy-btn.copied { background: var(--color-green); }
 
-  /* ─── DONOR LEVELS ──────────────────────────────── */
-  .donor-levels-section {
-    background-color: var(--color-surface);
-    padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px);
-    font-family: var(--font-body);
+  /* ── form field ── */
+  .dn-input {
+    width: 100%; padding: 13px 16px;
+    border: 1.5px solid var(--color-border); border-radius: 6px;
+    font-family: var(--font-body); font-size: 14px;
+    color: var(--color-text); outline: none;
+    background: var(--color-bg); transition: var(--transition);
+    box-sizing: border-box;
   }
-  .donor-tabs {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-  }
-  .donor-tab {
-    padding: 9px 22px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s;
-    font-family: inherit;
-  }
-  .community-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    max-width: 1080px;
-    margin: 0 auto;
-  }
-  .leadership-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    max-width: 1080px;
-    margin: 0 auto;
-  }
-  .major-gift-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 1080px;
-    margin: 0 auto;
-  }
-  .donor-card {
-    border-radius: 16px;
-    padding: 24px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: var(--transition);
-    cursor: default;
-  }
-  .donor-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  .major-gift-card {
-    background: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    padding: 24px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: var(--transition);
-  }
-  .major-gift-card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+  .dn-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(29,143,212,0.10); }
+  .dn-input::placeholder { color: var(--color-text-light); }
+  .dn-label {
+    display: block; font-family: var(--font-body); font-size: 11px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--color-text-muted); margin-bottom: 8px;
   }
 
-  /* ─── DONATION LAYOUT ───────────────────────────── */
-  .donation-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background-color: #ffffff;
-    font-family: var(--font-body);
-  }
-  .donation-left {
-    background: linear-gradient(160deg, #0d1f4e 0%, #1e3a8a 60%, #1e40af 100%);
-    padding: clamp(32px, 4vw, 48px) clamp(24px, 3.5vw, 44px);
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .donation-right {
-    padding: clamp(32px, 4vw, 48px) clamp(24px, 3.5vw, 44px);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .amount-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  /* ─── RECURRING DONATION TOGGLE ─────────────────── */
-  .recurring-toggle {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--color-surface);
-    padding: 12px 20px;
-    border-radius: 60px;
-    margin: 16px 0 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .recurring-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 20px;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .recurring-option.active {
-    background: var(--color-green);
-    color: #ffffff;
-  }
-  .recurring-option.inactive {
-    background: #F3F4F6;
-    color: #4B5563;
-  }
-  .recurring-option:hover {
-    transform: translateY(-1px);
-  }
-  .monthly-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 16px;
-  }
-  .monthly-amount {
-    background: #F3F4F6;
-    border: 1px solid #E5E7EB;
-    border-radius: 40px;
-    padding: 8px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .monthly-amount.active {
-    background: var(--color-green);
-    border-color: var(--color-green);
-    color: #ffffff;
-  }
-  .monthly-amount:hover {
-    transform: translateY(-2px);
-  }
-
-  /* ─── CURRENCY SWITCHER ─────────────────────────── */
-  .currency-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: var(--font-body);
-  }
-  .flag-emoji {
-    font-size: 28px;
-    line-height: 1.2;
-    display: block;
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', sans-serif !important;
-  }
-  .flag-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    font-family: var(--font-body);
-  }
-
-  /* ─── PAYMENT SECTION ───────────────────────────── */
-  .payment-section {
-    background-color: var(--color-surface);
-    padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px);
-    font-family: var(--font-body);
-  }
-  .payment-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .payment-card {
-    background: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-  }
-  .payment-card:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-primary);
-    transform: translateY(-2px);
-  }
-  .payment-card-nigeria { border-left: 4px solid #008751; }
-  .payment-card-usa { border-left: 4px solid #002868; }
-  .copy-field {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    gap: 10px;
-  }
-  .copy-btn {
-    background: var(--color-navy);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: inherit;
-    transition: var(--transition);
-    flex-shrink: 0;
-  }
-  .copy-btn:hover { background: var(--color-primary-dark); }
-  .copy-btn.copied { background: var(--color-green); }
-
-  /* ─── OTHER WAYS ────────────────────────────────── */
-  .other-ways-section {
-    background-color: var(--color-white);
-    padding: clamp(40px, 5vw, 64px) clamp(16px, 4vw, 48px);
-    font-family: var(--font-body);
-  }
-  .other-ways-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  /* ─── FAQ ───────────────────────────────────────── */
-  .faq-header-block {
-    text-align: center;
-    padding: clamp(36px, 5vw, 56px) clamp(16px, 4vw, 48px) clamp(28px, 4vw, 48px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  .faq-body {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 48px) clamp(40px, 5vw, 64px);
-  }
-
-  /* ─── RESPONSIVE ────────────────────────────────── */
-  @media (max-width: 860px) {
-    .donation-layout { grid-template-columns: 1fr; }
-    .payment-grid { grid-template-columns: 1fr; max-width: 520px; }
-    .community-grid { grid-template-columns: repeat(2, 1fr); }
-    .leadership-grid { grid-template-columns: repeat(2, 1fr); }
-    .major-gift-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 600px) {
-    .amount-grid { grid-template-columns: repeat(2, 1fr); }
-    .other-ways-grid { grid-template-columns: 1fr; max-width: 400px; }
-    .community-grid { grid-template-columns: repeat(2, 1fr); }
-    .leadership-grid { grid-template-columns: repeat(2, 1fr); }
-    .major-gift-grid { grid-template-columns: 1fr; max-width: 400px; }
-    .recurring-toggle { flex-direction: column; width: 100%; }
-    .recurring-option { justify-content: center; }
-    .monthly-options { justify-content: center; }
-  }
-  @media (max-width: 480px) {
-    .donate-hero-btns { flex-direction: column; }
-    .dh-btn-primary, .dh-btn-outline { width: 100%; text-align: center; }
-    .amount-grid { grid-template-columns: repeat(2, 1fr); }
-    .community-grid { grid-template-columns: 1fr 1fr; }
-    .leadership-grid { grid-template-columns: 1fr 1fr; }
+  /* Responsive overrides */
+  @media (max-width: 768px) {
+    .dn-copy-row { flex-direction: column; align-items: stretch; }
+    .dn-copy-btn { justify-content: center; }
   }
 `;
 
-const labelSt: React.CSSProperties = {
-  display: 'block', fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '6px',
-};
-const inputWrapSt: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '8px',
-  border: '1.5px solid #e5e7eb', borderRadius: '8px',
-  padding: '10px 12px', backgroundColor: '#ffffff',
-};
-const fieldSt: React.CSSProperties = {
-  border: 'none', outline: 'none', fontSize: '13.5px',
-  color: '#111827', width: '100%', backgroundColor: 'transparent',
-};
-
-// ─── COPY BUTTON ──────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
+   COPY BUTTON
+───────────────────────────────────────────────────────────────────────────── */
 const CopyButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
   return (
-    <button onClick={handleCopy} className={`copy-btn${copied ? ' copied' : ''}`}>
+    <button
+      className={`dn-copy-btn${copied ? ' copied' : ''}`}
+      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+    >
       {copied ? '✓ Copied' : 'Copy'}
     </button>
   );
 };
 
-// ─── DONATION HERO ────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
+   HERO
+───────────────────────────────────────────────────────────────────────────── */
 const DonationHero = () => (
-  <section className="donate-hero">
+  <section className="donation-hero-section">
+    <style>{`
+      .donation-hero-section {
+        position: relative;
+        min-height: 520px;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+      }
+      .donation-hero-section img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 40%;
+      }
+      .donation-hero-section .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.10) 100%);
+      }
+      .donation-hero-section .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 clamp(24px, 5vw, 72px) 64px;
+        max-width: 720px;
+        width: 100%;
+      }
+      .hero-kicker {
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--color-primary);
+        margin: 0 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hero-kicker span {
+        display: inline-block;
+        width: 28px;
+        height: 2px;
+        background: var(--color-primary);
+        flex-shrink: 0;
+      }
+      .donation-hero-section h1 {
+        font-family: 'Anton', sans-serif;
+        font-size: clamp(34px, 5.5vw, 64px);
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 1.08;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        margin: 0 0 20px;
+      }
+      .donation-hero-section .hero-desc {
+        font-family: var(--font-body);
+        font-size: clamp(13px, 1.3vw, 16px);
+        color: rgba(255,255,255,0.78);
+        line-height: 1.75;
+        margin: 0 0 32px;
+        max-width: 520px;
+      }
+      .hero-buttons {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .hero-btn-primary {
+        background: var(--color-green);
+        color: #fff;
+        border: none;
+        border-radius: var(--btn-radius);
+        padding: 15px 32px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+      }
+      .hero-btn-secondary {
+        background: transparent;
+        color: #fff;
+        border: 1.5px solid rgba(255,255,255,0.45);
+        border-radius: var(--btn-radius);
+        padding: 15px 32px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      @media (max-width: 640px) {
+        .donation-hero-section { min-height: 480px; }
+        .donation-hero-section .hero-content { padding: 0 clamp(20px, 4vw, 24px) 48px; }
+        .hero-buttons { flex-direction: column; }
+        .hero-btn-primary, .hero-btn-secondary { justify-content: center; width: 100%; }
+      }
+    `}</style>
     <img
       src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80"
       alt="Healthcare training"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
     />
-    <div style={{
-      position: 'absolute', inset: 0,
-      background: 'linear-gradient(to right, rgba(13,31,78,0.92) 0%, rgba(30,58,138,0.60) 60%, rgba(13,31,78,0.20) 100%)',
-    }} />
-    <div className="donate-hero-content">
-      <p style={{ color: 'var(--color-primary)', fontSize: '11px', fontWeight: '700', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '18px' }}>
+    <div className="hero-overlay" />
+    <div className="hero-content">
+      <div className="hero-kicker">
+        <span />
         JoMabel Healthcare Foundation
-      </p>
-      <h1 style={{
-        fontFamily: 'var(--font-heading)',
-        color: '#ffffff', fontSize: 'clamp(26px, 4vw, 44px)',
-        fontWeight: '700', lineHeight: '1.2', marginBottom: '16px',
-      }}>
+      </div>
+      <h1>
         Your Gift Builds<br />
         <span style={{ color: 'var(--color-primary)' }}>Generational Healthcare</span>
       </h1>
-      <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '14px', lineHeight: '1.8', marginBottom: '28px', maxWidth: '480px' }}>
-        Every dollar goes directly toward building Nigeria's next world-class
-        medical and training campus in Ufuma, Anambra State.
+      <p className="hero-desc">
+        Every dollar goes directly toward building Nigeria&apos;s next world-class medical
+        and training campus in Ufuma, Anambra State.
       </p>
-      <div className="donate-hero-btns">
-        <button className="dh-btn-primary" onClick={() => { const el = document.getElementById('donor-levels'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}>
-          See Giving Levels
+      <div className="hero-buttons">
+        <button className="hero-btn-primary" onClick={() => document.getElementById('donor-levels')?.scrollIntoView({ behavior: 'smooth' })}>
+          See Giving Levels <ArrowRight size={15} />
         </button>
-        <button className="dh-btn-outline" onClick={() => { const el = document.getElementById('payment-section'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}>
+        <button className="hero-btn-secondary" onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}>
           Donate Now
         </button>
       </div>
@@ -404,585 +240,841 @@ const DonationHero = () => (
   </section>
 );
 
-// ─── DONOR LEVELS ─────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
+   DONOR LEVELS
+───────────────────────────────────────────────────────────────────────────── */
 type Tab = 'community' | 'leadership' | 'major';
 
 const communityLevels = [
-  { amount: '$100',   title: 'Community Supporter',  color: '#0ea5e9', bg: '#e0f2fe', desc: 'Help fund community health education and outreach missions across southeastern Nigeria.' },
-  { amount: '$250',   title: 'Screening Sponsor',    color: '#6366f1', bg: '#eef2ff', desc: 'Sponsor free health screenings for families who cannot afford basic medical checkups.' },
-  { amount: '$500',   title: 'Patient Care Supporter', color: '#ec4899', bg: '#fdf2f8', desc: 'Provide direct patient care support medications, supplies, and clinical services.' },
-  { amount: '$1,000', title: 'Training Sponsor',     color: '#f59e0b', bg: '#fffbeb', desc: 'Fund training for a community health worker, investing in the future of local healthcare.' },
+  { amount: '$100',   title: 'Community Supporter',    accent: 'var(--color-primary)',   desc: 'Help fund community health education and outreach missions across southeastern Nigeria.' },
+  { amount: '$250',   title: 'Screening Sponsor',      accent: 'var(--color-navy-mid)',  desc: 'Sponsor free health screenings for families who cannot afford basic medical checkups.' },
+  { amount: '$500',   title: 'Patient Care Supporter', accent: 'var(--color-orange)',    desc: 'Provide direct patient care support — medications, supplies, and clinical services.' },
+  { amount: '$1,000', title: 'Training Sponsor',       accent: 'var(--color-green)',     desc: 'Fund training for a community health worker, investing in the future of local healthcare.' },
 ];
 
 const leadershipLevels = [
-  { amount: '$5,000',    title: 'Founders Circle',          color: '#7c3aed', bg: '#f5f3ff', badge: 'Leadership', desc: 'Join our founding circle of visionary donors committed to transforming rural healthcare in Nigeria.' },
-  { amount: '$10,000',   title: 'Health Access Partner',    color: '#0369a1', bg: '#e0f2fe', badge: 'Leadership', desc: 'Partner directly with JHF to expand health access recognized as a strategic foundation partner.' },
-  { amount: '$25,000',   title: 'Community Impact Sponsor', color: '#065f46', bg: '#d1fae5', badge: 'Leadership', desc: 'Make a transformational impact — sponsor a full program area and receive naming recognition.' },
-  { amount: '$100,000+', title: 'Legacy Donor',             color: '#92400e', bg: '#fef3c7', badge: 'Legacy',     desc: 'Secure your legacy name a facility, department, or major initiative at the JoMabel campus.' },
+  { amount: '$5,000',    title: 'Founders Circle',           badge: 'Leadership', accent: 'var(--color-navy-mid)', desc: 'Join our founding circle of visionary donors committed to transforming rural healthcare in Nigeria.' },
+  { amount: '$10,000',   title: 'Health Access Partner',     badge: 'Leadership', accent: 'var(--color-primary)',  desc: 'Partner directly with JHF to expand health access — recognised as a strategic foundation partner.' },
+  { amount: '$25,000',   title: 'Community Impact Sponsor',  badge: 'Leadership', accent: 'var(--color-green)',    desc: 'Make a transformational impact — sponsor a full program area and receive naming recognition.' },
+  { amount: '$100,000+', title: 'Legacy Donor',              badge: 'Legacy',     accent: 'var(--color-orange)',   desc: 'Secure your legacy — name a facility, department, or major initiative at the JoMabel campus.' },
 ];
 
-const majorGiftOpportunities = [
-  { icon: '🏫', title: 'Sponsor a Classroom',           amount: 'From $10,000', desc: 'Fund a dedicated training classroom at the Skill Acquisition & Medical Training Center.' },
-  { icon: '🩺', title: 'Sponsor Diagnostic Equipment',  amount: 'From $5,000',  desc: 'Equip the Medical Center with life-saving diagnostic tools ultrasound, labs, imaging.' },
-  { icon: '💻', title: 'Fund Telemedicine Systems',     amount: 'From $15,000', desc: 'Bring digital health and telemedicine infrastructure to connect Ufuma with global specialists.' },
-  { icon: '👶', title: 'Maternal & Child Health',       amount: 'From $7,500',  desc: 'Support safe deliveries, newborn care, immunization, and women\'s health programs.' },
-  { icon: '🎓', title: 'Fund Training Scholarships',    amount: 'From $1,000',  desc: 'Sponsor a student\'s healthcare training — clinical skills, nursing, community health.' },
-  { icon: '🏛️', title: 'Name a Facility or Department', amount: 'From $25,000', desc: 'Permanently attach your name or a loved one\'s legacy to a ward, clinic, or department.' },
+const majorGifts = [
+  { emoji: '🏫', title: 'Sponsor a Classroom',          amount: 'From $10,000', desc: 'Fund a dedicated training classroom at the Skill Acquisition & Medical Training Center.' },
+  { emoji: '🩺', title: 'Sponsor Diagnostic Equipment', amount: 'From $5,000',  desc: 'Equip the Medical Center with life-saving diagnostic tools — ultrasound, labs, imaging.' },
+  { emoji: '💻', title: 'Fund Telemedicine Systems',    amount: 'From $15,000', desc: 'Bring digital health infrastructure to connect Ufuma with global specialists.' },
+  { emoji: '👶', title: 'Maternal & Child Health',      amount: 'From $7,500',  desc: 'Support safe deliveries, newborn care, immunization, and women\'s health programs.' },
+  { emoji: '🎓', title: 'Fund Training Scholarships',   amount: 'From $1,000',  desc: 'Sponsor a student\'s healthcare training — clinical skills, nursing, community health.' },
+  { emoji: '🏛️', title: 'Name a Facility',              amount: 'From $25,000', desc: 'Permanently attach your name or a loved one\'s legacy to a ward, clinic, or department.' },
+];
+
+const tabs: { id: Tab; label: string }[] = [
+  { id: 'community',  label: 'Community Giving' },
+  { id: 'leadership', label: 'Leadership Giving' },
+  { id: 'major',      label: 'Major Gift / Institutional' },
 ];
 
 const DonorLevels = () => {
   const [tab, setTab] = useState<Tab>('community');
-
-  const tabs: { id: Tab; label: string; color: string; activeBg: string; activeColor: string }[] = [
-    { id: 'community',  label: 'Community Giving',  color: '#e5e7eb', activeBg: 'var(--color-primary)', activeColor: '#ffffff' },
-    { id: 'leadership', label: 'Leadership Giving',  color: '#e5e7eb', activeBg: 'var(--color-navy)',    activeColor: '#ffffff' },
-    { id: 'major',      label: 'Major Gift / Institutional', color: '#e5e7eb', activeBg: '#92400e', activeColor: '#ffffff' },
-  ];
-
   return (
-    <section id="donor-levels" className="donor-levels-section">
-      <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-        <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dark)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-          Giving Levels
-        </span>
-        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: '700', color: 'var(--color-navy)', margin: '12px 0 12px' }}>
-          Find Your Level of Impact
-        </h2>
-        <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', maxWidth: '540px', margin: '0 auto', lineHeight: '1.75' }}>
-          Every gift at every level directly funds the completion of a healthcare
-          campus that will serve thousands of families for generations.
-        </p>
+    <section id="donor-levels" style={{ background: 'var(--color-surface)', padding: '80px 0 0', borderTop: '2px solid var(--color-navy)' }}>
+      <div style={{ padding: '0 clamp(24px,5vw,72px) 52px' }}>
+        <div className="dn-section-header">
+          <p className="dn-kicker">Giving Levels</p>
+          <h2 className="dn-headline">Find Your Level of Impact</h2>
+          <p className="dn-sub">Every gift at every level directly funds the completion of a healthcare campus that will serve thousands of families for generations.</p>
+        </div>
+        <div className="donor-tabs">
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className={`donor-tab ${tab === t.id ? 'active' : ''}`}>
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="donor-tabs">
-        {tabs.map(t => (
-          <button key={t.id} className="donor-tab"
-            onClick={() => setTab(t.id)}
-            style={{
-              backgroundColor: tab === t.id ? t.activeBg : '#ffffff',
-              color: tab === t.id ? t.activeColor : '#374151',
-              borderColor: tab === t.id ? t.activeBg : '#e5e7eb',
-              boxShadow: tab === t.id ? 'var(--shadow-sm)' : 'none',
-            }}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-
+      {/* community */}
       {tab === 'community' && (
-        <div className="community-grid">
-          {communityLevels.map((level, i) => (
-            <div key={i} className="donor-card" style={{ backgroundColor: level.bg, border: `1px solid ${level.color}30` }}>
-              <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: '800', color: level.color, margin: 0 }}>{level.amount}</p>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '700', color: '#1a1a2e', margin: 0 }}>{level.title}</h3>
-              <p style={{ fontSize: '13px', color: '#4b5563', lineHeight: '1.7', margin: 0, flex: 1 }}>{level.desc}</p>
-              <button
-                onClick={() => { const el = document.getElementById('payment-section'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-                style={{
-                  backgroundColor: level.color, color: '#ffffff', border: 'none',
-                  borderRadius: '8px', padding: '10px 18px', fontSize: '13px',
-                  fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit',
-                  transition: 'opacity 0.2s', marginTop: 'auto',
-                }}
-                onMouseOver={e => (e.currentTarget.style.opacity = '0.85')}
-                onMouseOut={e => (e.currentTarget.style.opacity = '1')}
-              >
-                Give {level.amount}
+        <div className="donor-grid">
+          {communityLevels.map((l, i) => (
+            <div key={i} className="donor-card">
+              <div className="donor-amount" style={{ color: l.accent }}>{l.amount}</div>
+              <h3 className="donor-title">{l.title}</h3>
+              <p className="donor-desc">{l.desc}</p>
+              <button onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="donor-btn" style={{ color: l.accent, borderBottomColor: l.accent }}>
+                Give {l.amount} <ArrowRight size={12} />
               </button>
             </div>
           ))}
         </div>
       )}
 
+      {/* leadership */}
       {tab === 'leadership' && (
-        <div className="leadership-grid">
-          {leadershipLevels.map((level, i) => (
-            <div key={i} className="donor-card" style={{ backgroundColor: level.bg, border: `1px solid ${level.color}30` }}>
-              <span style={{
-                display: 'inline-block', background: level.color, color: '#ffffff',
-                fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em',
-                textTransform: 'uppercase', padding: '3px 10px', borderRadius: '999px',
-                width: 'fit-content',
-              }}>{level.badge}</span>
-              <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.5vw, 28px)', fontWeight: '800', color: level.color, margin: 0 }}>{level.amount}</p>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '700', color: '#1a1a2e', margin: 0 }}>{level.title}</h3>
-              <p style={{ fontSize: '13px', color: '#4b5563', lineHeight: '1.7', margin: 0, flex: 1 }}>{level.desc}</p>
-              <button
-                onClick={() => { const el = document.getElementById('payment-section'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-                style={{
-                  backgroundColor: level.color, color: '#ffffff', border: 'none',
-                  borderRadius: '8px', padding: '10px 18px', fontSize: '13px',
-                  fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit',
-                  transition: 'opacity 0.2s', marginTop: 'auto',
-                }}
-                onMouseOver={e => (e.currentTarget.style.opacity = '0.85')}
-                onMouseOut={e => (e.currentTarget.style.opacity = '1')}
-              >
-                Give {level.amount}
+        <div className="donor-grid">
+          {leadershipLevels.map((l, i) => (
+            <div key={i} className="donor-card">
+              <span className="donor-badge" style={{ color: l.accent }}>{l.badge}</span>
+              <div className="donor-amount" style={{ color: l.accent }}>{l.amount}</div>
+              <h3 className="donor-title">{l.title}</h3>
+              <p className="donor-desc">{l.desc}</p>
+              <button onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="donor-btn" style={{ color: l.accent, borderBottomColor: l.accent }}>
+                Give {l.amount} <ArrowRight size={12} />
               </button>
             </div>
           ))}
         </div>
       )}
 
+      {/* major gifts */}
       {tab === 'major' && (
-        <div>
-          <div style={{ textAlign: 'center', marginBottom: '28px', maxWidth: '600px', margin: '0 auto 28px' }}>
-            <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: '1.75' }}>
-              Major gifts and institutional opportunities allow you to make a transformational,
-              named contribution to a specific facility, program, or resource at the JoMabel campus.
-              Contact us to discuss a giving plan tailored to your goals.
-            </p>
-          </div>
-          <div className="major-gift-grid">
-            {majorGiftOpportunities.map((opp, i) => (
-              <div key={i} className="major-gift-card">
-                <span style={{ fontSize: '32px' }}>{opp.icon}</span>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>{opp.title}</h3>
-                  <span style={{
-                    background: 'var(--color-orange-light)', color: 'var(--color-orange-dark)',
-                    fontSize: '11px', fontWeight: '700', padding: '3px 10px',
-                    borderRadius: '999px', flexShrink: 0,
-                  }}>{opp.amount}</span>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>{opp.desc}</p>
-                <a href="mailto:claraogbaa2022@gmail.com"
-                  style={{ color: 'var(--color-primary-dark)', fontSize: '13px', fontWeight: '700', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: 'auto' }}>
-                  Inquire Now
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </a>
+        <div className="donor-grid donor-grid-major">
+          {majorGifts.map((g, i) => (
+            <div key={i} className="donor-card">
+              <span className="donor-emoji">{g.emoji}</span>
+              <div className="donor-header-row">
+                <h3 className="donor-title">{g.title}</h3>
+                <span className="donor-amount-tag">{g.amount}</span>
               </div>
-            ))}
-          </div>
+              <p className="donor-desc">{g.desc}</p>
+              <a href="mailto:foundation@jomabelhealthcare.org" className="donor-link">
+                Inquire Now <ArrowRight size={12} />
+              </a>
+            </div>
+          ))}
         </div>
       )}
+
+      <style>{`
+        .donor-tabs {
+          display: flex;
+          gap: 0;
+          border-bottom: 2px solid var(--color-border);
+          margin-bottom: 0;
+          flex-wrap: wrap;
+        }
+        .donor-tab {
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          padding: 14px 24px;
+          background: none;
+          border: none;
+          border-bottom: 3px solid transparent;
+          margin-bottom: -2px;
+          cursor: pointer;
+          color: var(--color-text-light);
+          transition: var(--transition);
+          white-space: nowrap;
+        }
+        .donor-tab.active {
+          color: var(--color-navy);
+          border-bottom-color: var(--color-navy);
+        }
+        .donor-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          width: 100%;
+          border-top: 1px solid var(--color-border);
+        }
+        .donor-card {
+          padding: 40px 32px 44px;
+          border-right: 1px solid var(--color-border);
+          background: var(--color-bg);
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          transition: background 0.25s;
+        }
+        .donor-card:hover { background: var(--color-surface); }
+        .donor-grid-major .donor-card { border-bottom: 1px solid var(--color-border); }
+        .donor-amount {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 3.5vw, 44px);
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: 0.02em;
+        }
+        .donor-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(15px, 1.4vw, 18px);
+          font-weight: 700;
+          color: var(--color-navy);
+          margin: 0;
+          line-height: 1.2;
+        }
+        .donor-desc {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--color-text-muted);
+          line-height: 1.7;
+          margin: 0;
+          flex: 1;
+        }
+        .donor-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1.5px solid;
+          padding-bottom: 3px;
+          align-self: flex-start;
+          transition: var(--transition);
+        }
+        .donor-badge {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .donor-badge::before {
+          content: '';
+          display: inline-block;
+          width: 14px;
+          height: 2px;
+          background: currentColor;
+          flex-shrink: 0;
+        }
+        .donor-emoji { font-size: 32px; line-height: 1; }
+        .donor-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .donor-amount-tag {
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--color-orange);
+          background: var(--color-orange-light);
+          padding: 3px 10px;
+          border-radius: 999px;
+          flex-shrink: 0;
+          white-space: nowrap;
+        }
+        .donor-link {
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1.5px solid var(--color-navy);
+          padding-bottom: 3px;
+          align-self: flex-start;
+        }
+        @media (max-width: 1024px) {
+          .donor-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .donor-card { border-right: none; }
+          .donor-card:nth-child(odd) { border-right: 1px solid var(--color-border); }
+          .donor-card:nth-child(3), .donor-card:nth-child(4) { border-bottom: none; }
+        }
+        @media (max-width: 640px) {
+          .donor-tab { padding: 12px 16px; font-size: 12px; white-space: normal; text-align: center; flex: 1; }
+          .donor-grid { grid-template-columns: 1fr !important; }
+          .donor-card { border-right: none !important; border-bottom: 1px solid var(--color-border) !important; }
+          .donor-card:last-child { border-bottom: none !important; }
+          .donor-card { padding: 32px 24px; }
+          .donor-header-row { flex-direction: column; align-items: flex-start; }
+        }
+      `}</style>
     </section>
   );
 };
 
-// ─── DONATION FORM WITH RECURRING TOGGLE ──────────────────────────────────────
-const usdAmounts = [25, 50, 100, 250, 500, 1000];
-const ngnAmounts = [5000, 10000, 25000, 50000, 100000, 250000];
-const usdMonthlyAmounts = [10, 25, 50, 100, 250, 500];
-const ngnMonthlyAmounts = [2000, 5000, 10000, 25000, 50000, 100000];
+/* ─────────────────────────────────────────────────────────────────────────────
+   DONATION FORM
+───────────────────────────────────────────────────────────────────────────── */
+const usdOne  = [25, 50, 100, 250, 500, 1000];
+const ngnOne  = [5000, 10000, 25000, 50000, 100000, 250000];
+const usdMon  = [10, 25, 50, 100, 250, 500];
+const ngnMon  = [2000, 5000, 10000, 25000, 50000, 100000];
 
 const impacts = {
   usd: [
     { amount: '$50',    desc: 'Provides medications for 10 children at an outreach mission' },
-    { amount: '$100',   desc: 'Funds a full day of free medical consultations for a community' },
+    { amount: '$100',   desc: 'Funds a full day of free medical consultations' },
     { amount: '$500',   desc: 'Equips a nurse with essential supplies for one month' },
-    { amount: '$1,000', desc: 'Sponsors a full healthcare training scholarship for one student' },
+    { amount: '$1,000', desc: 'Sponsors a full healthcare training scholarship' },
   ],
   ngn: [
     { amount: '₦5,000',   desc: 'Provides medications for 10 children at an outreach mission' },
-    { amount: '₦25,000',  desc: 'Funds a full day of free medical consultations for a community' },
+    { amount: '₦25,000',  desc: 'Funds a full day of free medical consultations' },
     { amount: '₦50,000',  desc: 'Equips a nurse with essential supplies for one month' },
-    { amount: '₦250,000', desc: 'Sponsors a full healthcare training scholarship for one student' },
+    { amount: '₦250,000', desc: 'Sponsors a full healthcare training scholarship' },
   ],
 };
 
 const DonationForm = () => {
-  const [currency, setCurrency] = useState<'usd' | 'ngn'>('usd');
-  const [selected, setSelected] = useState<number | null>(50);
-  const [custom, setCustom] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [selectedMonthly, setSelectedMonthly] = useState<number | null>(25);
+  const [currency, setCurrency]         = useState<'usd' | 'ngn'>('usd');
+  const [isRecurring, setIsRecurring]   = useState(false);
+  const [selected, setSelected]         = useState<number | null>(50);
+  const [custom, setCustom]             = useState('');
+  const [name, setName]                 = useState('');
+  const [email, setEmail]               = useState('');
 
-  const symbol = currency === 'usd' ? '$' : '₦';
-  const amounts = isRecurring 
-    ? (currency === 'usd' ? usdMonthlyAmounts : ngnMonthlyAmounts)
-    : (currency === 'usd' ? usdAmounts : ngnAmounts);
+  const sym     = currency === 'usd' ? '$' : '₦';
+  const amounts = isRecurring ? (currency === 'usd' ? usdMon : ngnMon) : (currency === 'usd' ? usdOne : ngnOne);
+  const fmt     = (n: number) => `${sym}${n.toLocaleString()}`;
+  const display = selected ? fmt(selected) : custom ? `${sym}${custom}` : '';
 
-  const handleCurrencySwitch = (c: 'usd' | 'ngn') => {
+  const switchCurrency = (c: 'usd' | 'ngn') => {
     setCurrency(c);
-    const defaultAmount = c === 'usd' ? (isRecurring ? 25 : 50) : (isRecurring ? 10000 : 10000);
-    setSelected(defaultAmount);
-    setSelectedMonthly(c === 'usd' ? 25 : 10000);
+    setSelected(c === 'usd' ? (isRecurring ? 25 : 50) : (isRecurring ? 5000 : 10000));
     setCustom('');
   };
-
-  const handleRecurringToggle = (recurring: boolean) => {
-    setIsRecurring(recurring);
-    if (recurring) {
-      const defaultMonthly = currency === 'usd' ? 25 : 10000;
-      setSelectedMonthly(defaultMonthly);
-      setSelected(null);
-    } else {
-      const defaultOneTime = currency === 'usd' ? 50 : 10000;
-      setSelected(defaultOneTime);
-    }
+  const switchRecurring = (r: boolean) => {
+    setIsRecurring(r);
+    setSelected(r ? (currency === 'usd' ? 25 : 5000) : (currency === 'usd' ? 50 : 10000));
     setCustom('');
   };
-
-  const handleMonthlySelect = (amt: number) => {
-    setSelectedMonthly(amt);
-    setSelected(null);
-    setCustom('');
-  };
-
-  const handleOneTimeSelect = (amt: number) => {
-    setSelected(amt);
-    setSelectedMonthly(null);
-    setCustom('');
-  };
-
-  const formatAmount = (amt: number) =>
-    currency === 'usd' ? `$${amt.toLocaleString()}` : `₦${amt.toLocaleString()}`;
-
-  const displayAmount = isRecurring 
-    ? (selectedMonthly ? formatAmount(selectedMonthly) : '')
-    : (selected ? formatAmount(selected) : '');
 
   return (
-    <section style={{ backgroundColor: '#ffffff', fontFamily: 'var(--font-body)' }}>
-      <div className="donation-layout">
-        <div className="donation-left">
-          <p style={{ color: 'var(--color-primary)', fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>Your Impact</p>
-          <h2 style={{ color: '#ffffff', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: '400', lineHeight: 1.4, margin: 0 }}>
-            Every Gift Directly Funds<br /><strong style={{ fontWeight: '800' }}>Healthcare in Ufuma,<br />Anambra State</strong>
+    <section className="donation-form-section" id="donation-form-layout">
+      <style>{`
+        .donation-form-section {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-top: 2px solid var(--color-navy);
+          width: 100%;
+        }
+        .form-left {
+          background: var(--color-navy);
+          padding: 64px clamp(24px, 5vw, 64px);
+        }
+        .form-right {
+          background: var(--color-bg);
+          padding: 64px clamp(24px, 5vw, 64px);
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+        }
+        .form-currency-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .currency-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .currency-btn {
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: var(--transition);
+        }
+        .recurring-toggle {
+          display: flex;
+          gap: 0;
+          border: 1.5px solid var(--color-border);
+          border-radius: 6px;
+          overflow: hidden;
+        }
+        .recurring-option {
+          flex: 1;
+          padding: 12px;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          transition: var(--transition);
+          text-align: center;
+        }
+        .amount-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+        .name-email-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        @media (max-width: 860px) {
+          .donation-form-section { grid-template-columns: 1fr !important; }
+          .name-email-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 560px) {
+          .form-left, .form-right { padding: 40px 24px !important; }
+          .amount-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .form-currency-row { flex-direction: column; align-items: flex-start; }
+        }
+      `}</style>
+      <div className="form-left">
+        <div style={{ borderLeft: '4px solid var(--color-primary)', paddingLeft: '20px', marginBottom: '40px' }}>
+          <p className="dn-kicker">Your Impact</p>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(22px, 2.8vw, 32px)', fontWeight: 700, color: '#ffffff', lineHeight: 1.2, margin: '0 0 14px' }}>
+            Every Gift Directly Funds<br />Healthcare in Ufuma
           </h2>
-          <p style={{ color: '#bfdbfe', fontSize: '13.5px', lineHeight: '1.7', margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, margin: 0 }}>
             Your donation funds facility construction, medical equipment, and life-changing community health programs for families in southeastern Nigeria.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {impacts[currency].map((item, i) => (
-              <div key={i} style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '10px', padding: '13px 16px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                <span style={{ color: 'var(--color-primary)', fontSize: '13px', fontWeight: '800', minWidth: '68px', flexShrink: 0 }}>{item.amount}</span>
-                <span style={{ color: '#bfdbfe', fontSize: '12.5px', lineHeight: '1.6' }}>{item.desc}</span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+          {impacts[currency].map((item, i) => (
+            <div key={i} style={{ padding: '20px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              <span style={{ fontFamily: "'Anton', sans-serif", fontSize: '22px', fontWeight: 400, color: 'var(--color-primary)', letterSpacing: '0.02em', lineHeight: 1, flexShrink: 0, minWidth: '80px' }}>{item.amount}</span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.65 }}>{item.desc}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: '36px', borderLeft: '3px solid var(--color-green)', paddingLeft: '16px' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, color: 'rgba(134,239,172,0.9)', margin: '0 0 4px', letterSpacing: '1px', textTransform: 'uppercase' }}>✓ Tax-Exempt Nonprofit</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.65, margin: 0 }}>
+            All donations are tax-deductible to the extent allowed by law.
+          </p>
+        </div>
+      </div>
+
+      <div className="form-right">
+        <div>
+          <p className="dn-kicker">Make a Gift</p>
+          <h3 style={{ fontFamily: "'Anton', sans-serif", fontSize: 'clamp(20px, 2.5vw, 30px)', fontWeight: 400, letterSpacing: '0.01em', textTransform: 'uppercase', color: 'var(--color-navy)', margin: 0 }}>Choose Your Amount</h3>
+        </div>
+
+        <div className="form-currency-row">
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-text-light)' }}>Currency</span>
+          <div className="currency-buttons">
+            {(['usd','ngn'] as const).map(c => (
+              <button key={c} onClick={() => switchCurrency(c)}
+                className="currency-btn" style={{ border: currency === c ? '2px solid var(--color-navy)' : '1.5px solid var(--color-border)', background: currency === c ? 'var(--color-navy-light)' : 'var(--color-bg)', color: currency === c ? 'var(--color-navy)' : 'var(--color-text-muted)' }}>
+                {c === 'usd' ? '🇺🇸 USD $' : '🇳🇬 NGN ₦'}
+              </button>
+            ))}
+          </div>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--color-text-light)' }}>USD $100 ≈ ₦150,000</span>
+        </div>
+
+        <div className="recurring-toggle">
+          <button onClick={() => switchRecurring(false)} className="recurring-option" style={{ background: !isRecurring ? 'var(--color-navy)' : 'var(--color-bg)', color: !isRecurring ? '#ffffff' : 'var(--color-text-muted)' }}>
+            💝 One-Time
+          </button>
+          <button onClick={() => switchRecurring(true)} className="recurring-option" style={{ background: isRecurring ? 'var(--color-navy)' : 'var(--color-bg)', color: isRecurring ? '#ffffff' : 'var(--color-text-muted)' }}>
+            🔁 Monthly
+          </button>
+        </div>
+
+        <div className="amount-grid">
+          {amounts.map(amt => (
+            <button key={amt} onClick={() => { setSelected(amt); setCustom(''); }}
+              style={{ padding: '14px 8px', borderRadius: '6px', border: selected === amt ? '2px solid var(--color-navy)' : '1.5px solid var(--color-border)', background: selected === amt ? 'var(--color-navy-light)' : 'var(--color-bg)', fontFamily: 'var(--font-body)', fontSize: 'clamp(12px, 1.8vw, 14px)', fontWeight: 700, color: selected === amt ? 'var(--color-navy)' : 'var(--color-text-muted)', cursor: 'pointer' }}>
+              {fmt(amt)}{isRecurring ? '/mo' : ''}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-light)', fontSize: '14px', fontWeight: 600, pointerEvents: 'none' }}>{sym}</span>
+          <input type="number" placeholder={`Custom ${isRecurring ? 'monthly ' : ''}amount`} value={custom}
+            onChange={e => { setCustom(e.target.value); setSelected(null); }}
+            className="dn-input" style={{ paddingLeft: '28px' }} />
+        </div>
+
+        <div className="name-email-grid">
+          <div><label className="dn-label">Full Name</label><input placeholder="Your name" value={name} onChange={e => setName(e.target.value)} className="dn-input" /></div>
+          <div><label className="dn-label">Email Address</label><input placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} className="dn-input" /></div>
+        </div>
+
+        {display && (
+          <div style={{ background: 'var(--color-green-light)', border: '1px solid #BBF7D0', borderRadius: '6px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <CheckCircle size={16} color="var(--color-green)" />
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#166534', margin: 0 }}>
+              You are donating <strong>{display}</strong> {isRecurring ? 'monthly' : 'as a one-time gift'}.
+            </p>
+          </div>
+        )}
+
+        <button onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
+          style={{ background: 'var(--color-navy)', color: '#ffffff', border: 'none', borderRadius: 'var(--btn-radius)', padding: '16px', fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'var(--transition)' }}
+          onMouseOver={e => (e.currentTarget.style.background = 'var(--color-primary)')}
+          onMouseOut={e => (e.currentTarget.style.background = 'var(--color-navy)')}>
+          See Payment Options <ArrowRight size={15} />
+        </button>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--color-text-light)', textAlign: 'center', margin: 0 }}>🔒 JoMabel Healthcare Foundation USA INC. — Registered Nonprofit</p>
+      </div>
+    </section>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PAYMENT METHODS
+───────────────────────────────────────────────────────────────────────────── */
+const paymentMethods = [
+  { flag: '🇺🇸', country: 'US Donors', name: 'PayPal', desc: 'Send your gift via PayPal to the foundation\'s registered account.', fields: [{ label: 'PayPal Email', value: 'foundation@jomabelhealthcare.org' }], note: 'JoMabel Healthcare Foundation', accent: '#003087' },
+  { flag: '🇺🇸', country: 'US Donors', name: 'Zelle',  desc: 'Send directly from your US bank app using Zelle — fast, free, and instant.', fields: [{ label: 'Zelle Email', value: 'foundation@jomabelhealthcare.org' }], note: 'JoMabel Healthcare Foundation', accent: '#6d1ed4' },
+  { flag: '🇺🇸', country: 'US Donors', name: 'Cash App', desc: 'Use Cash App to send your gift using the foundation\'s $Cashtag.', fields: [{ label: '$Cashtag', value: '$Cashtag — to be provided' }], note: 'JoMabel Healthcare Foundation', accent: '#00d632' },
+  { flag: '🇳🇬', country: 'Nigeria Donors', name: 'First Bank Nigeria', desc: 'Transfer directly to the foundation\'s First Bank account.', fields: [{ label: 'Account Number', value: '2048034193' }, { label: 'Account Name', value: 'JOMABEL HEALTHCARE FOUNDATION' }], note: 'First Bank of Nigeria', accent: '#008751' },
+];
+
+const PaymentMethods = () => (
+  <section id="payment-section" style={{ background: 'var(--color-surface)', borderTop: '2px solid var(--color-navy)', padding: '0' }}>
+    <div style={{ padding: '72px clamp(24px, 5vw, 72px) 52px' }}>
+      <div className="dn-section-header" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <p className="dn-kicker">How to Give</p>
+        <h2 className="dn-headline">Payment Options</h2>
+        <p className="dn-sub">All accounts are registered under the foundation name. Choose your preferred method and use the details below to complete your gift.</p>
+      </div>
+    </div>
+
+    <div className="payment-grid">
+      {paymentMethods.map((m, i) => (
+        <div key={i} className="payment-card" style={{ borderTop: `3px solid ${m.accent}` }}>
+          <div>
+            <p className="payment-country">{m.flag} {m.country}</p>
+            <h3 className="payment-name">{m.name}</h3>
+          </div>
+          <p className="payment-desc">{m.desc}</p>
+          <div className="payment-fields">
+            {m.fields.map(f => (
+              <div key={f.label}>
+                <p className="payment-field-label">{f.label}</p>
+                <div className="dn-copy-row">
+                  <span className="payment-field-value">{f.value}</span>
+                  <CopyButton text={f.value} />
+                </div>
               </div>
             ))}
           </div>
-          <div style={{ background: 'rgba(58,165,53,0.15)', border: '1px solid rgba(58,165,53,0.35)', borderRadius: '10px', padding: '14px 18px' }}>
-            <p style={{ color: '#86efac', fontSize: '12px', fontWeight: '700', margin: '0 0 4px', letterSpacing: '0.05em' }}>✓ 501(c)(3) TAX-EXEMPT</p>
-            <p style={{ color: 'rgba(255,255,255,0.70)', fontSize: '12px', lineHeight: '1.6', margin: 0 }}>
-              JoMabel Healthcare Foundation USA INC. is a registered nonprofit. All donations are tax-deductible to the extent allowed by law.
-            </p>
-          </div>
-        </div>
-
-        <div className="donation-right">
-          <h3 style={{ fontSize: 'clamp(15px, 2.5vw, 18px)', fontWeight: '700', color: '#111827', margin: 0 }}>Choose an amount to give</h3>
-          
-          {/* Currency Switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '13px', color: '#6b7280', fontWeight: '500' }}>Currency:</span>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              {(['usd', 'ngn'] as const).map((c) => (
-                <button key={c} onClick={() => handleCurrencySwitch(c)} className="currency-btn"
-                  style={{ border: currency === c ? '2px solid var(--color-navy)' : '2px solid #e5e7eb', backgroundColor: currency === c ? 'var(--color-navy-light)' : '#ffffff', boxShadow: currency === c ? '0 0 0 3px rgba(27,42,74,0.10)' : 'none' }}>
-                  <span className="flag-emoji">{c === 'usd' ? '🇺🇸' : '🇳🇬'}</span>
-                  <span className="flag-label" style={{ color: currency === c ? 'var(--color-navy)' : '#6b7280' }}>{c === 'usd' ? 'USD $' : 'NGN ₦'}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Recurring Donation Toggle */}
-          <div className="recurring-toggle">
-            <div 
-              className={`recurring-option ${!isRecurring ? 'active' : 'inactive'}`}
-              onClick={() => handleRecurringToggle(false)}
-            >
-              <span>💝</span>
-              One-Time Gift
-            </div>
-            <div 
-              className={`recurring-option ${isRecurring ? 'active' : 'inactive'}`}
-              onClick={() => handleRecurringToggle(true)}
-            >
-              <RefreshCw size={14} />
-              Monthly Donation
-            </div>
-          </div>
-
-          {/* One-Time Amounts */}
-          {!isRecurring && (
-            <div className="amount-grid">
-              {amounts.map((amt) => (
-                <button key={amt} onClick={() => handleOneTimeSelect(amt)}
-                  style={{ padding: '14px 8px', borderRadius: '8px', cursor: 'pointer', border: selected === amt ? '2px solid var(--color-navy)' : '1.5px solid #e5e7eb', backgroundColor: selected === amt ? 'var(--color-navy-light)' : '#ffffff', color: selected === amt ? 'var(--color-navy)' : '#374151', fontSize: 'clamp(12px, 1.8vw, 15px)', fontWeight: '700', transition: 'all 0.15s', fontFamily: 'inherit' }}>
-                  {formatAmount(amt)}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Monthly Amounts */}
-          {isRecurring && (
-            <div className="monthly-options">
-              {amounts.map((amt) => (
-                <button key={amt} onClick={() => handleMonthlySelect(amt)}
-                  className={`monthly-amount ${selectedMonthly === amt ? 'active' : ''}`}
-                  style={{ background: selectedMonthly === amt ? 'var(--color-green)' : '#F3F4F6', borderColor: selectedMonthly === amt ? 'var(--color-green)' : '#E5E7EB', color: selectedMonthly === amt ? '#ffffff' : '#4B5563' }}>
-                  {formatAmount(amt)}/month
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Custom Amount */}
-          <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', fontSize: '14px', fontWeight: '600', pointerEvents: 'none' }}>{symbol}</span>
-            <input type="number" placeholder={`Enter a custom ${isRecurring ? 'monthly ' : ''}amount`} value={custom}
-              onChange={e => { setCustom(e.target.value); setSelected(null); setSelectedMonthly(null); }}
-              style={{ width: '100%', padding: '13px 16px 13px 28px', border: custom ? '1.5px solid var(--color-navy)' : '1.5px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', color: '#111827', outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'inherit' }} />
-          </div>
-
-          {/* Donor Info */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-            <div>
-              <label style={labelSt}>Full Name</label>
-              <div style={inputWrapSt}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/><circle cx="12" cy="7" r="4" stroke="#9ca3af" strokeWidth="1.5"/></svg>
-                <input placeholder="Your name" style={fieldSt} value={name} onChange={e => setName(e.target.value)} />
-              </div>
-            </div>
-            <div>
-              <label style={labelSt}>Email Address</label>
-              <div style={inputWrapSt}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#9ca3af" strokeWidth="1.5"/><path d="M22 6l-10 7L2 6" stroke="#9ca3af" strokeWidth="1.5"/></svg>
-                <input placeholder="your@email.com" style={fieldSt} value={email} onChange={e => setEmail(e.target.value)} />
-              </div>
-            </div>
-          </div>
-
-          {/* Summary */}
-          {displayAmount && (
-            <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '10px', padding: '12px 16px' }}>
-              <p style={{ fontSize: '13px', color: '#166534', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle size={16} />
-                You are donating <strong>{displayAmount}</strong> {isRecurring ? 'monthly' : 'as a one-time gift'} to JoMabel Healthcare Foundation.
-              </p>
-            </div>
-          )}
-
-          <button
-            onClick={() => { const el = document.getElementById('payment-section'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-            style={{ backgroundColor: 'var(--color-navy)', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '16px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'inherit', transition: 'background 0.2s' }}
-            onMouseOver={e => (e.currentTarget.style.backgroundColor = '#0d1f4e')}
-            onMouseOut={e => (e.currentTarget.style.backgroundColor = 'var(--color-navy)')}>
-            See Payment Options
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
-          <p style={{ fontSize: '11.5px', color: '#9ca3af', textAlign: 'center', margin: 0 }}>
-            🔒 JoMabel Healthcare Foundation USA INC. — Registered 501(c)(3) Nonprofit
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// ─── PAYMENT METHODS ──────────────────────────────────────────────────────────
-const PaymentMethods = () => (
-  <section id="payment-section" className="payment-section">
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-        <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dark)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>How to Give</span>
-        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: '700', color: 'var(--color-navy)', margin: '12px 0 12px' }}>Payment Options</h2>
-        <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', maxWidth: '540px', margin: '0 auto', lineHeight: '1.75' }}>
-          All accounts are registered under the foundation name. Choose your preferred method and use the details below to complete your gift.
-        </p>
-      </div>
-      <div className="payment-grid">
-        <div className="payment-card payment-card-usa">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#003087', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 8c0-2.2 1.8-4 4-4h5c2.5 0 4 1.5 3.5 4-0.5 2.5-2.5 4-5 4h-2l-1 5H7.5L10 8H6Z" fill="#009cde"/><path d="M4 10c0-2.2 1.8-4 4-4h5c2.5 0 4 1.5 3.5 4-0.5 2.5-2.5 4-5 4h-2l-1 5H5.5L8 10H4Z" fill="#ffffff" opacity="0.3"/></svg>
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '18px', fontFamily: "'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif" }}>🇺🇸</span>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: '#002868', letterSpacing: '0.08em', textTransform: 'uppercase' }}>US Donors</span>
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>PayPal</h3>
-            </div>
-          </div>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>Send your gift via PayPal to the foundation's registered account.</p>
-          <div>
-            <p style={{ fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>PayPal Link / Email</p>
-            <div className="copy-field">
-              <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>Account details to be provided</span>
-              <CopyButton text="[PayPal — details to be provided by Dr. Ogbaa]" />
-            </div>
-          </div>
-          <p style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', margin: 0 }}>Account name: <strong style={{ color: 'var(--color-navy)' }}>JoMabel Healthcare Foundation</strong></p>
-        </div>
-        <div className="payment-card payment-card-usa">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#6d1ed4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 17L17 7H9" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M7 17h8" stroke="#ffffff" strokeWidth="2" strokeLinecap="round"/><path d="M20 7l-5 5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '18px', fontFamily: "'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif" }}>🇺🇸</span>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: '#002868', letterSpacing: '0.08em', textTransform: 'uppercase' }}>US Donors</span>
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>Zelle</h3>
-            </div>
-          </div>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>Send directly from your US bank app using Zelle — fast, free, and instant.</p>
-          <div>
-            <p style={{ fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Zelle Email / Phone Number</p>
-            <div className="copy-field">
-              <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>Account details to be provided</span>
-              <CopyButton text="[Zelle — details to be provided by Dr. Ogbaa]" />
-            </div>
-          </div>
-          <p style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', margin: 0 }}>Account name: <strong style={{ color: 'var(--color-navy)' }}>JoMabel Healthcare Foundation</strong></p>
-        </div>
-        <div className="payment-card payment-card-usa">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#00d632', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#ffffff" strokeWidth="1.5"/><path d="M12 6v12M9.5 9.5h4a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3H15" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/></svg>
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '18px', fontFamily: "'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif" }}>🇺🇸</span>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: '#002868', letterSpacing: '0.08em', textTransform: 'uppercase' }}>US Donors</span>
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>Cash App</h3>
-            </div>
-          </div>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>Use Cash App to send your gift using the foundation's $Cashtag.</p>
-          <div>
-            <p style={{ fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>$Cashtag</p>
-            <div className="copy-field">
-              <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>Account details to be provided</span>
-              <CopyButton text="[Cash App — details to be provided by Dr. Ogbaa]" />
-            </div>
-          </div>
-          <p style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', margin: 0 }}>Account name: <strong style={{ color: 'var(--color-navy)' }}>JoMabel Healthcare Foundation</strong></p>
-        </div>
-        <div className="payment-card payment-card-nigeria">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#008751', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#ffffff" strokeWidth="1.5"/><path d="M2 10h20" stroke="#ffffff" strokeWidth="1.5"/><path d="M6 14h3M11 14h3" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/></svg>
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '18px', fontFamily: "'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif" }}>🇳🇬</span>
-                <span style={{ fontSize: '10px', fontWeight: '700', color: '#155724', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Nigeria Donors</span>
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>First Bank Nigeria</h3>
-            </div>
-          </div>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>Transfer directly to the foundation's First Bank account via internet banking or mobile app.</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div>
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>Account Number</p>
-              <div className="copy-field">
-                <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>Account number to be provided</span>
-                <CopyButton text="[First Bank account number — to be provided]" />
-              </div>
-            </div>
-            <div>
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>Account Name</p>
-              <div className="copy-field">
-                <span style={{ fontSize: '13px', color: 'var(--color-navy)', fontWeight: '600' }}>JoMabel Healthcare Foundation</span>
-                <CopyButton text="JoMabel Healthcare Foundation" />
-              </div>
-            </div>
-          </div>
-          <p style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', margin: 0 }}>Bank: <strong style={{ color: 'var(--color-navy)' }}>First Bank of Nigeria</strong></p>
-        </div>
-      </div>
-      <div style={{ marginTop: '40px', textAlign: 'center', background: 'var(--color-white)', border: '1px solid var(--color-border)', borderRadius: '14px', padding: '28px 36px', maxWidth: '640px', margin: '40px auto 0', boxShadow: 'var(--shadow-sm)' }}>
-        <p style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-navy)', marginBottom: '8px' }}>After Your Transfer</p>
-        <p style={{ fontSize: '13.5px', color: 'var(--color-text-muted)', lineHeight: '1.8', margin: 0 }}>
-          Please send a confirmation to{' '}
-          <a href="mailto:claraogbaa2022@gmail.com" style={{ color: 'var(--color-primary-dark)', fontWeight: '600' }}>claraogbaa2022@gmail.com</a>{' '}
-          with your name, amount, and payment method so we can acknowledge your gift and issue a receipt. For any questions, call us at{' '}
-          <a href="tel:+15125080277" style={{ color: 'var(--color-primary-dark)', fontWeight: '600' }}>+1 (512) 508-0277</a>.
-        </p>
-      </div>
-    </div>
-  </section>
-);
-
-// ─── OTHER WAYS TO GIVE ───────────────────────────────────────────────────────
-const OtherWays = () => (
-  <section className="other-ways-section">
-    <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-      <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dark)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Additional Options</span>
-      <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: '700', color: 'var(--color-navy)', margin: '12px 0 0' }}>More Ways to Give</h2>
-    </div>
-    <div className="other-ways-grid">
-      {[
-        { icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="var(--color-navy-mid)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 2L15 22l-4-9-9-4 20-7z" stroke="var(--color-navy-mid)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>, title: 'Wire Transfer', desc: 'Contact us for international wire transfer details to give securely from anywhere in the world.' },
-        { icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="var(--color-navy-mid)" strokeWidth="1.5"/><path d="M9 7h6M9 11h6M9 15h4" stroke="var(--color-navy-mid)" strokeWidth="1.5" strokeLinecap="round"/><circle cx="17" cy="19" r="3" fill="var(--color-green)"/><path d="M15.5 19l1 1 2-2" stroke="#fff" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/></svg>, title: 'Legacy Giving', desc: 'Include JoMabel Healthcare Foundation in your estate or long-term charitable plans.' },
-        { icon: <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="var(--color-navy-mid)" strokeWidth="1.5" strokeLinecap="round"/><circle cx="9" cy="7" r="4" stroke="var(--color-navy-mid)" strokeWidth="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="var(--color-navy-mid)" strokeWidth="1.5" strokeLinecap="round"/></svg>, title: 'Corporate Partners', desc: 'Partner with us through corporate giving, sponsorships, or employee matching gift programs.' },
-      ].map((item, i) => (
-        <div key={i} style={{ backgroundColor: 'var(--color-surface)', borderRadius: '14px', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '12px', border: '1px solid var(--color-border)' }}>
-          {item.icon}
-          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '700', color: 'var(--color-navy)', margin: 0 }}>{item.title}</h3>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>{item.desc}</p>
-          <a href="mailto:claraogbaa2022@gmail.com" style={{ color: 'var(--color-primary-dark)', fontSize: '13px', fontWeight: '700', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            Contact Us <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </a>
+          <p className="payment-note">Account: <strong>{m.note}</strong></p>
         </div>
       ))}
     </div>
+
+    <div style={{ padding: '52px clamp(24px, 5vw, 72px)' }}>
+      <div style={{ maxWidth: '640px', margin: '0 auto', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderLeft: '4px solid var(--color-primary)', borderRadius: '6px', padding: '28px 32px' }}>
+        <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '16px', fontWeight: 700, color: 'var(--color-navy)', margin: '0 0 8px' }}>After Your Transfer</p>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.8, margin: 0 }}>
+          Please send a confirmation to{' '}
+          <a href="mailto:foundation@jomabelhealthcare.org" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>foundation@jomabelhealthcare.org</a>
+          {' '}with your name, amount, and payment method so we can acknowledge your gift and issue a receipt. For questions, call{' '}
+          <a href="tel:+15125080277" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>1-512-508-0277</a>.
+        </p>
+      </div>
+    </div>
+
+    <style>{`
+      .payment-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        width: 100%;
+        border-top: 1px solid var(--color-border);
+      }
+      .payment-card {
+        background: var(--color-bg);
+        padding: 40px 32px 44px;
+        border-right: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .payment-country {
+        font-family: var(--font-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--color-text-light);
+        margin: 0 0 6px;
+      }
+      .payment-name {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: clamp(17px, 1.8vw, 22px);
+        font-weight: 700;
+        color: var(--color-navy);
+        margin: 0;
+      }
+      .payment-desc {
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: var(--color-text-muted);
+        line-height: 1.7;
+        margin: 0;
+      }
+      .payment-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+      .payment-field-label {
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        margin: 0 0 6px;
+      }
+      .payment-field-value {
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-primary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .payment-note {
+        font-family: var(--font-body);
+        font-size: 11px;
+        color: var(--color-text-light);
+        margin: 0;
+      }
+      @media (max-width: 1024px) {
+        .payment-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .payment-card { border-right: none; }
+        .payment-card:nth-child(odd) { border-right: 1px solid var(--color-border); }
+      }
+      @media (max-width: 640px) {
+        .payment-grid { grid-template-columns: 1fr !important; }
+        .payment-card { border-right: none !important; border-bottom: 1px solid var(--color-border) !important; }
+        .payment-card:last-child { border-bottom: none !important; }
+        .payment-card { padding: 32px 24px; }
+        .payment-field-value { white-space: normal; word-break: break-all; }
+      }
+    `}</style>
   </section>
 );
 
-// ─── FAQ ──────────────────────────────────────────────────────────────────────
-const faqs = [
-  { q: 'Is my donation tax-deductible?', a: 'Yes. JoMabel Healthcare Foundation USA INC. is a registered 501(c)(3) nonprofit. Donations are tax-deductible to the extent allowed by law. You will receive a receipt upon confirmation.' },
-  { q: 'Can I set up a recurring monthly donation?', a: 'Yes! Simply select the "Monthly Donation" option and choose your preferred monthly amount. Your support will provide sustainable funding for our programs.' },
-  { q: 'How will my donation be used?', a: 'All donations go directly toward facility construction, medical equipment, and community health programs in Ufuma, Anambra State, Nigeria. We are committed to full transparency in the stewardship of your gift.' },
-  { q: 'How do I confirm my transfer was received?', a: 'After completing your transfer, please email claraogbaa2022@gmail.com with your name, donation amount, and payment method. We will acknowledge your gift and send a formal receipt within 2–3 business days.' },
-  { q: 'Can I donate in honor or memory of someone?', a: 'Absolutely. Please include a tribute note in your payment reference or email us with the details. We will acknowledge your memorial or honorary gift and where appropriate notify the family.' },
-  { q: 'What if I have more questions?', a: 'Please reach out to Dr. Clara Ada Ogbaa directly at claraogbaa2022@gmail.com or by phone at +1 (512) 508-0277. We are always happy to speak personally with our donors.' },
+/* ─────────────────────────────────────────────────────────────────────────────
+   OTHER WAYS + FAQ
+───────────────────────────────────────────────────────────────────────────── */
+const otherWays = [
+  { emoji: '✈️', title: 'Wire Transfer',       desc: 'Contact us for international wire transfer details to give securely from anywhere in the world.' },
+  { emoji: '📜', title: 'Legacy Giving',        desc: 'Include JoMabel Healthcare Foundation in your estate or long-term charitable plans.' },
+  { emoji: '🤝', title: 'Corporate Partners',   desc: 'Partner through corporate giving, sponsorships, or employee matching gift programs.' },
 ];
 
-const FAQ = () => {
-  const [open, setOpen] = useState<number>(-1);
+const faqs = [
+  { q: 'Is my donation tax-deductible?', a: 'Yes. JoMabel Healthcare Foundation USA INC. is a registered nonprofit. Donations are tax-deductible to the extent allowed by law. You will receive a receipt upon confirmation.' },
+  { q: 'Can I set up a recurring monthly donation?', a: 'Yes! Simply select the "Monthly" option and choose your preferred monthly amount. Your support will provide sustainable funding for our programs.' },
+  { q: 'How will my donation be used?', a: 'All donations go directly toward facility construction, medical equipment, and community health programs in Ufuma, Anambra State, Nigeria.' },
+  { q: 'How do I confirm my transfer was received?', a: 'After completing your transfer, please email foundation@jomabelhealthcare.org with your name, donation amount, and payment method. We will send a formal receipt within 2–3 business days.' },
+  { q: 'Can I donate in honor or memory of someone?', a: 'Absolutely. Please include a tribute note in your payment reference or email us the details. We will acknowledge your memorial or honorary gift appropriately.' },
+  { q: 'What if I have more questions?', a: 'Please reach out to Dr. Clara Ada Ogbaa at foundation@jomabelhealthcare.org or by phone at 1-512-508-0277. We are always happy to speak personally with our donors.' },
+];
+
+const OtherWaysAndFAQ = () => {
+  const [open, setOpen] = useState(-1);
   return (
-    <section id="faq-section" style={{ backgroundColor: 'var(--color-navy)', fontFamily: 'var(--font-body)' }}>
-      <div className="faq-header-block">
-        <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary)', letterSpacing: '0.14em', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>Questions & Answers</span>
-        <h2 style={{ color: '#ffffff', fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: '700', marginBottom: '12px' }}>Frequently Asked Questions</h2>
-        <p style={{ color: '#93c5fd', fontSize: '14px', margin: 0, maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto', lineHeight: '1.7' }}>
-          Clear answers about giving, how funds are used, and how to reach us.
-        </p>
-      </div>
-      <div className="faq-body">
-        {faqs.map((faq, i) => (
-          <div key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-            <button onClick={() => setOpen(open === i ? -1 : i)}
-              style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: '16px' }}>
-              <span style={{ color: '#ffffff', fontSize: 'clamp(13px, 2vw, 15px)', fontWeight: '600' }}>{faq.q}</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, transform: open === i ? 'rotate(90deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>
-                <path d="M9 18l6-6-6-6" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            {open === i && (
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '8px', padding: '20px 24px', marginBottom: '12px' }}>
-                <p style={{ color: '#bfdbfe', fontSize: '14px', lineHeight: '1.8', margin: 0 }}>{faq.a}</p>
-              </div>
-            )}
+    <>
+      <div className="other-ways-grid">
+        {otherWays.map((w, i) => (
+          <div key={i} className={`other-way-card ${i === 1 ? 'highlight' : ''}`}>
+            <span className="other-way-emoji">{w.emoji}</span>
+            <h3 className="other-way-title">{w.title}</h3>
+            <p className="other-way-desc">{w.desc}</p>
+            <a href="mailto:foundation@jomabelhealthcare.org" className="other-way-link">
+              Contact Us <ArrowRight size={12} />
+            </a>
           </div>
         ))}
       </div>
-    </section>
+
+      <div className="faq-section">
+        <div className="faq-header">
+          <p className="dn-kicker">Questions & Answers</p>
+          <h2 className="faq-title">Frequently Asked Questions</h2>
+          <p className="faq-sub">Clear answers about giving, how funds are used, and how to reach us.</p>
+        </div>
+        <div className="faq-list">
+          {faqs.map((faq, i) => (
+            <div key={i} className="faq-item">
+              <button onClick={() => setOpen(open === i ? -1 : i)} className="faq-question">
+                <span>{faq.q}</span>
+                <span className="faq-icon">{open === i ? '−' : '+'}</span>
+              </button>
+              {open === i && (
+                <div className="faq-answer">
+                  <p>{faq.a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        .other-ways-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          border-top: 2px solid var(--color-navy);
+          width: 100%;
+        }
+        .other-way-card {
+          padding: 52px 40px;
+          border-right: 1px solid var(--color-border);
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .other-way-card.highlight { background: var(--color-surface); }
+        .other-way-card:last-child { border-right: none; }
+        .other-way-emoji { font-size: 32px; line-height: 1; }
+        .other-way-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(17px, 1.8vw, 22px);
+          font-weight: 700;
+          color: var(--color-navy);
+          margin: 0;
+        }
+        .other-way-desc {
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: var(--color-text-muted);
+          line-height: 1.7;
+          margin: 0;
+          flex: 1;
+        }
+        .other-way-link {
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1.5px solid var(--color-navy);
+          padding-bottom: 3px;
+          align-self: flex-start;
+        }
+        .faq-section {
+          background: var(--color-navy);
+          border-top: 2px solid rgba(255,255,255,0.10);
+          padding: 72px clamp(24px, 5vw, 72px);
+        }
+        .faq-header {
+          max-width: 1200px;
+          margin: 0 auto 52px;
+          border-left: 4px solid var(--color-primary);
+          padding-left: 20px;
+        }
+        .faq-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 3.5vw, 44px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.1;
+          color: #ffffff;
+          margin: 0 0 12px;
+        }
+        .faq-sub {
+          font-family: var(--font-body);
+          font-size: clamp(13px, 1.2vw, 15px);
+          color: rgba(255,255,255,0.45);
+          line-height: 1.75;
+          max-width: 560px;
+          margin: 0;
+        }
+        .faq-list {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        .faq-item {
+          border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        .faq-question {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 22px 0;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          gap: 16px;
+        }
+        .faq-question span:first-child {
+          font-family: var(--font-body);
+          font-size: clamp(13px, 1.3vw, 15px);
+          font-weight: 600;
+          color: #ffffff;
+        }
+        .faq-icon {
+          flex-shrink: 0;
+          color: var(--color-primary);
+          font-size: 18px;
+          line-height: 1;
+          transition: transform 0.2s;
+        }
+        .faq-answer {
+          padding: 4px 0 24px;
+        }
+        .faq-answer p {
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: rgba(255,255,255,0.55);
+          line-height: 1.8;
+          margin: 0;
+          max-width: 680px;
+          border-left: 3px solid var(--color-primary);
+          padding-left: 16px;
+        }
+        @media (max-width: 900px) {
+          .other-ways-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .other-way-card { border-right: none; }
+          .other-way-card:nth-child(odd) { border-right: 1px solid var(--color-border); }
+          .other-way-card:nth-child(3) { grid-column: span 2; border-right: none; }
+        }
+        @media (max-width: 640px) {
+          .other-ways-grid { grid-template-columns: 1fr !important; }
+          .other-way-card { border-right: none !important; border-bottom: 1px solid var(--color-border) !important; }
+          .other-way-card:last-child { border-bottom: none !important; }
+          .other-way-card:nth-child(3) { grid-column: auto; }
+          .other-way-card { padding: 32px 24px; }
+          .faq-section { padding: 48px 24px; }
+          .faq-question { padding: 18px 0; }
+        }
+      `}</style>
+    </>
   );
 };
 
-// ─── DONATE PAGE ──────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
+   PAGE ASSEMBLY
+───────────────────────────────────────────────────────────────────────────── */
 const Donate = () => (
-  <div style={{ fontFamily: 'var(--font-body)' }}>
-    <style>{donateStyles}</style>
+  <div className="dn-page">
+    <style>{globalStyles}</style>
     <Navbar />
     <DonationHero />
     <DonorLevels />
     <DonationForm />
     <PaymentMethods />
-    <OtherWays />
-    <FAQ />
+    <OtherWaysAndFAQ />
     <CampaignBanner />
     <Footer />
   </div>

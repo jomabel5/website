@@ -670,19 +670,19 @@ const CentersSection = () => (
 // ─── ADVISORY BOARD SECTION ─────────────────────────────────────────────────
 const advisoryBoard = [
   {
-    name: 'Dr. Adaeze Oreh',
+    name: '',
     title: 'Public Health Advisor',
     bio: 'Public health expert with extensive experience in healthcare systems strengthening and community health programs in Nigeria.',
     img: null
   },
   {
-    name: 'Mr. Chidi Okonkwo',
+    name: '',
     title: 'Healthcare Policy Advisor',
     bio: 'Healthcare policy specialist focused on health equity and access to care in underserved communities.',
     img: null
   },
   {
-    name: 'Dr. Ngozi Eze',
+    name: '',
     title: 'Clinical Advisor',
     bio: 'Experienced physician with expertise in maternal and child health, and community-based healthcare delivery.',
     img: null
@@ -778,25 +778,21 @@ const GovernanceSection = () => (
 const boardMembers = [
   { 
     name: 'Ike Ogbaa, MD', 
-    position: 'Board Chair',
     bio: 'Ike Ogbaa, MD, is a physician, biopharmaceutical leader, and strong advocate for equitable healthcare innovation. With nearly 20 years of experience, he has dedicated his career to translating scientific breakthroughs into new drugs for patients with serious and life-threatening conditions. He has held leadership roles at Merck, Sanofi, GSK, and Bayer, focusing on cardiorenal, neurovascular and metabolic diseases. As Chief Medical Officer of Oxia Therapeutics, Dr. Ogbaa is advancing a new therapeutic approach focused on activating the body\'s natural repair systems. Through JoMabel Healthcare Foundation, he extends this mission beyond drug development—working to improve access, education, and health outcomes in underserved communities particularly in Subsaharan Africa.',
     img: ikeOgbaaImg
   },
   { 
     name: 'Dr. Comfort N. Obi', 
-    position: 'Board Member',
     bio: 'Dr. Comfort N Obi is an Associate Professor at one of the public universities in Georgia State, where she spends time teaching and molding future generations of healthcare workforce and leaders. A nurse for 50 years and more, Dr. Obi spent many years working in intensive care, community health settings, and in caring for women of all ages. She served as a consultant to World-Bank-assisted projects on healthcare. She also spent many years at Nursing and Midwifery Council of Nigeria (Nurses Board) supervising the education and licensure of nurses and midwives and monitoring the accreditation of nursing institutions. Before transitioning to academia, Dr. Obi was a director in Women and Infant Services at one of Atlanta\'s top hospitals where she supervised the care of pregnant and non-pregnant women, new mothers and their babies. Dr. Obi is a board-certified Nurse Executive and a Fellow of West Africa College of Nursing. She sits on many boards and has received awards and recognition for her work in healthcare and nursing.',
     img: comfortObiImg
   },
   { 
     name: 'Nneka Ogbaa', 
-    position: 'Board Member',
-    bio: 'Nneka Ogbaa, MD, is a clinical research and data management professional with over a decade of experience in the biopharmaceutical industry, leading and supporting clinical trial operations across diverse therapeutic areas with a focus on data integrity, regulatory compliance, and successful study execution. Prior to entering the industry, she attended medical school, gaining a strong clinical perspective that informs her work in research and development. With a unique blend of clinical knowledge and data expertise, she is committed to advancing research that improves patient outcomes and, as a board member of the JoMabel Healthcare Foundation, focuses on enhancing healthcare access, education, and quality of life for underserved populations in Nigeria.',
+    bio: 'Nneka Ogbaa, is a clinical research and data management professional with over a decade of experience in the biopharmaceutical industry, leading and supporting clinical trial operations across diverse therapeutic areas with a focus on data integrity, regulatory compliance, and successful study execution. Prior to entering the industry, she attended medical school, gaining a strong clinical perspective that informs her work in research and development. With a unique blend of clinical knowledge and data expertise, she is committed to advancing research that improves patient outcomes and, as a board member of the JoMabel Healthcare Foundation, focuses on enhancing healthcare access, education, and quality of life for underserved populations in Nigeria.',
     img: nnekaOgbaaImg
   },
   { 
     name: 'Doyin Antiabong, MBA, PMP', 
-    position: 'Board Member',
     bio: 'Doyin Antiabong, MBA, PMP, is a strategy and transformation executive with 17 years of experience closing the gap between bold vision and measurable results — across four Fortune 500 companies: Accenture, Diageo, Amazon, and Microsoft — where she led digital transformation, cloud strategy, and global programs across some of the world\'s most complex organizations. She currently serves as Founder and CEO of Zarn Group, where she is building lifestyle and home products people reach for every day — without knowing they were waiting for something this good. As a Nigerian and a board member of the JoMabel Healthcare Foundation, she is focused on what she has always done best: designing the operational systems and governance frameworks that turn JHF\'s bold vision into a lasting institution — because in Nigeria, healthcare\'s greatest barrier has never been the absence of vision. It has always been the absence of the system to deliver it. Vision is common. Execution is rare. Doyin brings both.',
     img: doyinImg
   },
@@ -826,7 +822,6 @@ const TeamCard = ({ member, index }: { member: typeof boardMembers[0]; index: nu
       </div>
       <div className="team-info">
         <h3 className="team-name">{member.name}</h3>
-        <p className="team-position">{member.position}</p>
         <p className="team-bio">
           {expanded ? member.bio : bioPreview}
         </p>

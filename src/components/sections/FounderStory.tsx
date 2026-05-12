@@ -5,141 +5,243 @@ import founderPhoto from '../../assests/images/founderphoto.jpeg';
 
 const FounderStory = () => {
   const navigate = useNavigate();
-  
+
   return (
-    <section className="founder-section">
+    <section className="fs-section">
       <style>{`
-        .founder-section {
-          background-color: #FFFFFF;
-          padding: var(--section-padding-y) var(--section-padding-x);
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        /* ── Wrapper ── */
+        .fs-section {
+          background: var(--color-bg);
+          padding: 48px clamp(20px, 5vw, 56px);
           font-family: var(--font-body);
+          color: var(--color-text);
         }
-        .founder-container {
-          max-width: 1100px;
+
+        .fs-inner {
+          max-width: 1080px;
           margin: 0 auto;
         }
-        
-        /* Layout: Image left, text right */
-        .founder-layout {
+
+        /* ── Editorial header — left border, matches TheProblem ── */
+        .fs-header {
+          border-left: 5px solid var(--color-navy);
+          padding-left: 20px;
+          margin-bottom: 28px;
+        }
+
+        .fs-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 10px;
+        }
+
+        .fs-headline {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 48px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.1;
+          color: var(--color-navy);
+          margin: 0;
+        }
+
+        /* ── Section divider label ── */
+        .fs-divider {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
           display: flex;
-          gap: 56px;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 0;
+        }
+
+        .fs-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--color-border);
+        }
+
+        /* ── Two-column layout ── */
+        .fs-layout {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 48px;
           align-items: flex-start;
+          border-top: 2px solid var(--color-navy);
+          padding-top: 36px;
         }
-        
-        /* Left Column - Small Circular Image */
-        .founder-image-col {
-          flex-shrink: 0;
+
+        /* ── Left: image column ── */
+        .fs-image-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          padding-right: 48px;
+          border-right: 1px solid var(--color-border);
         }
-        .founder-image-wrap {
-          width: 120px;
-          height: 120px;
+
+        .fs-image-wrap {
+          width: 110px;
+          height: 110px;
           border-radius: 50%;
           overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: var(--shadow-md);
+          flex-shrink: 0;
         }
-        .founder-img {
+
+        .fs-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center top;
         }
-        
-        /* Right Column - Text Content */
-        .founder-content-col {
-          flex: 1;
+
+        .fs-name {
+          font-family: 'Anton', sans-serif;
+          font-size: 13px;
+          font-weight: 400;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          text-align: center;
+          line-height: 1.3;
+          margin: 0;
         }
-        .founder-headline {
-          font-family: var(--font-heading);
-          font-size: clamp(28px, 4vw, 38px);
-          font-weight: 700;
-          color: #111827;
-          line-height: 1.2;
-          margin-bottom: 24px;
+
+        .fs-title {
+          font-family: var(--font-body);
+          font-size: 11px;
+          color: var(--color-text-light);
+          text-align: center;
+          letter-spacing: 0.3px;
+          margin: 0;
         }
-        .founder-text {
-          font-size: 17px;
-          color: #4B5563;
-          line-height: 1.7;
-          margin-bottom: 24px;
+
+        /* ── Right: text column ── */
+        .fs-content-col {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
         }
-        .founder-btn {
+
+        .fs-text {
+          font-family: var(--font-body);
+          font-size: clamp(15px, 1.4vw, 17px);
+          color: var(--color-text-muted);
+          line-height: 1.8;
+          margin: 0;
+        }
+
+        /* ── CTA link ── */
+        .fs-btn {
           background: transparent;
-          color: #1D8FD4;
+          color: var(--color-primary);
           border: none;
           padding: 0;
-          font-size: 15px;
-          font-weight: 600;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
           display: inline-flex;
           align-items: center;
           gap: 8px;
+          transition: var(--transition);
+          margin-top: 8px;
         }
-        .founder-btn:hover {
-          gap: 12px;
-          color: #1570A6;
+
+        .fs-btn:hover {
+          gap: 14px;
+          color: var(--color-primary-dark);
         }
-        
-        /* Responsive */
+
+        /* ── Responsive ── */
         @media (max-width: 700px) {
-          .founder-layout {
-            flex-direction: column;
+          .fs-layout {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .fs-image-col {
+            flex-direction: row;
             align-items: center;
-            text-align: center;
-            gap: 24px;
+            padding-right: 0;
+            border-right: none;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 24px;
+            gap: 20px;
           }
-          .founder-headline {
-            font-size: 28px;
-          }
-          .founder-text {
-            font-size: 16px;
+          .fs-name,
+          .fs-title {
+            text-align: left;
           }
         }
       `}</style>
 
-      <div className="founder-container">
-        
-        <div className="founder-layout">
-          
-          {/* Left: Small Circular Image */}
-          <div className="founder-image-col">
-            <div className="founder-image-wrap">
+      <div className="fs-inner">
+
+        {/* ── Editorial header ── */}
+        <div className="fs-header">
+          <p className="fs-kicker">Founder's Story</p>
+          <h2 className="fs-headline">A Mission Born<br />from Survival</h2>
+        </div>
+
+        {/* ── Divider ── */}
+        <p className="fs-divider">Dr. Clara Ada Ogbaa, Ed.D. — Founder, JoMabel Healthcare Foundation</p>
+
+        {/* ── Layout ── */}
+        <div className="fs-layout">
+
+          {/* Left: photo + name */}
+          <div className="fs-image-col">
+            <div className="fs-image-wrap">
               <img
                 src={founderPhoto}
                 alt="Clara Ada Ogbaa, Ed.D. — Founder, JoMabel Healthcare Foundation"
-                className="founder-img"
+                className="fs-img"
               />
             </div>
+            <p className="fs-name">Clara Ada<br />Ogbaa, Ed.D.</p>
+            <p className="fs-title">Founder & Executive Director</p>
           </div>
-          
-          {/* Right: Text Content */}
-          <div className="founder-content-col">
-            <h2 className="founder-headline">
-              Following Clara's Vision
-            </h2>
-            <p className="founder-text">
-              Dr. Clara Ada Ogbaa founded JoMabel Healthcare Foundation based on the belief 
-              that every person deserves access to quality healthcare regardless of where 
-              they are born or what they can afford. A two-time cancer survivor and kidney 
-              transplant recipient, Clara experienced firsthand the life-saving power of 
-              quality medical care. She returned to her hometown of Ufuma, Nigeria, and 
-              began building a healthcare campus with her own retirement savings.
+
+          {/* Right: text */}
+          <div className="fs-content-col">
+            <p className="fs-text">
+              Dr. Clara Ada Ogbaa founded JoMabel Healthcare Foundation based on the belief
+              that every person deserves access to quality healthcare regardless of where
+              they are born or what they can afford. A two-time cancer survivor and kidney
+              transplant recipient, Clara has experienced firsthand the life-saving power of
+              quality medical care and, as a result, began building a healthcare center in
+              Ufuma, Anambra State, using her own retirement and personal funds.
             </p>
-            <p className="founder-text">
-              Today, Clara's vision is becoming reality. She cares for the sick, trains 
-              local healthcare workers, and is transforming healthcare in rural southeastern 
-              Nigeria saving lives and building a movement toward health equity. We carry 
+            <p className="fs-text">
+              Today, Clara's vision is becoming reality. She cares for the sick, trains
+              local healthcare workers, and is transforming healthcare in rural southeastern
+              Nigeria — saving lives and building a movement toward health equity. We carry
               forward her legacy and vision.
             </p>
-            <button className="founder-btn" onClick={() => navigate('/about')}>
+            <button className="fs-btn" onClick={() => navigate('/founder-story')}>
               Read Her Full Story
-              <ArrowRight size={16} />
+              <ArrowRight size={14} />
             </button>
           </div>
-          
+
         </div>
-        
+
       </div>
     </section>
   );

@@ -6,539 +6,523 @@ import AccessibilityWidget from '../common/AccessibilityWidget';
 import TextToSpeech from './TextToSpeech';
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen]   = useState(false);
+  const [openDropdown, setOpenDropdown]       = useState<string | null>(null);
+  const [mobileDropdowns, setMobileDropdowns] = useState<{ [key: string]: boolean }>({});
   const location = useLocation();
 
- // Dropdown menu structure
-const menuGroups = [
-  {
-    id: 'work-group',
-    label: 'Our Work',
-    items: [
-      { id: 'programs', label: 'Programs', path: '/programs' },
-      { id: 'campaign', label: 'Campaign', path: '/campaign' },
-      { id: 'impact', label: 'Impact', path: '/impact' },
-      { id: 'roi', label: 'ROI', path: '/roi' },
-    ]
-  },
-  {
-    id: 'give-group',
-    label: 'Give',
-    items: [
-      { id: 'donate', label: 'Donate Now', path: '/donate' },
-      { id: 'legacy', label: 'Legacy Giving', path: '/legacy' },
-    ]
-  },
-  {
-    id: 'connect-group',
-    label: 'Connect',
-    items: [
-      { id: 'blog', label: 'Blog', path: '/blog' },
-      { id: 'contact', label: 'Contact', path: '/contact' },
-    ]
-  }
-];
-  // Simple items (no dropdown)
-  const simpleItems = [
-  { id: 'home', label: 'Home', path: '/' },
-  { id: 'about', label: 'About', path: '/about' },
-];
+  const menuGroups = [
+    {
+      id: 'about-group',
+      label: 'About',
+      items: [
+        { id: 'mission-vision', label: 'Mission & Vision',  path: '/mission-vision' },
+        { id: 'our-story',      label: 'Our Story',         path: '/our-story' },
+        { id: 'founders-story', label: "Founder's Story",   path: '/founder-story' },
+        { id: 'leadership',     label: 'Leadership',        path: '/leadership' },
+      ],
+    },
+    {
+      id: 'work-group',
+      label: 'Our Work',
+      items: [
+        { id: 'programs', label: 'Programs', path: '/programs' },
+        { id: 'campaign', label: 'Campaign', path: '/campaign' },
+        { id: 'impact',   label: 'Impact',   path: '/impact' },
+        { id: 'roi',      label: 'ROI',       path: '/roi' },
+      ],
+    },
+    {
+      id: 'give-group',
+      label: 'Give',
+      items: [
+        { id: 'donate', label: 'Donate Now',    path: '/donate' },
+        { id: 'legacy', label: 'Legacy Giving', path: '/legacy' },
+      ],
+    },
+    {
+      id: 'connect-group',
+      label: 'Connect',
+      items: [
+        { id: 'newsletters', label: 'Newsletters', path: '/newsletter' },
+        { id: 'contact',     label: 'Contact',     path: '/contact' },
+      ],
+    },
+  ];
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
-    if (path.includes('#')) {
-      const mainPath = path.split('#')[0];
-      return location.pathname === mainPath;
-    }
     return location.pathname.startsWith(path);
   };
 
-  const isDropdownItemActive = (items: { path: string }[]) => {
-    return items.some(item => {
-      if (item.path.includes('#')) {
-        const mainPath = item.path.split('#')[0];
-        return location.pathname === mainPath;
-      }
-      return location.pathname.startsWith(item.path);
-    });
-  };
+  const isGroupActive = (items: { path: string }[]) =>
+    items.some(item => location.pathname.startsWith(item.path));
 
-  const handleDropdownToggle = (dropdownId: string) => {
-    setOpenDropdown(openDropdown === dropdownId ? null : dropdownId);
-  };
-
-  // Close dropdown when clicking outside (for desktop)
   React.useEffect(() => {
-    const handleClickOutside = () => setOpenDropdown(null);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    const close = () => setOpenDropdown(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
   }, []);
 
   return (
     <>
-      {/* Skip to content link - for keyboard users */}
-      <a href="#main-content" className="skip-to-content">
-        Skip to main content
-      </a>
+      <a href="#main-content" className="nb-skip">Skip to main content</a>
 
       <style>{`
-        /* Skip to content link styles */
-        .skip-to-content {
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@500;600;700&display=swap');
+
+        /* ─────────────────────────────────────────
+           SKIP LINK
+        ───────────────────────────────────────── */
+        .nb-skip {
           position: absolute;
           top: -40px;
           left: 0;
-          background: #1D8FD4;
-          color: white;
+          background: var(--color-primary);
+          color: #fff;
           padding: 8px 16px;
           text-decoration: none;
           z-index: 10001;
-          transition: top 0.2s;
-          font-family: 'Inter', sans-serif;
-          font-size: 14px;
+          font-family: var(--font-body);
+          font-size: 13px;
           font-weight: 600;
           border-radius: 0 0 4px 0;
+          transition: top 0.2s;
         }
-        
-        .skip-to-content:focus {
-          top: 0;
-        }
+        .nb-skip:focus { top: 0; }
 
-        /* ── NAVBAR ROOT ── */
-        .navbar-root {
+        /* ─────────────────────────────────────────
+           ROOT
+        ───────────────────────────────────────── */
+        .nb-root {
           width: 100%;
           background: #ffffff;
           position: sticky;
           top: 0;
-          z-index: 50;
+          z-index: 1000;
+          border-bottom: 1px solid var(--color-border);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
-        /* ── TOP ROW: Logo + Donate ── */
-        .navbar-top {
-          background: #ffffff;
-          border-bottom: 1px solid #F3F4F6;
-        }
-        .navbar-top-inner {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 12px clamp(20px, 4vw, 48px);
+        /* ─────────────────────────────────────────
+           SINGLE ROW
+        ───────────────────────────────────────── */
+        .nb-inner {
+          width: 100%;
+          padding: 0 0 0 clamp(20px, 4vw, 48px);
+          height: 80px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          gap: 0;
         }
-        .navbar-brand {
+
+        /* ── BRAND ── */
+        .nb-brand {
           display: flex;
           align-items: center;
           gap: 12px;
           text-decoration: none;
+          flex-shrink: 0;
+          margin-right: 40px;
         }
-        .navbar-brand img {
-          height: 65px;
+        .nb-brand img {
+          height: 64px;
           width: auto;
           object-fit: contain;
         }
-        .navbar-brand-text {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
-        .navbar-brand-name {
+        .nb-brand-name {
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: 18px;
+          font-size: 17px;
           font-weight: 800;
-          color: #111827;
-          line-height: 1.2;
+          color: var(--color-navy);
+          line-height: 1;
+          white-space: nowrap;
         }
-        .navbar-brand-sub {
-          font-family: 'Inter', sans-serif;
-          font-size: 10px;
-          font-weight: 500;
-          color: #1D8FD4;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-        }
-        .navbar-top-actions {
+
+        /* ── NAV LINKS ── */
+        .nb-links {
           display: flex;
           align-items: center;
-          gap: 16px;
+          justify-content: center;
+          gap: 4px;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          flex: 1;
+          height: 100%;
         }
-        .navbar-donate {
-          background: #16A34A;
+
+        /* simple link */
+        .nb-link {
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: var(--color-navy);
+          padding: 0 12px;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          border-bottom: 3px solid transparent;
+          transition: var(--transition);
+        }
+        .nb-link:hover { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+        .nb-link.nb-active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
+        /* dropdown trigger */
+        .nb-drop { position: relative; height: 100%; display: flex; align-items: center; }
+        .nb-trigger {
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          padding: 0 12px;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          border: none;
+          background: none;
+          cursor: pointer;
+          border-bottom: 3px solid transparent;
+          transition: var(--transition);
+        }
+        .nb-trigger:hover { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+        .nb-trigger.nb-active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+        .nb-trigger svg { transition: transform 0.2s; flex-shrink: 0; }
+        .nb-trigger.nb-open svg { transform: rotate(180deg); }
+
+        /* dropdown panel */
+        .nb-dropdown {
+          position: absolute;
+          top: calc(100% + 0px);
+          left: 0;
+          background: #ffffff;
+          border-top: 3px solid var(--color-primary);
+          border-radius: 0 0 8px 8px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+          min-width: 220px;
+          overflow: hidden;
+          z-index: 200;
+        }
+        .nb-dropdown-item {
+          display: block;
+          padding: 13px 20px;
+          font-family: 'Inter', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--color-text-muted);
+          text-decoration: none;
+          border-left: 3px solid transparent;
+          transition: var(--transition);
+        }
+        .nb-dropdown-item:hover {
+          background: var(--color-primary-light);
+          color: var(--color-primary);
+          border-left-color: var(--color-primary);
+        }
+        .nb-dropdown-item.nb-active {
+          background: var(--color-primary-light);
+          color: var(--color-primary);
+          border-left-color: var(--color-primary);
+          font-weight: 700;
+        }
+
+        /* ── RIGHT ACTIONS ── */
+        .nb-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-left: auto;
+          flex-shrink: 0;
+          height: 100%;
+          padding-right: 0;
+        }
+        .nb-tts-wrap {
+          display: flex;
+          align-items: center;
+          transform: scale(0.85);
+          transform-origin: center;
+          opacity: 0.75;
+          transition: opacity 0.2s;
+        }
+        .nb-tts-wrap:hover { opacity: 1; }
+        .nb-donate {
+          background: var(--color-green);
           color: #ffffff;
           border: none;
-          border-radius: 6px;
-          padding: 10px 28px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
+          border-radius: 0;
+          padding: 0 36px;
+          height: 80px;
           font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
           text-decoration: none;
-          transition: all 0.2s;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: var(--transition);
+          white-space: nowrap;
+          flex-shrink: 0;
         }
-        .navbar-donate:hover { 
-          background: #15803D; 
+        .nb-donate:hover { background: var(--color-green-dark); }
+        .nb-donate-heart {
+          font-size: 15px;
+          line-height: 1;
         }
-        .navbar-toggle {
+
+        /* mobile toggle */
+        .nb-toggle {
           display: none;
           background: none;
           border: none;
           cursor: pointer;
           padding: 8px;
-          color: #4B5563;
+          color: var(--color-navy);
         }
 
-        /* ── BOTTOM ROW: Navigation Menu (Different Background) ── */
-        .navbar-bottom {
-          background: #1D8FD4;
-          border-bottom: 1px solid #1570A6;
-        }
-        .navbar-bottom-inner {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 clamp(20px, 4vw, 48px);
-        }
-        .navbar-links {
-          display: flex;
-          align-items: center;
-          gap: 32px;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          height: 52px;
-        }
-        
-        /* Dropdown Styles */
-        .dropdown {
-          position: relative;
-        }
-        .dropdown-trigger {
-          font-family: 'Inter', sans-serif;
-          font-size: 14px;
-          font-weight: 500;
-          text-decoration: none;
-          color: #ffffff;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          padding: 8px 0;
-          border-bottom: 2px solid transparent;
-          cursor: pointer;
-          background: none;
-          border: none;
-        }
-        .dropdown-trigger:hover {
-          opacity: 0.85;
-        }
-        .dropdown-trigger.active {
-          border-bottom-color: #ffffff;
-          font-weight: 600;
-        }
-        .dropdown-trigger svg {
-          width: 16px;
-          height: 16px;
-          transition: transform 0.2s;
-        }
-        .dropdown-trigger.open svg {
-          transform: rotate(180deg);
-        }
-        .dropdown-menu {
-          position: absolute;
-          top: 100%;
-          left: 0;
+        /* ─────────────────────────────────────────
+           MOBILE MENU
+        ───────────────────────────────────────── */
+        .nb-mobile {
           background: #ffffff;
-          border-radius: 8px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-          min-width: 200px;
-          overflow: hidden;
-          z-index: 100;
-          margin-top: 4px;
-        }
-        .dropdown-item {
-          display: block;
-          padding: 12px 20px;
-          font-size: 14px;
-          font-weight: 500;
-          color: #4B5563;
-          text-decoration: none;
-          transition: all 0.2s;
-          border-left: 3px solid transparent;
-        }
-        .dropdown-item:hover {
-          background: #F0F9FF;
-          color: #1D8FD4;
-          border-left-color: #1D8FD4;
-        }
-        .dropdown-item.active {
-          background: #EBF5FB;
-          color: #1D8FD4;
-          font-weight: 600;
-          border-left-color: #1D8FD4;
-        }
-        
-        /* Simple Link Styles */
-        .navbar-link {
-          font-family: 'Inter', sans-serif;
-          font-size: 14px;
-          font-weight: 500;
-          text-decoration: none;
-          color: #ffffff;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          padding: 8px 0;
-          border-bottom: 2px solid transparent;
-        }
-        .navbar-link:hover { 
-          color: #ffffff;
-          opacity: 0.85;
-        }
-        .navbar-link.active { 
-          color: #ffffff;
-          border-bottom-color: #ffffff;
-          font-weight: 600;
-        }
-
-        /* ── MOBILE MENU (with dropdowns) ── */
-        .navbar-mobile {
-          background: #ffffff;
-          border-top: 1px solid #E5E7EB;
-          padding: 16px 0 20px;
-          max-height: 80vh;
+          border-top: 2px solid var(--color-primary);
+          max-height: 85vh;
           overflow-y: auto;
         }
-        .navbar-mobile-links {
-          display: flex;
-          flex-direction: column;
-        }
-        .navbar-mobile-item {
-          border-bottom: 1px solid #F3F4F6;
-        }
-        .navbar-mobile-link {
+        .nb-mob-item { border-bottom: 1px solid var(--color-border); }
+        .nb-mob-link {
           display: block;
-          padding: 14px clamp(20px, 4vw, 48px);
+          padding: 15px clamp(20px, 4vw, 48px);
+          font-family: 'Inter', sans-serif;
           font-size: 15px;
-          font-weight: 500;
-          color: #4B5563;
+          font-weight: 700;
+          letter-spacing: 0.3px;
+          text-transform: uppercase;
+          color: var(--color-navy);
           text-decoration: none;
           border-left: 3px solid transparent;
+          transition: var(--transition);
         }
-        .navbar-mobile-link:hover,
-        .navbar-mobile-link.active {
-          color: #1D8FD4;
-          background: #F0F9FF;
-          border-left-color: #1D8FD4;
+        .nb-mob-link:hover, .nb-mob-link.nb-active {
+          color: var(--color-primary);
+          background: var(--color-primary-light);
+          border-left-color: var(--color-primary);
         }
-        .navbar-mobile-dropdown-trigger {
+        .nb-mob-trigger {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 14px clamp(20px, 4vw, 48px);
+          width: 100%;
+          padding: 15px clamp(20px, 4vw, 48px);
+          font-family: 'Inter', sans-serif;
           font-size: 15px;
-          font-weight: 500;
-          color: #4B5563;
-          cursor: pointer;
+          font-weight: 700;
+          letter-spacing: 0.3px;
+          text-transform: uppercase;
+          color: var(--color-navy);
           background: none;
           border: none;
-          width: 100%;
+          border-left: 3px solid transparent;
+          cursor: pointer;
           text-align: left;
+          transition: var(--transition);
         }
-        .navbar-mobile-dropdown-trigger.active {
-          color: #1D8FD4;
-          background: #F0F9FF;
+        .nb-mob-trigger.nb-active {
+          color: var(--color-primary);
+          background: var(--color-primary-light);
+          border-left-color: var(--color-primary);
         }
-        .navbar-mobile-submenu {
-          background: #F9FAFB;
-          padding-left: 20px;
-        }
-        .navbar-mobile-subitem {
+        .nb-mob-sub { background: var(--color-surface); }
+        .nb-mob-subitem {
           display: block;
           padding: 12px clamp(20px, 4vw, 48px) 12px calc(clamp(20px, 4vw, 48px) + 20px);
+          font-family: 'Inter', sans-serif;
           font-size: 14px;
-          font-weight: 500;
-          color: #6B7280;
+          font-weight: 600;
+          color: var(--color-text-muted);
           text-decoration: none;
           border-left: 3px solid transparent;
+          transition: var(--transition);
         }
-        .navbar-mobile-subitem:hover,
-        .navbar-mobile-subitem.active {
-          color: #1D8FD4;
-          background: #F0F9FF;
-          border-left-color: #1D8FD4;
+        .nb-mob-subitem:hover, .nb-mob-subitem.nb-active {
+          color: var(--color-primary);
+          background: var(--color-primary-light);
+          border-left-color: var(--color-primary);
         }
-        .navbar-mobile-donate {
+        .nb-mob-donate {
           display: block;
-          margin: 16px clamp(20px, 4vw, 48px) 8px;
-          background: #16A34A;
+          margin: 16px clamp(20px, 4vw, 48px);
+          background: var(--color-green);
           color: #ffffff;
           text-align: center;
-          padding: 12px;
-          border-radius: 8px;
+          padding: 14px;
+          font-family: 'Inter', sans-serif;
           font-size: 15px;
-          font-weight: 600;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
           text-decoration: none;
+          border-radius: var(--btn-radius);
+          transition: var(--transition);
         }
-        .navbar-mobile-tts {
-          margin: 8px clamp(20px, 4vw, 48px);
-          padding: 8px 0;
+        .nb-mob-donate:hover { background: var(--color-green-dark); }
+        .nb-mob-tts {
+          padding: 8px clamp(20px, 4vw, 48px) 16px;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-          .navbar-links { display: none; }
-          .navbar-donate { display: none; }
-          .navbar-toggle { display: block; }
-          .navbar-bottom { display: none; }
+        /* ─────────────────────────────────────────
+           RESPONSIVE
+        ───────────────────────────────────────── */
+        @media (max-width: 960px) {
+          .nb-links, .nb-tts-wrap, .nb-donate { display: none !important; }
+          .nb-toggle { display: flex; }
         }
-        @media (min-width: 901px) {
-          .navbar-mobile { display: none !important; }
-          .navbar-toggle { display: none !important; }
+        @media (min-width: 961px) {
+          .nb-mobile  { display: none !important; }
+          .nb-toggle  { display: none !important; }
         }
-        @media (max-width: 550px) {
-          .navbar-brand-text { display: none; }
-          .navbar-brand img { height: 50px; }
+        @media (max-width: 520px) {
+          .nb-brand-name { display: none; }
+          .nb-brand img  { height: 44px; }
         }
       `}</style>
 
-      <header className="navbar-root">
-        {/* TOP ROW: Logo + Donate Button */}
-        <div className="navbar-top">
-          <div className="navbar-top-inner">
-            <Link to="/" className="navbar-brand">
-              <img src={logo} alt="JoMabel Healthcare Foundation" />
-              <div className="navbar-brand-text">
-                <span className="navbar-brand-name">JoMabel Healthcare Foundation</span>
-                <span className="navbar-brand-sub">JHF · USA Inc. · 501(c)(3)</span>
-              </div>
-            </Link>
-            <div className="navbar-top-actions">
-              <span className="navbar-tts hidden md:block"><TextToSpeech /></span>
-              <Link to="/donate" className="navbar-donate">Donate Now</Link>
-              <button
-                className="navbar-toggle"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
-        </div>
+      <header className="nb-root">
+        <div className="nb-inner">
 
-        {/* BOTTOM ROW: Navigation Menu with Dropdowns */}
-        <div className="navbar-bottom">
-          <div className="navbar-bottom-inner">
-            <ul className="navbar-links">
-              {/* Simple Items (Home) */}
-              {simpleItems.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    className={`navbar-link${isActive(item.path) ? ' active' : ''}`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              
-              {/* Dropdown Groups */}
-              {menuGroups.map((group) => (
-                <li key={group.id} className="dropdown">
-                  <button
-                    className={`dropdown-trigger ${isDropdownItemActive(group.items) ? 'active' : ''} ${openDropdown === group.id ? 'open' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDropdownToggle(group.id);
-                    }}
-                  >
-                    {group.label}
-                    <ChevronDown size={14} />
-                  </button>
-                  {openDropdown === group.id && (
-                    <div className="dropdown-menu">
-                      {group.items.map((item) => (
-                        <Link
-                          key={item.id}
-                          to={item.path}
-                          className={`dropdown-item ${isActive(item.path) ? 'active' : ''}`}
-                          onClick={() => setOpenDropdown(null)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+          {/* Brand */}
+          <Link to="/" className="nb-brand">
+            <img src={logo} alt="JoMabel Healthcare Foundation" />
+            <span className="nb-brand-name">JoMabel Healthcare Foundation Inc.</span>
+          </Link>
 
-        {/* MOBILE MENU */}
-        {mobileMenuOpen && (
-          <div className="navbar-mobile">
-            <div className="navbar-mobile-links">
-              {/* Home */}
-              <div className="navbar-mobile-item">
-                <Link
-                  to="/"
-                  className={`navbar-mobile-link${isActive('/') ? ' active' : ''}`}
-                  onClick={() => setMobileMenuOpen(false)}
+          {/* Nav Links */}
+          <ul className="nb-links">
+            <li>
+              <Link to="/" className={`nb-link${isActive('/') ? ' nb-active' : ''}`}>
+                Home
+              </Link>
+            </li>
+
+            {menuGroups.map((group) => (
+              <li key={group.id} className="nb-drop">
+                <button
+                  className={`nb-trigger${isGroupActive(group.items) ? ' nb-active' : ''}${openDropdown === group.id ? ' nb-open' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDropdown(openDropdown === group.id ? null : group.id);
+                  }}
                 >
-                  Home
-                </Link>
-              </div>
-              
-              {/* Mobile Dropdowns */}
-              {menuGroups.map((group) => {
-                const [isMobileOpen, setIsMobileOpen] = useState(false);
-                return (
-                  <div key={group.id} className="navbar-mobile-item">
-                    <button
-                      className={`navbar-mobile-dropdown-trigger ${isMobileOpen ? 'active' : ''}`}
-                      onClick={() => setIsMobileOpen(!isMobileOpen)}
-                    >
-                      {group.label}
-                      <ChevronDown size={16} style={{ transform: isMobileOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
-                    </button>
-                    {isMobileOpen && (
-                      <div className="navbar-mobile-submenu">
-                        {group.items.map((item) => (
-                          <Link
-                            key={item.id}
-                            to={item.path}
-                            className={`navbar-mobile-subitem ${isActive(item.path) ? 'active' : ''}`}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                  {group.label}
+                  <ChevronDown size={13} />
+                </button>
+                {openDropdown === group.id && (
+                  <div className="nb-dropdown">
+                    {group.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.path}
+                        className={`nb-dropdown-item${isActive(item.path) ? ' nb-active' : ''}`}
+                        onClick={() => setOpenDropdown(null)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
-                );
-              })}
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Right Actions */}
+          <div className="nb-actions">
+            {/* TTS — smaller, subtle */}
+            <div className="nb-tts-wrap">
+              <TextToSpeech />
             </div>
-            <Link to="/donate" className="navbar-mobile-donate" onClick={() => setMobileMenuOpen(false)}>
-              Donate Now
+
+            {/* Donate — flush right, full height */}
+            <Link to="/donate" className="nb-donate">
+              <span className="nb-donate-heart">♥</span>
+              Donate
             </Link>
-            <div className="navbar-mobile-tts">
+
+            {/* Mobile toggle */}
+            <button
+              className="nb-toggle"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="nb-mobile">
+            <div className="nb-mob-item">
+              <Link
+                to="/"
+                className={`nb-mob-link${isActive('/') ? ' nb-active' : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+            </div>
+
+            {menuGroups.map((group) => (
+              <div key={group.id} className="nb-mob-item">
+                <button
+                  className={`nb-mob-trigger${mobileDropdowns[group.id] ? ' nb-active' : ''}`}
+                  onClick={() => setMobileDropdowns(prev => ({ ...prev, [group.id]: !prev[group.id] }))}
+                >
+                  {group.label}
+                  <ChevronDown
+                    size={16}
+                    style={{
+                      transform: mobileDropdowns[group.id] ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s',
+                      flexShrink: 0,
+                    }}
+                  />
+                </button>
+                {mobileDropdowns[group.id] && (
+                  <div className="nb-mob-sub">
+                    {group.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.path}
+                        className={`nb-mob-subitem${isActive(item.path) ? ' nb-active' : ''}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <Link to="/donate" className="nb-mob-donate" onClick={() => setMobileMenuOpen(false)}>
+              ♥ Donate Now
+            </Link>
+            <div className="nb-mob-tts">
               <TextToSpeech />
             </div>
           </div>
         )}
       </header>
 
-      {/* Floating TTS — mobile only */}
-      <div
-        className="fixed bottom-6 right-6 z-50 md:hidden"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.2)', borderRadius: '9999px', background: '#ffffff' }}
-      >
-        <TextToSpeech />
-      </div>
-
-      {/* Accessibility Widget - appears on every page */}
       <AccessibilityWidget />
     </>
   );

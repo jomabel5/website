@@ -41,9 +41,7 @@ const CookieConsent = () => {
     setIsVisible(false);
     setShowPreferences(false);
     
-    // Trigger analytics if consented
     if (allPreferences.analytics) {
-      // Initialize Google Analytics or other analytics here
       console.log('Analytics enabled');
     }
   };
@@ -84,8 +82,8 @@ const CookieConsent = () => {
           right: 0;
           z-index: 9999;
           background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
-          box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
-          animation: slideUp 0.4s ease-out;
+          box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+          animation: slideUp 0.3s ease-out;
         }
         
         @keyframes slideUp {
@@ -98,39 +96,44 @@ const CookieConsent = () => {
         }
         
         .cookie-container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
-          padding: 20px 24px;
+          padding: 10px 20px;
           display: flex;
           flex-wrap: wrap;
           align-items: center;
           justify-content: space-between;
-          gap: 20px;
+          gap: 12px;
         }
         
         .cookie-text {
-          flex: 2;
-          min-width: 250px;
+          flex: 3;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
         }
         
         .cookie-title {
           font-family: var(--font-heading);
-          font-size: 18px;
-          font-weight: 700;
+          font-size: 13px;
+          font-weight: 600;
           color: #ffffff;
-          margin-bottom: 8px;
+          white-space: nowrap;
         }
         
         .cookie-description {
-          font-size: 13px;
+          font-size: 11px;
           color: rgba(255,255,255,0.7);
-          line-height: 1.5;
+          line-height: 1.4;
         }
         
         .cookie-link {
           color: #1D8FD4;
           text-decoration: underline;
           cursor: pointer;
+          font-size: 11px;
+          white-space: nowrap;
         }
         
         .cookie-link:hover {
@@ -139,18 +142,19 @@ const CookieConsent = () => {
         
         .cookie-buttons {
           display: flex;
-          gap: 12px;
+          gap: 8px;
           flex-wrap: wrap;
         }
         
         .cookie-btn {
-          padding: 10px 20px;
-          border-radius: 8px;
-          font-size: 13px;
-          font-weight: 600;
+          padding: 6px 14px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
           font-family: 'Inter', sans-serif;
+          white-space: nowrap;
         }
         
         .cookie-btn-primary {
@@ -161,7 +165,6 @@ const CookieConsent = () => {
         
         .cookie-btn-primary:hover {
           background: #15803D;
-          transform: translateY(-1px);
         }
         
         .cookie-btn-secondary {
@@ -355,10 +358,22 @@ const CookieConsent = () => {
           justify-content: flex-end;
         }
         
+        /* Mobile Responsive */
         @media (max-width: 768px) {
           .cookie-container {
             flex-direction: column;
             text-align: center;
+            padding: 12px 16px;
+          }
+          .cookie-text {
+            flex-direction: column;
+            gap: 6px;
+          }
+          .cookie-title {
+            white-space: normal;
+          }
+          .cookie-link {
+            white-space: normal;
           }
           .cookie-buttons {
             justify-content: center;
@@ -369,10 +384,10 @@ const CookieConsent = () => {
       <div className="cookie-overlay">
         <div className="cookie-container">
           <div className="cookie-text">
-            <div className="cookie-title">🍪 We value your privacy</div>
+            <div className="cookie-title">We value your privacy</div>
             <div className="cookie-description">
-              We use cookies to enhance your browsing experience, analyze site traffic, 
-              and personalize content. By clicking "Accept All", you consent to our use of cookies.{' '}
+              We use cookies to enhance your experience. By clicking "Accept All", you consent.
+              {' '}
               <span className="cookie-link" onClick={() => setShowPreferences(true)}>
                 Cookie Preferences
               </span>
@@ -380,10 +395,10 @@ const CookieConsent = () => {
           </div>
           <div className="cookie-buttons">
             <button className="cookie-btn cookie-btn-secondary" onClick={declineAll}>
-              Decline All
+              Decline
             </button>
             <button className="cookie-btn cookie-btn-outline" onClick={() => setShowPreferences(true)}>
-              <Settings size={14} style={{ marginRight: '6px' }} />
+              <Settings size={12} style={{ marginRight: '4px' }} />
               Preferences
             </button>
             <button className="cookie-btn cookie-btn-primary" onClick={acceptAll}>
@@ -406,7 +421,7 @@ const CookieConsent = () => {
             <div className="preferences-body">
               <div className="preference-item">
                 <div className="preference-header">
-                  <span className="preference-title necessary">✅ Necessary Cookies</span>
+                  <span className="preference-title necessary">Necessary Cookies</span>
                   <label className="toggle-switch">
                     <input type="checkbox" checked disabled />
                     <span className="toggle-slider"></span>
@@ -419,7 +434,7 @@ const CookieConsent = () => {
               
               <div className="preference-item">
                 <div className="preference-header">
-                  <span className="preference-title">📊 Analytics Cookies</span>
+                  <span className="preference-title">Analytics Cookies</span>
                   <label className="toggle-switch">
                     <input 
                       type="checkbox" 
@@ -436,7 +451,7 @@ const CookieConsent = () => {
               
               <div className="preference-item">
                 <div className="preference-header">
-                  <span className="preference-title">🎯 Marketing Cookies</span>
+                  <span className="preference-title">Marketing Cookies</span>
                   <label className="toggle-switch">
                     <input 
                       type="checkbox" 

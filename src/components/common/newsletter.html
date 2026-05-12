@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JoMabel Healthcare Foundation — Inaugural Newsletter</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #f0f0f0;
+    color: #111827;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PAGE WRAPPER ── */
+  .page {
+    width: 794px;           /* A4 width at 96dpi */
+    margin: 32px auto;
+    background: #ffffff;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.14);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; margin: 0; }
+    .page { margin: 0; box-shadow: none; width: 100%; }
+    @page { size: A4; margin: 0; }
+  }
+
+  /* ── COLOURS ── */
+  :root {
+    --blue:       #1D8FD4;
+    --blue-dark:  #1570A6;
+    --navy:       #111827;
+    --green:      #16A34A;
+    --orange:     #EA580C;
+    --light-blue: #EBF5FB;
+    --border:     #E5E7EB;
+    --muted:      #4B5563;
+    --light:      #F9FAFB;
+  }
+
+  /* ══════════════════════════════════════
+     MASTHEAD
+  ══════════════════════════════════════ */
+  .masthead {
+    background: var(--navy);
+    padding: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .masthead-left {
+    background: var(--blue);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .masthead-left img {
+    height: 64px;
+    width: auto;
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+  }
+  .masthead-brand { color: #ffffff; }
+  .masthead-brand-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.2;
+    max-width: 160px;
+  }
+  .masthead-brand-sub {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+  .masthead-right {
+    flex: 1;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .masthead-issue {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .masthead-tagline {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+  }
+  .masthead-date {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.40);
+    margin-top: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════
+     HERO IMAGE STRIP
+  ══════════════════════════════════════ */
+  .hero-strip {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    height: 200px;
+    overflow: hidden;
+  }
+  .hero-strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ══════════════════════════════════════
+     BLUE BAND
+  ══════════════════════════════════════ */
+  .blue-band {
+    background: var(--blue);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .blue-band-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+  }
+  .blue-band-right {
+    font-size: 10px;
+    color: rgba(255,255,255,0.70);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════
+     BODY LAYOUT
+  ══════════════════════════════════════ */
+  .body-wrap {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .main-col {
+    padding: 32px 28px 32px 32px;
+    border-right: 1px solid var(--border);
+  }
+  .side-col {
+    padding: 28px 24px;
+    background: var(--light);
+  }
+
+  /* ══════════════════════════════════════
+     SECTION LABEL
+  ══════════════════════════════════════ */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-label-bar {
+    width: 24px;
+    height: 3px;
+    background: var(--blue);
+    flex-shrink: 0;
+  }
+  .section-label-text {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  /* ══════════════════════════════════════
+     FOUNDER BLOCK
+  ══════════════════════════════════════ */
+  .founder-block {
+    display: grid;
+    grid-template-columns: 1fr 140px;
+    gap: 20px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .founder-block img {
+    width: 140px;
+    height: 175px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 6px;
+    display: block;
+  }
+  .founder-quote {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--navy);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .founder-quote::before { content: '\201C'; color: var(--blue); font-size: 28px; line-height: 0; vertical-align: -8px; margin-right: 3px; }
+  .founder-quote::after  { content: '\201D'; color: var(--blue); font-size: 28px; line-height: 0; vertical-align: -8px; margin-left: 3px; }
+  .founder-body {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .founder-sig {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .founder-sig-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .founder-sig-title {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ══════════════════════════════════════
+     ARTICLE SECTIONS
+  ══════════════════════════════════════ */
+  .article-section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .article-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .article-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .article-body {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.78;
+  }
+  .article-body p { margin-bottom: 9px; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  /* pull quote */
+  .pull-quote {
+    border-left: 4px solid var(--blue);
+    padding: 10px 16px;
+    margin: 14px 0;
+    background: var(--light-blue);
+    border-radius: 0 6px 6px 0;
+  }
+  .pull-quote p {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--blue-dark);
+    line-height: 1.55;
+    margin: 0 !important;
+  }
+
+  /* image in article */
+  .article-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    margin: 12px 0;
+  }
+  .article-img-caption {
+    font-size: 9.5px;
+    color: #9CA3AF;
+    text-align: center;
+    margin-top: -8px;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  /* ══════════════════════════════════════
+     OUTREACH DATA TABLE
+  ══════════════════════════════════════ */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 11.5px;
+  }
+  .data-table thead tr {
+    background: var(--navy);
+    color: #ffffff;
+  }
+  .data-table thead th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .data-table tbody tr:nth-child(even) { background: var(--light); }
+  .data-table tbody td {
+    padding: 8px 12px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table tbody td:last-child { font-weight: 700; color: var(--navy); text-align: right; }
+  .data-table-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin: 14px 0 6px;
+  }
+
+  /* two col tables */
+  .tables-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0;
+  }
+
+  /* ══════════════════════════════════════
+     PROGRESS BARS
+  ══════════════════════════════════════ */
+  .progress-item { margin-bottom: 14px; }
+  .progress-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+  .progress-label { font-size: 11px; font-weight: 700; color: var(--navy); }
+  .progress-pct   { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--blue); }
+  .progress-track {
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue) 0%, var(--green) 100%);
+    border-radius: 999px;
+  }
+  .progress-sub { font-size: 10px; color: #9CA3AF; margin-top: 3px; }
+
+  /* ══════════════════════════════════════
+     SIDEBAR COMPONENTS
+  ══════════════════════════════════════ */
+  .sidebar-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .sidebar-card:last-child { margin-bottom: 0; }
+  .sidebar-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--blue);
+  }
+
+  /* stat pill */
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .stat-pill:last-child { margin-bottom: 0; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--blue);
+    line-height: 1;
+    min-width: 48px;
+  }
+  .stat-label { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+  /* call-out box */
+  .callout-box {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 18px;
+    color: #ffffff;
+  }
+  .callout-box-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+  .callout-box p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.65;
+  }
+  .callout-box a {
+    color: var(--blue);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* ══════════════════════════════════════
+     OUTREACH PHOTO GRID
+  ══════════════════════════════════════ */
+  .outreach-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .outreach-photos img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+  }
+
+  /* ══════════════════════════════════════
+     FUNDING CALLOUT
+  ══════════════════════════════════════ */
+  .funding-callout {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin: 16px 0;
+    color: #ffffff;
+  }
+  .funding-callout-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 6px;
+  }
+  .funding-callout-amount {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .funding-callout-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════
+     BULLET LIST
+  ══════════════════════════════════════ */
+  .bullet-list { list-style: none; }
+  .bullet-list li {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    padding: 4px 0 4px 16px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  /* ══════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════ */
+  .footer {
+    background: var(--navy);
+    padding: 20px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .footer-col-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .footer-col p, .footer-col a {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    text-decoration: none;
+    display: block;
+  }
+  .footer-bottom {
+    background: #000;
+    padding: 10px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-bottom p {
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.3px;
+  }
+
+  /* ══════════════════════════════════════
+     DIVIDER
+  ══════════════════════════════════════ */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0;
+  }
+
+  /* ══════════════════════════════════════
+     CHECK ITEM
+  ══════════════════════════════════════ */
+  .check-list { list-style: none; }
+  .check-list li {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.65;
+    padding: 5px 0 5px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  /* ══════════════════════════════════════
+     VISION IMAGE
+  ══════════════════════════════════════ */
+  .vision-img-wrap {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .vision-img-wrap img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+  }
+  .vision-img-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    padding: 10px 12px 8px;
+  }
+  .vision-img-overlay p {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══════════════════════════════════════
+       MASTHEAD
+  ══════════════════════════════════════ -->
+  <div class="masthead">
+    <div class="masthead-left">
+      <img src="../../assests/images/logo.jpeg" alt="JoMabel Logo" />
+      <div class="masthead-brand">
+        <div class="masthead-brand-name">JoMabel Healthcare Foundation Inc.</div>
+        <div class="masthead-brand-sub">Georgetown, Texas · USA</div>
+      </div>
+    </div>
+    <div class="masthead-right">
+      <div class="masthead-issue">Volume 1 · Issue 1 · Inaugural Edition</div>
+      <div class="masthead-title">Building Systems.<br />Restoring Health.<br />Empowering Communities.</div>
+      <div class="masthead-date">2025 · Ufuma, Anambra State, Nigeria</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HERO STRIP
+  ══════════════════════════════════════ -->
+  <div class="hero-strip">
+    <img src="../../assests/images/IMG_3338.png"    alt="Medical center construction" />
+    <img src="../../assests/images/outreach4.jpeg"  alt="Medical outreach" />
+    <img src="../../assests/images/villagers1.png"  alt="Community members" />
+  </div>
+
+  <!-- BLUE BAND -->
+  <div class="blue-band">
+    <span class="blue-band-text">IRS 501(c)(3) Supporting Materials · Inaugural Newsletter</span>
+    <span class="blue-band-right">foundation@jomablhf.org · (512) 508-0277</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       BODY
+  ══════════════════════════════════════ -->
+  <div class="body-wrap">
+
+    <!-- ── MAIN COLUMN ── -->
+    <div class="main-col">
+
+      <!-- FOUNDER MESSAGE -->
+      <div class="section-label">
+        <div class="section-label-bar"></div>
+        <span class="section-label-text">Message from the Founder &amp; President</span>
+      </div>
+
+      <div class="founder-block">
+        <div>
+          <div class="founder-quote">
+            Healthcare is not a privilege reserved for a few — it is a human right, and it is the legacy we are called to leave.
+          </div>
+          <div class="article-body">
+            <p>JoMabel Healthcare Foundation was born from both personal experience and a calling to serve. As a survivor of cancer and kidney disease, Dr. Clara Ada Ogbaa is committed to ensuring that no one is denied quality healthcare because of geography or circumstance.</p>
+            <p>Today, that vision is taking shape in Ufuma, Anambra State, Nigeria, where the Foundation is building an integrated healthcare and training ecosystem designed to serve underserved communities for generations.</p>
+          </div>
+          <div class="founder-sig">
+            <div>
+              <div class="founder-sig-name">Dr. Clara Ada Ogbaa, Ed.D.</div>
+              <div class="founder-sig-title">Founder &amp; President, JoMabel Healthcare Foundation</div>
+            </div>
+          </div>
+        </div>
+        <img src="../../assests/images/ogbba2.png" alt="Dr. Clara Ada Ogbaa" />
+      </div>
+
+      <!-- WHO WE ARE -->
+      <div class="article-section">
+        <div class="section-label">
+          <div class="section-label-bar"></div>
+          <span class="section-label-text">Who We Are</span>
+        </div>
+        <h2 class="article-headline">A Foundation Built on Systems, Not Interventions</h2>
+        <div class="article-body">
+          <p>JoMabel Healthcare Foundation Inc. is a nonprofit organisation focused on expanding access to high-quality healthcare and training in underserved communities, primarily in Southeastern Nigeria. Its work combines healthcare delivery, workforce development, and infrastructure investment to build lasting systems rather than temporary interventions.</p>
+        </div>
+
+        <div class="pull-quote">
+          <p>"Residents previously lacked access to a fully equipped medical facility. Preventive and maternal health services were limited. The region faces a significant shortage of trained healthcare professionals."</p>
+        </div>
+
+        <div class="article-body">
+          <p>The Foundation's work is anchored in Ufuma, Anambra State — a community where healthcare gaps have long undermined quality of life and economic potential. JoMabel was created to change that permanently.</p>
+        </div>
+      </div>
+
+      <!-- FLAGSHIP PROJECT -->
+      <div class="article-section">
+        <div class="section-label">
+          <div class="section-label-bar"></div>
+          <span class="section-label-text">Flagship Infrastructure Project</span>
+        </div>
+        <h2 class="article-headline">A 16,000+ sq. Meter Medical &amp; Training Campus</h2>
+
+        <div class="vision-img-wrap">
+          <img src="../../assests/images/IMG_3338.png" alt="Construction of JoMabel Medical Center" />
+          <div class="vision-img-overlay">
+            <p>JoMabel Medical Center — Ufuma, Anambra State · Under Construction</p>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <p>At the centre of the Foundation's work is a 16,000+ square meter integrated medical and training complex in Ufuma. The campus comprises two facilities:</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;">
+          <div style="background:var(--light-blue);border-radius:8px;padding:16px;border-left:3px solid var(--blue);">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">Medical Center</div>
+            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px;">JoMabel Medical Center</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">6,000+ sq. meters. Primary care, maternal &amp; child health, diagnostics, and emergency services.</div>
+            <div class="progress-item" style="margin-top:10px;margin-bottom:0;">
+              <div class="progress-label-row">
+                <span class="progress-label">Completion</span>
+                <span class="progress-pct">70%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:70%;"></div></div>
+            </div>
+          </div>
+          <div style="background:#F0FDF4;border-radius:8px;padding:16px;border-left:3px solid var(--green);">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px;">Training Center</div>
+            <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px;">Skill Acquisition &amp; Training Center</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">10,000+ sq. meters. Trains nurses, community health workers, and emerging healthcare leaders.</div>
+            <div class="progress-item" style="margin-top:10px;margin-bottom:0;">
+              <div class="progress-label-row">
+                <span class="progress-label">Completion</span>
+                <span class="progress-pct">30%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:30%;background:var(--green);"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTREACH -->
+      <div class="article-section">
+        <div class="section-label">
+          <div class="section-label-bar"></div>
+          <span class="section-label-text">Medical Outreach · January 2 Initiative</span>
+        </div>
+        <h2 class="article-headline">Partnering with the Nigerian Red Cross to Serve Ufuma</h2>
+
+        <div class="outreach-photos">
+          <img src="../../assests/images/outreach3.jpeg" alt="Medical outreach team" />
+          <img src="../../assests/images/outreach5.jpeg" alt="Community outreach" />
+        </div>
+        <p class="article-img-caption">JoMabel team with Nigerian Red Cross Society, Aguata Branch · January 2, 2025</p>
+
+        <div class="article-body">
+          <p>On January 2, JoMabel Healthcare Foundation's team of doctors and nurses partnered with the Nigerian Red Cross Society, Aguata Branch, to host a community medical outreach in Ufuma. The collaboration model had the Red Cross team managing records, registration, and basic screening support, while JoMabel Foundation doctors and nurses handled clinical review and prescriptions.</p>
+        </div>
+
+        <div class="tables-row">
+          <div>
+            <div class="data-table-title">Services Delivered</div>
+            <table class="data-table">
+              <thead><tr><th>Service</th><th style="text-align:right;">People</th></tr></thead>
+              <tbody>
+                <tr><td>TB X-ray screening</td><td>98</td></tr>
+                <tr><td>Blood pressure checks</td><td>175</td></tr>
+                <tr><td>Blood sugar testing</td><td>168</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div class="data-table-title">Medications Provided</div>
+            <table class="data-table">
+              <thead><tr><th>Treatment</th><th style="text-align:right;">Qty</th></tr></thead>
+              <tbody>
+                <tr><td>Malaria</td><td>164</td></tr>
+                <tr><td>Typhoid</td><td>50</td></tr>
+                <tr><td>Blood pressure</td><td>114</td></tr>
+                <tr><td>Diabetes</td><td>134</td></tr>
+                <tr><td>Analgesics</td><td>98</td></tr>
+                <tr><td>Deworming</td><td>67</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISION -->
+      <div class="article-section" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+        <div class="section-label">
+          <div class="section-label-bar"></div>
+          <span class="section-label-text">Community &amp; Future Vision</span>
+        </div>
+        <h2 class="article-headline">What Began as a Personal Mission Has Become a Movement</h2>
+        <div class="outreach-photos">
+          <img src="../../assests/images/villagers1.png" alt="Community members" />
+          <img src="../../assests/images/villagers2.png" alt="Villagers" />
+        </div>
+        <div class="article-body">
+          <p>What began as a personal mission has evolved into a transformative initiative to build sustainable, integrated community healthcare systems where none previously existed. With continued support and partnership, JoMabel Healthcare Foundation will not only complete this vision but expand it for generations to come.</p>
+        </div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <!-- ── SIDEBAR ── -->
+    <div class="side-col">
+
+      <!-- KEY STATS -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Impact at a Glance</div>
+        <div class="stat-pill">
+          <div class="stat-num">16K+</div>
+          <div class="stat-label">sq. meters medical &amp; training campus</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num">441</div>
+          <div class="stat-label">individuals served at January outreach</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num">70%</div>
+          <div class="stat-label">Medical Center completion</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num">$140K+</div>
+          <div class="stat-label">invested by Founder to date</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num">6</div>
+          <div class="stat-label">board members, all voluntary</div>
+        </div>
+      </div>
+
+      <!-- PROGRESS MILESTONES -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Progress to Date</div>
+        <ul class="check-list">
+          <li>Texas nonprofit established</li>
+          <li>IRS 501(c)(3) application underway</li>
+          <li>Governance &amp; Board structure in place</li>
+          <li>Over $140,000 invested by Founder</li>
+          <li>Medical Center ~70% complete</li>
+          <li>Training Center ~30% complete</li>
+          <li>Outreach missions delivering services</li>
+        </ul>
+      </div>
+
+      <!-- FUNDING CALLOUT -->
+      <div class="funding-callout">
+        <div class="funding-callout-label">Funding Needed</div>
+        <div class="funding-callout-amount">$10M</div>
+        <div class="funding-callout-desc">To complete both facilities, procure equipment, launch services, and expand outreach programs across Southeastern Nigeria.</div>
+      </div>
+
+      <!-- CONTACT / DONATE -->
+      <div class="callout-box">
+        <div class="callout-box-title">Support Our Mission</div>
+        <p>Your gift directly funds the completion of a world-class healthcare campus serving thousands of families for generations.</p>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.15);">
+          <p style="margin-bottom:4px;"><a href="mailto:foundation@jomablhf.org">foundation@jomablhf.org</a></p>
+          <p style="margin-bottom:4px;"><a href="tel:+15125080277">(512) 508-0277</a></p>
+          <p>725 Pinnacle View Drive<br />Georgetown, Texas 78628</p>
+        </div>
+      </div>
+
+    </div><!-- /side-col -->
+  </div><!-- /body-wrap -->
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <div class="footer">
+    <div class="footer-col">
+      <div class="footer-col-title">JoMabel Healthcare Foundation</div>
+      <p>725 Pinnacle View Drive<br />Georgetown, Texas 78628<br />United States</p>
+      <p style="margin-top:6px;">Operating in Ufuma, Anambra State, Nigeria</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact Us</div>
+      <a href="mailto:foundation@jomablhf.org">foundation@jomablhf.org</a>
+      <a href="tel:+15125080277">(512) 508-0277</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <p>JoMabel Healthcare Foundation Inc. is a registered nonprofit corporation in the State of Texas.</p>
+      <p style="margin-top:6px;">IRS 501(c)(3) status application in progress. Donations may be tax-deductible.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 JoMabel Healthcare Foundation Inc. · All rights reserved.</p>
+    <p>Inaugural Newsletter · IRS 501(c)(3) Supporting Materials</p>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>

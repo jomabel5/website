@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, GraduationCap, Users, Smartphone, TrendingUp, Target } from 'lucide-react';
-import solutionImage from '../../assests/images/outreach1.jpeg'; 
+import { Building2, GraduationCap, Users, Smartphone, TrendingUp } from 'lucide-react';
+import solutionImage from '../../assests/images/outreach1.jpeg';
 
 const pillars = [
   {
     icon: Building2,
-    title: 'World-Class Medical Center',
+    title: 'Medical Center',
     desc: 'A 6,000 sqm facility delivering primary care, maternal health, diagnostics, chronic disease management, and specialist services permanently rooted in Ufuma.',
   },
   {
@@ -30,13 +30,12 @@ const TheSolution = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  
-  // Animated number states
-  const [animatedStats, setAnimatedStats] = useState({
+
+  const [nums, setNums] = useState({
     campusSize: 0,
     livesImpacted: 0,
     medicalProgress: 0,
-    trainingProgress: 0
+    trainingProgress: 0,
   });
 
   useEffect(() => {
@@ -49,545 +48,538 @@ const TheSolution = () => {
       },
       { threshold: 0.2 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Animate numbers when section becomes visible
   useEffect(() => {
-    if (isVisible) {
-      // Animate 16,000+ campus size
-      let startCampus = 0;
-      const campusInterval = setInterval(() => {
-        if (startCampus < 16000) {
-          startCampus += 500;
-          setAnimatedStats(prev => ({ ...prev, campusSize: startCampus }));
-        } else {
-          clearInterval(campusInterval);
-        }
-      }, 15);
+    if (!isVisible) return;
 
-      // Animate 50,000+ lives impacted
-      let startLives = 0;
-      const livesInterval = setInterval(() => {
-        if (startLives < 50000) {
-          startLives += 1000;
-          setAnimatedStats(prev => ({ ...prev, livesImpacted: startLives }));
-        } else {
-          clearInterval(livesInterval);
-        }
-      }, 15);
+    const animateTo = (key: keyof typeof nums, target: number, duration: number) => {
+      const start = performance.now();
+      const step = (now: number) => {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const val = Math.round(ease * target);
+        setNums(prev => ({ ...prev, [key]: val }));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
 
-      // Animate Medical Center progress 70%
-      let startMedical = 0;
-      const medicalInterval = setInterval(() => {
-        if (startMedical < 70) {
-          startMedical++;
-          setAnimatedStats(prev => ({ ...prev, medicalProgress: startMedical }));
-        } else {
-          clearInterval(medicalInterval);
-        }
-      }, 20);
-
-      // Animate Training Center progress 30%
-      let startTraining = 0;
-      const trainingInterval = setInterval(() => {
-        if (startTraining < 30) {
-          startTraining++;
-          setAnimatedStats(prev => ({ ...prev, trainingProgress: startTraining }));
-        } else {
-          clearInterval(trainingInterval);
-        }
-      }, 30);
-    }
+    animateTo('campusSize', 16000, 1400);
+    animateTo('livesImpacted', 50000, 1600);
+    animateTo('medicalProgress', 75, 1200);
+    animateTo('trainingProgress', 30, 1000);
   }, [isVisible]);
 
   return (
-    <section ref={sectionRef} className={`solution-section ${isVisible ? 'visible' : ''}`}>
+    <section ref={sectionRef} className="sol-section">
       <style>{`
-        .solution-section {
-          background-color: #FFFFFF;
-          padding: var(--section-padding-y) var(--section-padding-x);
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        /* ── Wrapper ── */
+        .sol-section {
+          background: var(--color-bg);
+          padding: 48px clamp(20px, 5vw, 56px);
           font-family: var(--font-body);
+          color: var(--color-text);
         }
-        .solution-container {
-          max-width: 1200px;
+
+        .sol-inner {
+          max-width: 1080px;
           margin: 0 auto;
         }
-        
-        /* Header */
-        .solution-header {
-          text-align: center;
-          margin-bottom: 64px;
+
+        /* ── Editorial header — right-aligned to contrast TheProblem's left ── */
+        .sol-header {
+          border-right: 5px solid var(--color-navy);
+          padding-right: 20px;
+          margin-bottom: 28px;
+          text-align: right;
         }
-        .solution-label {
-          display: inline-block;
-          font-size: 12px;
+
+        .sol-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
-          margin-bottom: 16px;
+          color: var(--color-primary);
+          margin: 0 0 10px;
         }
-        .solution-headline {
-          font-family: var(--font-heading);
-          font-size: clamp(36px, 4.5vw, 48px);
+
+        /* Anton headline — matches TheProblem .tp-headline */
+        .sol-headline {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 48px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.1;
+          color: var(--color-navy);
+          margin: 0;
+        }
+
+        /* Body copy — right-aligned, pushed to the right edge */
+        .sol-intro {
+          font-family: var(--font-body);
+          font-size: clamp(15px, 1.4vw, 17px);
+          color: var(--color-text-muted);
+          line-height: 1.8;
+          max-width: 720px;
+          margin: 0 0 52px;
+          padding-right: 25px;
+          margin-left: auto;
+          text-align: right;
+        }
+
+        /* ── Section divider label — mirrors TheProblem .tp-section-label ── */
+        .sol-divider {
+          font-family: var(--font-body);
+          font-size: 10px;
           font-weight: 700;
-          color: #111827;
-          line-height: 1.2;
-          margin-bottom: 20px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
+          margin-bottom: 0;
+          display: flex;
+          align-items: center;
+          gap: 12px;
         }
-        .solution-description {
-          font-size: 18px;
-          color: #4B5563;
-          line-height: 1.6;
-          max-width: 700px;
-          margin: 0 auto;
+
+        .sol-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--color-border);
         }
-        
-        /* Two Column Layout */
-        .solution-two-col {
+
+        /* ── Two-column layout ── */
+        .sol-two-col {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 64px;
-          margin-bottom: 80px;
           align-items: center;
+          border-top: 2px solid var(--color-navy);
+          padding-top: 36px;
+          margin-bottom: 56px;
         }
-        
-        /* Left Column - Text */
-        .solution-text {
-          text-align: left;
+
+        .sol-subhead {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(22px, 2.8vw, 32px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.15;
+          color: var(--color-navy);
+          margin: 0 0 20px;
         }
-        .solution-subhead {
-          font-family: var(--font-heading);
-          font-size: 28px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 20px;
+
+        .sol-body {
+          font-family: var(--font-body);
+          font-size: clamp(14px, 1.3vw, 16px);
+          color: var(--color-text-muted);
+          line-height: 1.8;
+          margin: 0 0 16px;
         }
-        .solution-body {
-          font-size: 16px;
-          color: #4B5563;
-          line-height: 1.7;
-          margin-bottom: 24px;
-        }
-        .solution-stats {
+
+        /* ── Inline stats — Anton numbers, Inter labels ── */
+        .sol-stats {
           display: flex;
-          gap: 32px;
-          margin-top: 32px;
+          gap: 36px;
+          margin: 28px 0 24px;
+          padding-top: 20px;
+          border-top: 1px solid var(--color-border);
         }
-        .solution-stat {
-          text-align: left;
+
+        .sol-stat-num {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(24px, 3vw, 34px);
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          color: var(--color-primary);
+          line-height: 1;
+          margin: 0 0 4px;
         }
-        .solution-stat-number {
-          font-family: var(--font-heading);
-          font-size: 32px;
-          font-weight: 800;
-          color: #1D8FD4;
-          margin-bottom: 4px;
+
+        .sol-stat-lbl {
+          font-family: var(--font-body);
+          font-size: 12px;
+          color: var(--color-text-muted);
+          line-height: 1.4;
         }
-        .solution-stat-label {
-          font-size: 13px;
-          color: #6B7280;
-        }
-        .solution-btn {
-          background: #1D8FD4;
-          color: #fff;
+
+        /* CTA button */
+        .sol-btn {
+          background: var(--color-primary);
+          color: var(--color-white);
           border: none;
-          border-radius: 8px;
-          padding: 14px 32px;
-          font-size: 15px;
+          border-radius: var(--btn-radius);
+          padding: 13px 28px;
+          font-family: var(--font-body);
+          font-size: 13px;
           font-weight: 600;
+          letter-spacing: 0.5px;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          margin-top: 16px;
+          transition: var(--transition);
         }
-        .solution-btn:hover {
-          background: #1570A6;
+
+        .sol-btn:hover {
+          background: var(--color-primary-dark);
           transform: translateY(-1px);
         }
-        
-        /* Right Column - Image */
-        .solution-image {
+
+        /* Image */
+        .sol-image {
           width: 100%;
           height: auto;
-          min-height: 380px;
+          min-height: 360px;
           object-fit: cover;
-          border-radius: 24px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+          border-radius: var(--card-radius);
+          box-shadow: var(--shadow-lg);
         }
-        
-        /* Progress Cards */
-        .progress-section {
-          margin-bottom: 80px;
-        }
-        .progress-title {
-          text-align: center;
-          margin-bottom: 40px;
-        }
-        .progress-title h3 {
-          font-family: var(--font-heading);
-          font-size: 28px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 12px;
-        }
-        .progress-title p {
-          font-size: 16px;
-          color: #6B7280;
-        }
-        .progress-grid {
+
+        /* ── Progress cards ── */
+        .sol-progress-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 32px;
+          gap: 24px;
+          border-top: 1px solid var(--color-border);
+          padding-top: 36px;
+          margin-bottom: 56px;
         }
-        .progress-card {
-          background: #F9FAFB;
-          border: 1px solid #E5E7EB;
-          border-radius: 20px;
+
+        .sol-progress-card {
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--card-radius);
           padding: 28px;
-          transition: all 0.3s ease;
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease;
+          transition: var(--transition);
         }
-        .solution-section.visible .progress-card:nth-child(1) {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.3s;
+
+        .sol-progress-card:hover {
+          border-color: var(--color-primary);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-3px);
         }
-        .solution-section.visible .progress-card:nth-child(2) {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.5s;
-        }
-        .progress-card:hover {
-          box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-          border-color: #1D8FD4;
-          transform: translateY(-4px);
-        }
-        .progress-header {
+
+        .sol-progress-top {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
-        .progress-header h4 {
-          font-family: var(--font-heading);
-          font-size: 20px;
-          font-weight: 700;
-          color: #111827;
-          margin: 0 0 4px 0;
+
+        /* Anton for progress percentage */
+        .sol-progress-pct {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(30px, 3.5vw, 40px);
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          color: var(--color-primary);
+          line-height: 1;
         }
-        .progress-size {
-          font-size: 14px;
-          color: #1D8FD4;
+
+        .sol-progress-name {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(15px, 1.8vw, 19px);
+          font-weight: 400;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 4px;
+        }
+
+        .sol-progress-size {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--color-primary);
           font-weight: 600;
           margin: 0;
         }
-        .progress-percent {
-          font-family: var(--font-heading);
-          font-size: 36px;
-          font-weight: 800;
-          color: #1D8FD4;
-          line-height: 1;
+
+        .sol-progress-detail {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--color-text-muted);
+          line-height: 1.55;
+          margin: 0 0 16px;
         }
-        .progress-detail {
-          font-size: 14px;
-          color: #4B5563;
-          margin: 12px 0;
-          line-height: 1.5;
-        }
-        .progress-bar {
-          height: 8px;
-          border-radius: 4px;
-          background-color: #E5E7EB;
+
+        .sol-bar-track {
+          height: 6px;
+          border-radius: 3px;
+          background: var(--color-border);
           overflow: hidden;
-          margin: 16px 0 12px;
+          margin-bottom: 10px;
         }
-        .progress-bar-fill {
+
+        .sol-bar-fill {
           height: 100%;
-          border-radius: 4px;
-          background-color: #1D8FD4;
-          width: 0%;
-          transition: width 0.5s ease-out;
+          border-radius: 3px;
+          background: var(--color-primary);
+          transition: width 1s ease-out;
         }
-        .progress-status {
+
+        .sol-bar-meta {
           display: flex;
           justify-content: space-between;
-          font-size: 12px;
-          color: #6B7280;
+          font-family: var(--font-body);
+          font-size: 11px;
+          color: var(--color-text-light);
+          letter-spacing: 0.3px;
         }
-        
-        /* Pillars Grid */
-        .pillars-section {
-          text-align: center;
-        }
-        .pillars-label {
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #1D8FD4;
-          margin-bottom: 48px;
-        }
-        .pillars-grid {
+
+        /* ── Pillars grid ── */
+        .sol-pillars-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 32px;
+          gap: 0;
+          border-top: 2px solid var(--color-navy);
         }
-        .pillar-card {
-          text-align: center;
-          padding: 24px;
-          transition: transform 0.3s ease;
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+
+        .sol-pillar {
+          padding: 32px 28px 32px 0;
+          border-right: 1px solid var(--color-border);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          transition: var(--transition);
         }
-        .solution-section.visible .pillar-card:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
-        .solution-section.visible .pillar-card:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
-        .solution-section.visible .pillar-card:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
-        .solution-section.visible .pillar-card:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
-        
-        .pillar-card:hover {
-          transform: translateY(-5px);
+
+        .sol-pillar:last-child {
+          border-right: none;
+          padding-right: 0;
         }
-        .pillar-icon {
-          width: 72px;
-          height: 72px;
-          margin: 0 auto 20px auto;
-          background: #F3F4F6;
-          border-radius: 24px;
+
+        .sol-pillar:not(:first-child) {
+          padding-left: 28px;
+        }
+
+        .sol-pillar-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          background: var(--color-primary-light);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #1D8FD4;
-          transition: all 0.2s;
+          color: var(--color-primary);
+          margin-bottom: 4px;
+          flex-shrink: 0;
+          transition: var(--transition);
         }
-        .pillar-card:hover .pillar-icon {
-          background: #EBF5FB;
-          transform: scale(1.05);
+
+        .sol-pillar:hover .sol-pillar-icon {
+          background: var(--color-primary);
+          color: var(--color-white);
         }
-        .pillar-icon svg {
-          width: 36px;
-          height: 36px;
+
+        .sol-pillar-icon svg {
+          width: 20px;
+          height: 20px;
           stroke-width: 1.5;
         }
-        .pillar-title {
-          font-family: var(--font-heading);
-          font-size: 18px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 12px;
+
+        /* Anton pillar title */
+        .sol-pillar-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(14px, 1.5vw, 17px);
+          font-weight: 400;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0;
+          line-height: 1.2;
         }
-        .pillar-desc {
-          font-size: 14px;
-          color: #6B7280;
+
+        /* Inter pillar desc */
+        .sol-pillar-desc {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--color-text-muted);
           line-height: 1.6;
+          margin: 0;
         }
-        
-        /* Header and Two Column Animations */
-        .solution-header .solution-label,
-        .solution-header .solution-headline,
-        .solution-header .solution-description {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+        /* ── Source footnote — mirrors TheProblem .tp-source ── */
+        .sol-source {
+          margin-top: 36px;
+          padding-top: 20px;
+          border-top: 1px solid var(--color-border);
+          font-family: var(--font-body);
+          font-size: 11px;
+          color: var(--color-text-light);
+          letter-spacing: 0.3px;
         }
-        .solution-section.visible .solution-header .solution-label {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0s;
-        }
-        .solution-section.visible .solution-header .solution-headline {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.1s;
-        }
-        .solution-section.visible .solution-header .solution-description {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.2s;
-        }
-        
-        .solution-two-col {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .solution-section.visible .solution-two-col {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.2s;
-        }
-        
-        /* Responsive */
-        @media (max-width: 1024px) {
-          .pillars-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-          }
-          .progress-grid {
-            grid-template-columns: 1fr;
-          }
-        }
+
+        /* ── Responsive ── */
         @media (max-width: 860px) {
-          .solution-two-col {
+          .sol-two-col {
             grid-template-columns: 1fr;
             gap: 40px;
           }
-          .solution-stats {
-            justify-content: center;
-          }
-          .solution-text {
-            text-align: center;
-          }
-          .solution-stat {
-            text-align: center;
-          }
-        }
-        @media (max-width: 700px) {
-          .pillars-grid {
+          .sol-progress-grid {
             grid-template-columns: 1fr;
           }
-          .pillar-card {
-            max-width: 400px;
-            margin: 0 auto;
+          .sol-pillars-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .sol-pillar {
+            border-right: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 28px 0;
+          }
+          .sol-pillar:not(:first-child) { padding-left: 0; }
+          .sol-pillar:last-child { border-bottom: none; }
+        }
+
+        @media (max-width: 480px) {
+          .sol-pillars-grid {
+            grid-template-columns: 1fr;
+          }
+          .sol-stats {
+            flex-direction: column;
+            gap: 20px;
           }
         }
       `}</style>
 
-      <div className="solution-container">
+      <div className="sol-inner">
 
-        {/* Header */}
-        <div className="solution-header">
-          <div className="solution-label">Our Solution</div>
-          <h2 className="solution-headline">
-            Building an Integrated<br />
-            Healthcare System
+        {/* ── Editorial header ── */}
+        <div className="sol-header">
+          <p className="sol-kicker">Our Solution</p>
+          <h2 className="sol-headline">
+            Building an Integrated<br />Healthcare System
           </h2>
-          <p className="solution-description">
-            More than a clinic a permanent, self-sustaining campus of care, training, 
-            and community health that will serve Ufuma and surrounding communities for generations.
-          </p>
         </div>
 
-        {/* Two Column: Text + Image */}
-        <div className="solution-two-col">
-          <div className="solution-text">
-            <h3 className="solution-subhead">
-              A Legacy of Care,<br />
-              Built to Last
+        <p className="sol-intro">
+          This is more than a clinic — it is a lasting, self-sustaining center for care, training,
+          and community health that will transform lives in Ufuma and surrounding communities
+          for generations to come.
+        </p>
+
+        {/* ── Two-column: text + image ── */}
+        <p className="sol-divider">The campus vision</p>
+
+        <div className="sol-two-col">
+          <div>
+            <h3 className="sol-subhead">
+              A Legacy of Care,<br />Built to Last
             </h3>
-            <p className="solution-body">
-              JoMabel Healthcare Foundation is not building a temporary clinic. 
-              We are building a permanent, integrated healthcare campus — a 
-              self-sustaining system of care, training, and community health 
+            <p className="sol-body">
+              JoMabel Healthcare Foundation is not building a temporary clinic.
+              We are building a permanent, integrated healthcare campus — a
+              self-sustaining system of care, training, and community health
               that will serve Ufuma and surrounding communities for generations.
             </p>
-            <p className="solution-body">
-              When complete, the campus will bring specialist-level care, 
-              professional training, and preventive health programs to a region 
+            <p className="sol-body">
+              When complete, the campus will bring specialist-level care,
+              professional training, and preventive health programs to a region
               where these have never existed at scale.
             </p>
-            <div className="solution-stats">
-              <div className="solution-stat">
-                <div className="solution-stat-number">{animatedStats.campusSize.toLocaleString()}+</div>
-                <div className="solution-stat-label">sqm total campus</div>
+
+            <div className="sol-stats">
+              <div>
+                <div className="sol-stat-num">{nums.campusSize.toLocaleString()}+</div>
+                <div className="sol-stat-lbl">sqm total campus</div>
               </div>
-              <div className="solution-stat">
-                <div className="solution-stat-number">{animatedStats.livesImpacted.toLocaleString()}+</div>
-                <div className="solution-stat-label">lives impacted annually</div>
+              <div>
+                <div className="sol-stat-num">{nums.livesImpacted.toLocaleString()}+</div>
+                <div className="sol-stat-lbl">lives impacted annually</div>
               </div>
             </div>
-            <button className="solution-btn" onClick={() => navigate('/campaign')}>
+
+            <button className="sol-btn" onClick={() => navigate('/campaign')}>
               See the Full Campus Plan
-              <TrendingUp size={16} />
+              <TrendingUp size={14} />
             </button>
           </div>
+
           <div>
             <img
               src={solutionImage}
               alt="JoMabel Healthcare Foundation campus vision"
-              className="solution-image"
+              className="sol-image"
             />
           </div>
         </div>
 
-        {/* Progress Cards */}
-        <div className="progress-section">
-          <div className="progress-title">
-            <h3>Current Progress</h3>
-            <p>Two phases of construction underway</p>
-          </div>
-          <div className="progress-grid">
-            <div className="progress-card">
-              <div className="progress-header">
-                <div>
-                  <h4>JoMabel Medical Center</h4>
-                  <p className="progress-size">6,000 sqm</p>
-                </div>
-                <div className="progress-percent">{animatedStats.medicalProgress}%</div>
+        {/* ── Progress cards ── */}
+        <p className="sol-divider" style={{ marginBottom: '0' }}>
+          Current construction progress — two phases underway
+        </p>
+
+        <div className="sol-progress-grid">
+          <div className="sol-progress-card">
+            <div className="sol-progress-top">
+              <div>
+                <p className="sol-progress-name">JoMabel Medical Center</p>
+                <p className="sol-progress-size">6,000 sqm</p>
               </div>
-              <p className="progress-detail">
-                Primary care, diagnostics, maternal health & specialist services
-              </p>
-              <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${animatedStats.medicalProgress}%` }}></div>
-              </div>
-              <div className="progress-status">
-                <span>Under active construction</span>
-                <span>{animatedStats.medicalProgress}% complete</span>
-              </div>
+              <div className="sol-progress-pct">{nums.medicalProgress}%</div>
             </div>
-            <div className="progress-card">
-              <div className="progress-header">
-                <div>
-                  <h4>Skill & Training Center</h4>
-                  <p className="progress-size">10,000 sqm</p>
-                </div>
-                <div className="progress-percent">{animatedStats.trainingProgress}%</div>
+            <p className="sol-progress-detail">
+              Primary care, diagnostics, maternal health &amp; specialist services
+            </p>
+            <div className="sol-bar-track">
+              <div className="sol-bar-fill" style={{ width: `${nums.medicalProgress}%` }} />
+            </div>
+            <div className="sol-bar-meta">
+              <span>Under active construction</span>
+              <span>{nums.medicalProgress}% complete</span>
+            </div>
+          </div>
+
+          <div className="sol-progress-card">
+            <div className="sol-progress-top">
+              <div>
+                <p className="sol-progress-name">Skill &amp; Training Center</p>
+                <p className="sol-progress-size">10,000 sqm</p>
               </div>
-              <p className="progress-detail">
-                Clinical training, community health worker programs & mentorship
-              </p>
-              <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${animatedStats.trainingProgress}%` }}></div>
-              </div>
-              <div className="progress-status">
-                <span>Foundation stage underway</span>
-                <span>{animatedStats.trainingProgress}% complete</span>
-              </div>
+              <div className="sol-progress-pct">{nums.trainingProgress}%</div>
+            </div>
+            <p className="sol-progress-detail">
+              Clinical training, community health worker programs &amp; mentorship
+            </p>
+            <div className="sol-bar-track">
+              <div className="sol-bar-fill" style={{ width: `${nums.trainingProgress}%` }} />
+            </div>
+            <div className="sol-bar-meta">
+              <span>Foundation stage underway</span>
+              <span>{nums.trainingProgress}% complete</span>
             </div>
           </div>
         </div>
 
-        {/* Four Pillars */}
-        <div className="pillars-section">
-          <div className="pillars-label">The JHF Model</div>
-          <div className="pillars-grid">
-            {pillars.map((pillar, i) => {
-              const IconComponent = pillar.icon;
-              return (
-                <div key={i} className="pillar-card">
-                  <div className="pillar-icon">
-                    <IconComponent />
-                  </div>
-                  <h3 className="pillar-title">{pillar.title}</h3>
-                  <p className="pillar-desc">{pillar.desc}</p>
+        {/* ── Four pillars ── */}
+        <p className="sol-divider" style={{ marginBottom: '0' }}>
+          The JHF model — four pillars of impact
+        </p>
+
+        <div className="sol-pillars-grid">
+          {pillars.map((pillar, i) => {
+            const Icon = pillar.icon;
+            return (
+              <div key={i} className="sol-pillar">
+                <div className="sol-pillar-icon">
+                  <Icon />
                 </div>
-              );
-            })}
-          </div>
+                <p className="sol-pillar-title">{pillar.title}</p>
+                <p className="sol-pillar-desc">{pillar.desc}</p>
+              </div>
+            );
+          })}
         </div>
+
+
 
       </div>
     </section>

@@ -1,25 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Building2, 
-  Heart, 
-  GraduationCap, 
-  Baby, 
-  HardHat, 
+import {
+  Building2,
+  Heart,
+  GraduationCap,
+  Baby,
+  HardHat,
   BookOpen,
   ArrowRight
 } from 'lucide-react';
 
-// ── YOUR AUTHENTIC JOMABEL IMAGES ──
-import roseImage from '../../assests/images/Rose.jpg';
-import outreachImage from '../../assests/images/outreach2.jpeg';
-import maternalImage from '../../assests/images/maternal-and-child-health-.jpg';
-import infrastructureImage from '../../assests/images/IMG_3338.jpg';
-import educationImage from '../../assests/images/imag1.png';
-import an2Image from '../../assests/images/an2.jpg';
-
-// Hero image (using outreach image for hero)
-import heroImage from '../../assests/images/outreach2.jpeg';
+import roseImage        from '../../assests/images/Rose.jpg';
+import outreachImage    from '../../assests/images/outreach2.jpeg';
+import maternalImage    from '../../assests/images/maternal-and-child-health-.jpg';
+import infrastructureImage from '../../assests/images/IMG_3338.png';
+import educationImage   from '../../assests/images/imag1.png';
+import an2Image         from '../../assests/images/an2.jpg';
+import heroImage        from '../../assests/images/outreach2.jpeg';
 
 const programs = [
   {
@@ -27,7 +24,8 @@ const programs = [
     icon: Building2,
     tag: 'Facility',
     title: 'JoMabel Medical Center',
-    description: 'Our operational hub offering primary care, maternal and child health services, diagnostic and laboratory services, chronic disease management, and preventive health education in Ufuma, Nigeria.',
+    description:
+      'Our operational hub offering primary care, maternal and child health services, diagnostic and laboratory services, chronic disease management, and preventive health education in Ufuma, Nigeria.',
     image: an2Image,
   },
   {
@@ -35,7 +33,8 @@ const programs = [
     icon: Heart,
     tag: 'Outreach',
     title: 'Medical Outreach Missions',
-    description: 'Regular medical missions providing free consultations, medications, screenings, and referrals reaching rural and underserved communities where healthcare access is limited or nonexistent.',
+    description:
+      'Regular medical missions providing free consultations, medications, screenings, and referrals reaching rural and underserved communities where healthcare access is limited or nonexistent.',
     image: outreachImage,
   },
   {
@@ -43,7 +42,8 @@ const programs = [
     icon: GraduationCap,
     tag: 'Training',
     title: 'Youth Training & Empowerment',
-    description: 'Investing in the next generation of healthcare professionals through hands-on clinical training, leadership development, community service opportunities, and career mentorship.',
+    description:
+      'Investing in the next generation of healthcare professionals through hands-on clinical training, leadership development, community service opportunities, and career mentorship.',
     image: roseImage,
   },
   {
@@ -51,7 +51,8 @@ const programs = [
     icon: Baby,
     tag: 'Child Health',
     title: 'Maternal & Child Health Initiative',
-    description: 'Programs focused on safe pregnancy and delivery, newborn care, immunization, nutrition support, and women\'s health education for families across our communities.',
+    description:
+      "Programs focused on safe pregnancy and delivery, newborn care, immunization, nutrition support, and women's health education for families across our communities.",
     image: maternalImage,
   },
   {
@@ -59,7 +60,8 @@ const programs = [
     icon: HardHat,
     tag: 'Infrastructure',
     title: 'Infrastructure Development',
-    description: 'Building and equipping facilities that anchor long-term community health including clinics, diagnostic centers, water and sanitation systems, and youth training complexes.',
+    description:
+      'Building and equipping facilities that anchor long-term community health including clinics, diagnostic centers, water and sanitation systems, and youth training complexes.',
     image: infrastructureImage,
   },
   {
@@ -67,29 +69,35 @@ const programs = [
     icon: BookOpen,
     tag: 'Education',
     title: 'Community Health Education',
-    description: 'Workshops and campaigns addressing hygiene and sanitation, disease prevention, mental and emotional wellness, and nutrition and healthy lifestyle for individuals and families.',
+    description:
+      'Workshops and campaigns addressing hygiene and sanitation, disease prevention, mental and emotional wellness, and nutrition and healthy lifestyle for individuals and families.',
     image: educationImage,
   },
 ];
 
+const stats = [
+  { key: 'campus',   target: 16000, suffix: '+', label: 'sqm medical & training campus under construction' },
+  { key: 'patients', target: 5000,  suffix: '+', label: 'patients served through outreach missions' },
+  { key: 'workers',  target: 200,   suffix: '+', label: 'community health workers trained' },
+  { key: 'maternal', target: 1000,  suffix: '+', label: 'women & children receiving maternal health services' },
+];
+
 const OurPrograms = () => {
   const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible]   = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-  
-  // Animated impact numbers
-  const [animatedStats, setAnimatedStats] = useState({
-    campus: 0,
-    patients: 0,
-    workers: 0,
-    maternal: 0
+
+  const [animatedStats, setAnimatedStats] = useState<Record<string, number>>({
+    campus: 0, patients: 0, workers: 0, maternal: 0,
   });
 
+  /* ── Intersection observer ── */
   useEffect(() => {
-    // Set visible to true immediately on mobile to ensure content shows
-    const isMobile = window.innerWidth < 768;
-    
+    if (window.innerWidth < 768) {
+      const t = setTimeout(() => { setIsVisible(true); setHasAnimated(true); }, 100);
+      return () => clearTimeout(t);
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
@@ -98,592 +106,578 @@ const OurPrograms = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '50px' } // Lower threshold for mobile
+      { threshold: 0.1, rootMargin: '50px' }
     );
-
-    // On mobile, trigger immediately after a short delay
-    if (isMobile) {
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-        setHasAnimated(true);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [hasAnimated]);
 
-  // Animate numbers when section becomes visible
+  /* ── Count-up animation ── */
   useEffect(() => {
-    if (isVisible) {
-      // Animate 16,000+ campus
-      let startCampus = 0;
-      const campusInterval = setInterval(() => {
-        if (startCampus < 16000) {
-          startCampus += 500;
-          setAnimatedStats(prev => ({ ...prev, campus: startCampus }));
-        } else {
-          clearInterval(campusInterval);
-        }
-      }, 15);
-
-      // Animate 5,000+ patients
-      let startPatients = 0;
-      const patientsInterval = setInterval(() => {
-        if (startPatients < 5000) {
-          startPatients += 100;
-          setAnimatedStats(prev => ({ ...prev, patients: startPatients }));
-        } else {
-          clearInterval(patientsInterval);
-        }
-      }, 15);
-
-      // Animate 200+ workers
-      let startWorkers = 0;
-      const workersInterval = setInterval(() => {
-        if (startWorkers < 200) {
-          startWorkers += 5;
-          setAnimatedStats(prev => ({ ...prev, workers: startWorkers }));
-        } else {
-          clearInterval(workersInterval);
-        }
-      }, 20);
-
-      // Animate 1,000+ maternal
-      let startMaternal = 0;
-      const maternalInterval = setInterval(() => {
-        if (startMaternal < 1000) {
-          startMaternal += 20;
-          setAnimatedStats(prev => ({ ...prev, maternal: startMaternal }));
-        } else {
-          clearInterval(maternalInterval);
-        }
-      }, 15);
-    }
+    if (!isVisible) return;
+    stats.forEach(({ key, target }) => {
+      const start = performance.now();
+      const duration = 1400;
+      const step = (now: number) => {
+        const p    = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        setAnimatedStats(prev => ({ ...prev, [key]: Math.round(ease * target) }));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
   }, [isVisible]);
 
   return (
-    <div 
-      ref={sectionRef} 
-      className={`programs-page ${isVisible ? 'visible' : ''}`}
-    >
+    <div ref={sectionRef} className={`op-page ${isVisible ? 'op-visible' : ''}`}>
       <style>{`
-        .programs-page {
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:wght@700&display=swap');
+
+        /* ─────────────────────────────────────────
+           BASE
+        ───────────────────────────────────────── */
+        .op-page {
           font-family: var(--font-body);
-          background-color: #FFFFFF;
+          background: var(--color-bg);
           width: 100%;
           overflow-x: hidden;
         }
-        
-        /* Hero Section with Image */
-        .programs-hero {
+
+        /* ─────────────────────────────────────────
+           HERO
+        ───────────────────────────────────────── */
+        .op-hero {
           position: relative;
-          height: 70vh;
-          min-height: 500px;
+          height: 72vh;
+          min-height: 480px;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
+          align-items: flex-end;
           overflow: hidden;
         }
-        .programs-hero-image {
+        .op-hero-img {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+          object-position: center top;
         }
-        .programs-hero-overlay {
+        .op-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 100%);
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.82) 0%,
+            rgba(0,0,0,0.30) 55%,
+            rgba(0,0,0,0.10) 100%
+          );
         }
-        .programs-hero-content {
+        .op-hero-content {
           position: relative;
           z-index: 2;
-          max-width: 800px;
-          padding: 0 24px;
+          width: 100%;
+          padding: 0 clamp(24px, 5vw, 72px) 56px;
+          max-width: 860px;
         }
-        .programs-hero h1 {
-          font-family: var(--font-heading);
-          font-size: clamp(36px, 5vw, 56px);
+        .op-hero-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .op-hero-kicker::before {
+          content: '';
+          display: inline-block;
+          width: 32px;
+          height: 2px;
+          background: var(--color-primary);
+          flex-shrink: 0;
+        }
+        .op-hero h1 {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(34px, 5.5vw, 64px);
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 1.08;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          margin: 0 0 20px;
+        }
+        .op-hero p {
+          font-family: var(--font-body);
+          font-size: clamp(14px, 1.4vw, 17px);
+          color: rgba(255,255,255,0.82);
+          line-height: 1.75;
+          max-width: 580px;
+          margin: 0;
+        }
+
+        /* ─────────────────────────────────────────
+           IMPACT STATS
+        ───────────────────────────────────────── */
+        .op-impact {
+          background: var(--color-navy);
+          padding: 64px clamp(24px, 5vw, 72px);
+        }
+        .op-impact-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        .op-impact-header {
+          border-left: 4px solid var(--color-primary);
+          padding-left: 20px;
+          margin-bottom: 48px;
+        }
+        .op-impact-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 10px;
+        }
+        .op-impact-headline {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(24px, 3vw, 36px);
           font-weight: 700;
           color: #ffffff;
           line-height: 1.2;
-          margin-bottom: 20px;
+          margin: 0;
         }
-        .programs-hero p {
-          font-size: 18px;
-          color: rgba(255,255,255,0.9);
-          line-height: 1.6;
-          max-width: 600px;
-          margin: 0 auto;
-        }
-        
-        /* Impact Stats Section */
-        .impact-section {
-          background-color: #F9FAFB;
-          padding: 64px clamp(20px, 5vw, 48px);
-        }
-        .impact-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          text-align: center;
-        }
-        .impact-label {
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #1D8FD4;
-          margin-bottom: 16px;
-        }
-        .impact-headline {
-          font-family: var(--font-heading);
-          font-size: clamp(32px, 4vw, 42px);
-          font-weight: 700;
-          color: #111827;
-          line-height: 1.2;
-          margin-bottom: 20px;
-        }
-        
-        /* Animation styles - with fallback */
-        .impact-label,
-        .impact-headline {
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        .programs-page:not(.visible) .impact-label,
-        .programs-page:not(.visible) .impact-headline {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        
-        .programs-page.visible .impact-label,
-        .programs-page.visible .impact-headline {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .programs-page.visible .impact-label {
-          transition-delay: 0s;
-        }
-        .programs-page.visible .impact-headline {
-          transition-delay: 0.1s;
-        }
-        
-        .impact-stats {
+        .op-stats-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 32px;
-          margin-top: 48px;
+          border-top: 1px solid rgba(255,255,255,0.12);
         }
-        .impact-stat {
-          text-align: center;
-          padding: 24px;
-          background: #ffffff;
-          border-radius: 20px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-          transition: all 0.3s ease;
+        .op-stat {
+          padding: 36px 32px 36px 0;
+          border-right: 1px solid rgba(255,255,255,0.10);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          transition: var(--transition);
         }
-        
-        .programs-page:not(.visible) .impact-stat {
+        .op-stat:last-child { border-right: none; }
+        .op-stat:not(:first-child) { padding-left: 32px; }
+        .op-stat-num {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(32px, 3.8vw, 52px);
+          font-weight: 400;
+          color: var(--color-primary);
+          line-height: 1;
+          letter-spacing: 0.02em;
+        }
+        .op-stat-label {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: rgba(255,255,255,0.55);
+          line-height: 1.5;
+          max-width: 180px;
+        }
+
+        /* animation */
+        .op-page:not(.op-visible) .op-impact-header,
+        .op-page:not(.op-visible) .op-stat {
           opacity: 0;
-          transform: translateY(30px);
+          transform: translateY(24px);
         }
-        
-        .programs-page.visible .impact-stat {
-          opacity: 1;
-          transform: translateY(0);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        .op-page.op-visible .op-impact-header {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+          transition-delay: 0s;
         }
-        
-        .programs-page.visible .impact-stat:nth-child(1) { transition-delay: 0.2s; }
-        .programs-page.visible .impact-stat:nth-child(2) { transition-delay: 0.3s; }
-        .programs-page.visible .impact-stat:nth-child(3) { transition-delay: 0.4s; }
-        .programs-page.visible .impact-stat:nth-child(4) { transition-delay: 0.5s; }
-        
-        .impact-stat:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        .op-page.op-visible .op-stat {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        
-        .impact-stat-number {
-          font-family: var(--font-heading);
-          font-size: clamp(32px, 4vw, 44px);
-          font-weight: 800;
-          color: #1D8FD4;
-          margin-bottom: 8px;
+        .op-page.op-visible .op-stat:nth-child(1) { transition-delay: 0.1s; }
+        .op-page.op-visible .op-stat:nth-child(2) { transition-delay: 0.2s; }
+        .op-page.op-visible .op-stat:nth-child(3) { transition-delay: 0.3s; }
+        .op-page.op-visible .op-stat:nth-child(4) { transition-delay: 0.4s; }
+
+        /* ─────────────────────────────────────────
+           PROGRAMS SECTION — editorial header
+        ───────────────────────────────────────── */
+        .op-programs {
+          background: var(--color-bg);
+          padding: 80px clamp(24px, 5vw, 72px) 0;
         }
-        .impact-stat-label {
-          font-size: 14px;
-          color: #4B5563;
-          line-height: 1.4;
-        }
-        
-        /* Programs Grid - Card Style with Images */
-        .programs-section {
-          padding: 80px clamp(20px, 5vw, 48px);
-          background-color: #FFFFFF;
-        }
-        .programs-container {
+        .op-programs-header {
           max-width: 1200px;
-          margin: 0 auto;
+          margin: 0 auto 56px;
+          border-left: 4px solid var(--color-navy);
+          padding-left: 20px;
         }
-        .programs-header {
-          text-align: center;
-          margin-bottom: 56px;
-        }
-        .programs-label {
-          font-size: 12px;
+        .op-programs-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
-          margin-bottom: 16px;
+          color: var(--color-primary);
+          margin: 0 0 10px;
         }
-        .programs-headline {
-          font-family: var(--font-heading);
-          font-size: clamp(32px, 4vw, 40px);
+        .op-programs-headline {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 48px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.1;
+          color: var(--color-navy);
+          margin: 0 0 14px;
+        }
+        .op-programs-sub {
+          font-family: var(--font-body);
+          font-size: clamp(14px, 1.3vw, 16px);
+          color: var(--color-text-muted);
+          line-height: 1.75;
+          max-width: 640px;
+          margin: 0;
+        }
+
+        /* section label divider — matches TheProblem */
+        .op-section-label {
+          max-width: 1200px;
+          margin: 0 auto 0;
+          padding: 0 0 0 0;
+          font-family: var(--font-body);
+          font-size: 10px;
           font-weight: 700;
-          color: #111827;
-          margin-bottom: 16px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 0 0 0 0;
         }
-        
-        .programs-label,
-        .programs-headline {
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        .op-section-label::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--color-border);
         }
-        
-        .programs-page:not(.visible) .programs-label,
-        .programs-page:not(.visible) .programs-headline {
+
+        /* animation */
+        .op-page:not(.op-visible) .op-programs-header {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(24px);
         }
-        
-        .programs-page.visible .programs-label,
-        .programs-page.visible .programs-headline {
-          opacity: 1;
-          transform: translateY(0);
+        .op-page.op-visible .op-programs-header {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+          transition-delay: 0.45s;
         }
-        
-        .programs-page.visible .programs-label {
-          transition-delay: 0.5s;
-        }
-        .programs-page.visible .programs-headline {
-          transition-delay: 0.6s;
-        }
-        
-        /* 3-Column Program Cards with Images */
-        .programs-grid {
+
+        /* ─────────────────────────────────────────
+           PROGRAM CARDS GRID — full bleed, 3-col
+        ───────────────────────────────────────── */
+        .op-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-        }
-        .program-card {
-          background: #FFFFFF;
-          border-radius: 20px;
-          overflow: hidden;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-          transition: all 0.3s ease;
-          border: 1px solid #F0F0F0;
-        }
-        
-        .programs-page:not(.visible) .program-card {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        
-        .programs-page.visible .program-card {
-          opacity: 1;
-          transform: translateY(0);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        .programs-page.visible .program-card:nth-child(1) { transition-delay: 0.7s; }
-        .programs-page.visible .program-card:nth-child(2) { transition-delay: 0.8s; }
-        .programs-page.visible .program-card:nth-child(3) { transition-delay: 0.9s; }
-        .programs-page.visible .program-card:nth-child(4) { transition-delay: 1.0s; }
-        .programs-page.visible .program-card:nth-child(5) { transition-delay: 1.1s; }
-        .programs-page.visible .program-card:nth-child(6) { transition-delay: 1.2s; }
-        
-        .program-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-        }
-        
-        .program-card-image {
           width: 100%;
-          height: 220px;
-          object-fit: cover;
-          transition: transform 0.3s ease;
+          border-top: 2px solid var(--color-navy);
+          margin-top: 32px;
         }
-        
-        .program-card:hover .program-card-image {
-          transform: scale(1.02);
+        .op-card {
+          background: var(--color-bg);
+          border-right: 1px solid var(--color-border);
+          border-bottom: 1px solid var(--color-border);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          transition: background 0.25s ease;
         }
-        
-        .program-card-content {
-          padding: 24px;
-        }
-        .program-card-tag {
-          display: inline-block;
-          font-size: 11px;
-          font-weight: 600;
-          color: #1D8FD4;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
-        .program-card-title {
-          font-family: var(--font-heading);
-          font-size: 18px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 12px;
-          line-height: 1.3;
-        }
-        .program-card-description {
-          font-size: 14px;
-          color: #6B7280;
-          line-height: 1.6;
-          margin-bottom: 20px;
-        }
-        .program-card-link {
-          background: none;
-          border: none;
-          padding: 0;
-          color: #1D8FD4;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-family: inherit;
-          transition: all 0.2s;
-        }
-        .program-card-link:hover {
-          gap: 10px;
-          color: #1570A6;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-          background: linear-gradient(135deg, #1D8FD4 0%, #1570A6 100%);
-          padding: 64px clamp(20px, 5vw, 48px);
-          text-align: center;
-          color: #ffffff;
-        }
-        
-        .programs-page:not(.visible) .cta-section {
+        .op-card:nth-child(3n) { border-right: none; }
+
+        /* animation */
+        .op-page:not(.op-visible) .op-card {
           opacity: 0;
-          transform: translateY(30px);
+          transform: translateY(28px);
         }
-        
-        .programs-page.visible .cta-section {
-          opacity: 1;
-          transform: translateY(0);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-          transition-delay: 1.3s;
+        .op-page.op-visible .op-card {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 0.55s ease, transform 0.55s ease;
         }
-        
-        .cta-container {
-          max-width: 700px;
-          margin: 0 auto;
+        .op-page.op-visible .op-card:nth-child(1) { transition-delay: 0.55s; }
+        .op-page.op-visible .op-card:nth-child(2) { transition-delay: 0.65s; }
+        .op-page.op-visible .op-card:nth-child(3) { transition-delay: 0.75s; }
+        .op-page.op-visible .op-card:nth-child(4) { transition-delay: 0.85s; }
+        .op-page.op-visible .op-card:nth-child(5) { transition-delay: 0.95s; }
+        .op-page.op-visible .op-card:nth-child(6) { transition-delay: 1.05s; }
+
+        .op-card-img-wrap {
+          overflow: hidden;
+          height: 240px;
+          flex-shrink: 0;
         }
-        .cta-title {
-          font-family: var(--font-heading);
-          font-size: 32px;
+        .op-card-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.45s ease;
+        }
+        .op-card:hover .op-card-img { transform: scale(1.04); }
+
+        .op-card-body {
+          padding: 28px 32px 32px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
+        .op-card-tag {
+          font-family: var(--font-body);
+          font-size: 10px;
           font-weight: 700;
-          margin-bottom: 16px;
-        }
-        .cta-description {
-          font-size: 18px;
-          opacity: 0.95;
-          margin-bottom: 32px;
-        }
-        .cta-btn {
-          background: #ffffff;
-          color: #1D8FD4;
-          border: none;
-          border-radius: 8px;
-          padding: 14px 36px;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
-          display: inline-flex;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 12px;
+          display: flex;
           align-items: center;
           gap: 8px;
         }
-        .cta-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        .op-card-tag::before {
+          content: '';
+          display: inline-block;
+          width: 20px;
+          height: 2px;
+          background: var(--color-primary);
+          flex-shrink: 0;
         }
-        
-        /* Responsive */
+        .op-card-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(17px, 1.6vw, 20px);
+          font-weight: 700;
+          color: var(--color-navy);
+          line-height: 1.25;
+          margin: 0 0 14px;
+        }
+        .op-card-desc {
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: var(--color-text-muted);
+          line-height: 1.7;
+          margin: 0 0 24px;
+          flex: 1;
+        }
+        .op-card-link {
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: var(--transition);
+          border-bottom: 1.5px solid var(--color-navy);
+          padding-bottom: 3px;
+          align-self: flex-start;
+        }
+        .op-card-link:hover {
+          color: var(--color-primary);
+          border-color: var(--color-primary);
+          gap: 14px;
+        }
+
+        /* ─────────────────────────────────────────
+           CTA STRIP
+        ───────────────────────────────────────── */
+        .op-cta {
+          background: var(--color-primary);
+          padding: 72px clamp(24px, 5vw, 72px);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 40px;
+          flex-wrap: wrap;
+        }
+        .op-cta-text {}
+        .op-cta-kicker {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.65);
+          margin: 0 0 10px;
+        }
+        .op-cta-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(22px, 2.8vw, 34px);
+          font-weight: 700;
+          color: #ffffff;
+          margin: 0 0 12px;
+          line-height: 1.2;
+          max-width: 540px;
+        }
+        .op-cta-desc {
+          font-family: var(--font-body);
+          font-size: 15px;
+          color: rgba(255,255,255,0.80);
+          line-height: 1.65;
+          max-width: 480px;
+          margin: 0;
+        }
+        .op-cta-btn {
+          background: #ffffff;
+          color: var(--color-primary);
+          border: none;
+          border-radius: var(--btn-radius);
+          padding: 16px 40px;
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          cursor: pointer;
+          white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: var(--transition);
+          flex-shrink: 0;
+        }
+        .op-cta-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-lg);
+        }
+
+        /* animation */
+        .op-page:not(.op-visible) .op-cta {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        .op-page.op-visible .op-cta {
+          opacity: 1; transform: translateY(0);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+          transition-delay: 1.1s;
+        }
+
+        /* ─────────────────────────────────────────
+           RESPONSIVE
+        ───────────────────────────────────────── */
         @media (max-width: 1024px) {
-          .programs-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .impact-stats {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          .op-grid          { grid-template-columns: repeat(2, 1fr); }
+          .op-card:nth-child(3n)   { border-right: 1px solid var(--color-border); }
+          .op-card:nth-child(2n)   { border-right: none; }
+          .op-stats-grid    { grid-template-columns: repeat(2, 1fr); }
+          .op-stat          { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.10); padding: 28px 0; }
+          .op-stat:not(:first-child) { padding-left: 0; }
+          .op-stat:last-child { border-bottom: none; }
         }
         @media (max-width: 768px) {
-          .programs-hero {
-            min-height: 400px;
-            height: auto;
-          }
-          .programs-hero h1 {
-            font-size: 28px;
-          }
-          .programs-hero p {
-            font-size: 14px;
-          }
-          .impact-stats {
-            grid-template-columns: 1fr;
-            gap: 16px;
-          }
-          .impact-section {
-            padding: 48px 20px;
-          }
-          .programs-section {
-            padding: 48px 20px;
-          }
-          .programs-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-          .program-card-image {
-            height: 180px;
-          }
-          .cta-title {
-            font-size: 24px;
-          }
-          .cta-description {
-            font-size: 16px;
-          }
-          .cta-btn {
-            padding: 12px 28px;
-            font-size: 14px;
-          }
+          .op-hero          { height: auto; min-height: 420px; padding-top: 80px; align-items: flex-end; }
+          .op-grid          { grid-template-columns: 1fr; }
+          .op-card          { border-right: none !important; }
+          .op-card-img-wrap { height: 200px; }
+          .op-cta           { flex-direction: column; align-items: flex-start; }
+          .op-programs      { padding-top: 56px; }
+          .op-impact        { padding: 48px 24px; }
         }
         @media (max-width: 480px) {
-          .impact-stat {
-            padding: 16px;
-          }
-          .impact-stat-number {
-            font-size: 28px;
-          }
-          .program-card-content {
-            padding: 16px;
-          }
-          .program-card-title {
-            font-size: 16px;
-          }
-          .program-card-description {
-            font-size: 13px;
-          }
+          .op-card-body     { padding: 20px 20px 24px; }
+          .op-stat-num      { font-size: 36px; }
         }
       `}</style>
 
-      {/* Hero with Your Authentic Image */}
-      <div className="programs-hero">
-        <img 
-          src={heroImage} 
-          alt="JoMabel Healthcare Foundation medical outreach" 
-          className="programs-hero-image"
-        />
-        <div className="programs-hero-overlay" />
-        <div className="programs-hero-content">
-          <h1>Healthcare That Transforms Communities</h1>
+      {/* ── Hero ── */}
+      <div className="op-hero">
+        <img src={heroImage} alt="JoMabel Healthcare Foundation medical outreach" className="op-hero-img" />
+        <div className="op-hero-overlay" />
+        <div className="op-hero-content">
+          <p className="op-hero-kicker">Our Programs</p>
+          <h1>Healthcare That<br />Transforms Communities</h1>
           <p>
             Through six program areas, JoMabel Healthcare Foundation delivers care,
-            training, and lasting community impact across Nigeria — from a growing
-            16,000+ sq. meter medical campus to outreach missions that reach the most vulnerable.
+            training, and lasting impact — from a growing 16,000+ sq.m medical campus
+            to outreach missions that reach the most vulnerable.
           </p>
         </div>
       </div>
 
-      {/* Impact Stats with Count-up Numbers */}
-      <div className="impact-section">
-        <div className="impact-container">
-          <div className="impact-label">Our Impact</div>
-          <h2 className="impact-headline">Making Healthcare Accessible<br />to Those Who Need It Most</h2>
-          <div className="impact-stats">
-            <div className="impact-stat">
-              <div className="impact-stat-number">{animatedStats.campus.toLocaleString()}+</div>
-              <div className="impact-stat-label">sqm medical & training campus under construction</div>
-            </div>
-            <div className="impact-stat">
-              <div className="impact-stat-number">{animatedStats.patients.toLocaleString()}+</div>
-              <div className="impact-stat-label">patients served through outreach missions</div>
-            </div>
-            <div className="impact-stat">
-              <div className="impact-stat-number">{animatedStats.workers.toLocaleString()}+</div>
-              <div className="impact-stat-label">community health workers trained</div>
-            </div>
-            <div className="impact-stat">
-              <div className="impact-stat-number">{animatedStats.maternal.toLocaleString()}+</div>
-              <div className="impact-stat-label">women & children receiving maternal health services</div>
-            </div>
+      {/* ── Impact Stats ── */}
+      <div className="op-impact">
+        <div className="op-impact-inner">
+          <div className="op-impact-header">
+            <p className="op-impact-kicker">Our Impact</p>
+            <h2 className="op-impact-headline">
+              Making Healthcare Accessible<br />to Those Who Need It Most
+            </h2>
           </div>
-        </div>
-      </div>
-
-      {/* Programs with Your Authentic Images */}
-      <div className="programs-section">
-        <div className="programs-container">
-          <div className="programs-header">
-            <div className="programs-label">Our Programs & Services</div>
-            <h2 className="programs-headline">Six Ways We Serve</h2>
-          </div>
-          
-          <div className="programs-grid">
-            {programs.map((program) => (
-              <div key={program.id} className="program-card">
-                <img 
-                  src={program.image} 
-                  alt={program.title} 
-                  className="program-card-image"
-                />
-                <div className="program-card-content">
-                  <div className="program-card-tag">{program.tag}</div>
-                  <h3 className="program-card-title">{program.title}</h3>
-                  <p className="program-card-description">{program.description}</p>
-                  <button className="program-card-link" onClick={() => navigate('/programs')}>
-                    Learn more
-                    <ArrowRight size={14} />
-                  </button>
+          <div className="op-stats-grid">
+            {stats.map(({ key, suffix, label }) => (
+              <div className="op-stat" key={key}>
+                <div className="op-stat-num">
+                  {animatedStats[key].toLocaleString()}{suffix}
                 </div>
+                <div className="op-stat-label">{label}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* CTA Section */}
-      <div className="cta-section">
-        <div className="cta-container">
-          <h3 className="cta-title">Ready to Make an Impact?</h3>
-          <p className="cta-description">
-            Your support helps us build healthcare infrastructure, train local professionals, 
-            and save lives in underserved communities across Nigeria.
+      {/* ── Programs Grid ── */}
+      <div className="op-programs">
+        <div className="op-programs-header">
+          <p className="op-programs-kicker">Programs &amp; Services</p>
+          <h2 className="op-programs-headline">Six Ways We Serve</h2>
+          <p className="op-programs-sub">
+            Every program area is purpose-built to address a critical gap in healthcare
+            access — from facility-based care to community outreach, training, and
+            infrastructure that lasts.
           </p>
-          <button className="cta-btn" onClick={() => navigate('/donate')}>
-            Support Our Mission
-            <ArrowRight size={16} />
-          </button>
         </div>
       </div>
+
+      {/* Full-bleed grid outside padded container */}
+      <div className="op-grid">
+        {programs.map((program) => (
+          <div key={program.id} className="op-card">
+            <div className="op-card-img-wrap">
+              <img src={program.image} alt={program.title} className="op-card-img" />
+            </div>
+            <div className="op-card-body">
+              <span className="op-card-tag">{program.tag}</span>
+              <h3 className="op-card-title">{program.title}</h3>
+              <p className="op-card-desc">{program.description}</p>
+              <button className="op-card-link" onClick={() => navigate('/programs')}>
+                Learn more <ArrowRight size={13} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── CTA Strip ── */}
+      <div className="op-cta">
+        <div className="op-cta-text">
+          <p className="op-cta-kicker">Get Involved</p>
+          <h2 className="op-cta-title">Ready to Make a Difference?</h2>
+          <p className="op-cta-desc">
+            Your support helps us expand programs, reach more families,
+            and build the healthcare infrastructure rural Nigeria deserves.
+          </p>
+        </div>
+        <button className="op-cta-btn" onClick={() => navigate('/get-involved')}>
+          Support Our Work <ArrowRight size={15} />
+        </button>
+      </div>
+
     </div>
   );
 };

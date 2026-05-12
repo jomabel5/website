@@ -60,7 +60,7 @@ const ProgramsHero = () => {
   );
 };
 
-// ─── FACILITY CARDS (NO IMAGES) ──────────────────────────────────────────────
+// ─── FACILITY CARDS ──────────────────────────────────────────────────────────
 interface FacilityCardProps {
   logo: string;
   title: string;
@@ -96,7 +96,7 @@ const FacilityCard = ({ logo, title, description, features, gradient }: Facility
 
 // ─── PROGRAM CARD ────────────────────────────────────────────────────────────
 interface ProgramCardProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{size?: number}>;
   category: string;
   title: string;
   description: string;
@@ -229,12 +229,14 @@ const Programs = () => {
   return (
     <div className="programs-page">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
         .programs-page {
           font-family: var(--font-body);
-          background-color: #FFFFFF;
+          background-color: var(--color-bg);
         }
-        
-        /* Hero Section */
+
+        /* ── Hero ── */
         .programs-hero {
           position: relative;
           min-height: 500px;
@@ -265,27 +267,30 @@ const Programs = () => {
           display: inline-block;
           background: rgba(29,143,212,0.2);
           border: 1px solid rgba(29,143,212,0.4);
-          color: #1D8FD4;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.1em;
+          color: var(--color-primary);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2px;
           text-transform: uppercase;
           padding: 6px 16px;
-          border-radius: 40px;
+          border-radius: 0;           /* square */
           margin-bottom: 24px;
         }
         .hero-title {
-          font-family: var(--font-heading);
-          color: #ffffff;
-          font-size: clamp(36px, 5vw, 52px);
-          font-weight: 700;
-          line-height: 1.2;
+          font-family: 'Anton', sans-serif;
+          color: var(--color-white);
+          font-size: clamp(36px, 5.5vw, 64px);
+          font-weight: 400;
+          line-height: 1.0;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
           margin-bottom: 20px;
         }
         .hero-description {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
-          line-height: 1.6;
+          font-family: var(--font-body);
+          font-size: clamp(14px, 1.4vw, 17px);
+          line-height: 1.7;
           margin-bottom: 32px;
           max-width: 520px;
         }
@@ -294,117 +299,131 @@ const Programs = () => {
           gap: 16px;
           flex-wrap: wrap;
         }
-        
-        /* Buttons */
+
+        /* ── Buttons — all square ── */
         .btn-primary {
-          background-color: #16A34A;
-          color: #ffffff;
+          background-color: var(--color-green);
+          color: var(--color-white);
           border: none;
-          border-radius: 10px;
-          padding: 12px 28px;
-          font-size: 14px;
-          font-weight: 600;
+          border-radius: 0;           /* square */
+          padding: 14px 32px;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
           display: inline-flex;
           align-items: center;
           gap: 8px;
+          transition: var(--transition);
         }
         .btn-primary:hover {
-          background-color: #15803D;
+          background-color: var(--color-green-dark);
           transform: translateY(-1px);
         }
         .btn-outline {
           background: transparent;
-          color: #ffffff;
-          border: 1.5px solid rgba(255,255,255,0.4);
-          border-radius: 10px;
-          padding: 12px 28px;
-          font-size: 14px;
+          color: var(--color-white);
+          border: 1.5px solid rgba(255,255,255,0.45);
+          border-radius: 0;           /* square */
+          padding: 14px 32px;
+          font-family: var(--font-body);
+          font-size: 13px;
           font-weight: 600;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
+          transition: var(--transition);
         }
         .btn-outline:hover {
-          background: rgba(255,255,255,0.1);
-          border-color: rgba(255,255,255,0.6);
+          background: rgba(255,255,255,0.10);
+          border-color: rgba(255,255,255,0.70);
         }
-        
-        /* Overview Section */
+
+        /* ── Overview wrapper ── */
         .programs-overview {
           padding: 80px clamp(24px, 5vw, 48px);
           max-width: 1280px;
           margin: 0 auto;
         }
+
+        /* ── Section header ── */
         .section-header {
           text-align: center;
           margin-bottom: 56px;
         }
         .section-label {
-          font-size: 12px;
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
+          color: var(--color-primary);
         }
         .section-title {
-          font-family: var(--font-heading);
-          font-size: clamp(28px, 4vw, 38px);
-          font-weight: 700;
-          color: #111827;
-          margin-top: 12px;
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 42px);
+          font-weight: 400;
+          color: var(--color-navy);
+          margin-top: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          line-height: 1.05;
         }
-        
-        /* Facility Cards Row */
+
+        /* ── Facility Cards Row ── */
         .facility-row {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 32px;
+          gap: 2px;                   /* tight seam between cards */
           margin-bottom: 48px;
         }
         .facility-card {
-          border-radius: 28px;
+          border-radius: 0;           /* square */
           overflow: hidden;
-          padding: 32px 28px;
-          transition: all 0.3s ease;
+          padding: 40px 36px;
+          transition: var(--transition);
         }
         .facility-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-xl);
         }
         .facility-logo-wrap {
-          background: #ffffff;
-          border-radius: 16px;
-          padding: 20px 24px;
-          margin-bottom: 24px;
+          background: var(--color-white);
+          border-radius: 0;           /* square */
+          padding: 28px 32px;
+          margin-bottom: 28px;
           display: flex;
           align-items: center;
           justify-content: center;
-          min-height: 100px;
+          min-height: 120px;
         }
         .facility-logo {
           height: auto;
-          width: 280px;
+          width: 300px;               /* big logo */
           object-fit: contain;
         }
         .facility-title {
-          font-family: var(--font-heading);
-          color: #ffffff;
-          font-size: 20px;
-          font-weight: 700;
+          font-family: 'Anton', sans-serif;
+          color: var(--color-white);
+          font-size: clamp(18px, 2vw, 24px);
+          font-weight: 400;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
           margin-bottom: 12px;
         }
         .facility-description {
-          color: rgba(255,255,255,0.8);
+          color: rgba(255,255,255,0.80);
+          font-family: var(--font-body);
           font-size: 14px;
-          line-height: 1.6;
+          line-height: 1.7;
           margin-bottom: 20px;
         }
         .facility-features {
           list-style: none;
           padding: 0;
-          margin: 0 0 24px;
+          margin: 0 0 28px;
           display: flex;
           flex-direction: column;
           gap: 10px;
@@ -414,97 +433,108 @@ const Programs = () => {
           align-items: center;
           gap: 10px;
           color: rgba(255,255,255,0.75);
+          font-family: var(--font-body);
           font-size: 13px;
         }
         .feature-dot {
           width: 6px;
           height: 6px;
-          border-radius: 50%;
-          background-color: #1D8FD4;
+          border-radius: 0;           /* square dot */
+          background-color: var(--color-primary);
           flex-shrink: 0;
         }
         .facility-link {
           background: none;
           border: none;
-          color: #ffffff;
-          font-size: 13px;
-          font-weight: 600;
+          color: var(--color-white);
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 0;
-          font-family: inherit;
-          transition: all 0.2s;
+          transition: var(--transition);
         }
         .facility-link:hover {
           gap: 10px;
-          opacity: 0.85;
+          opacity: 0.80;
         }
-        
-        /* Program Cards Grid */
+
+        /* ── Program Cards Grid ── */
         .programs-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 32px;
+          gap: 2px;                   /* tight seam */
           margin: 48px 0;
         }
         .program-card {
-          background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          border-radius: 24px;
+          background: var(--color-bg);
+          border: 1px solid var(--color-border);
+          border-radius: 0;           /* square */
           overflow: hidden;
-          transition: all 0.3s ease;
+          transition: var(--transition);
         }
         .program-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-          border-color: #1D8FD4;
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-lg);
+          border-color: var(--color-primary);
         }
         .program-card-image-wrap {
           position: relative;
-          height: 200px;
+          height: 220px;
           overflow: hidden;
         }
-        .program-card-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+      .program-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
         .program-card-icon {
           position: absolute;
           bottom: 12px;
           left: 12px;
           background: rgba(255,255,255,0.95);
-          border-radius: 12px;
+          border-radius: 0;           /* square */
           padding: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          box-shadow: var(--shadow-sm);
         }
         .program-card-content {
-          padding: 24px;
+          padding: 28px;
         }
         .program-category {
           display: inline-block;
+          font-family: var(--font-body);
           font-size: 11px;
-          font-weight: 600;
-          padding: 4px 12px;
-          border-radius: 20px;
-          margin-bottom: 12px;
+          font-weight: 700;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+          padding: 4px 10px;
+          border-radius: 0;           /* square */
+          margin-bottom: 14px;
         }
         .program-title {
-          font-family: var(--font-heading);
-          font-size: 18px;
-          font-weight: 700;
-          color: #111827;
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(16px, 1.8vw, 20px);
+          font-weight: 400;
+          color: var(--color-navy);
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
           margin-bottom: 12px;
+          line-height: 1.1;
         }
         .program-description {
+          font-family: var(--font-body);
           font-size: 14px;
-          color: #6B7280;
-          line-height: 1.6;
+          color: var(--color-text-muted);
+          line-height: 1.65;
           margin-bottom: 16px;
         }
         .program-bullets {
@@ -519,60 +549,68 @@ const Programs = () => {
           display: flex;
           align-items: center;
           gap: 8px;
+          font-family: var(--font-body);
           font-size: 13px;
-          color: #4B5563;
+          color: var(--color-text-muted);
         }
         .bullet-dot {
           width: 5px;
           height: 5px;
-          border-radius: 50%;
+          border-radius: 0;           /* square */
           flex-shrink: 0;
         }
         .program-link {
           background: none;
           border: none;
-          color: #1D8FD4;
-          font-size: 13px;
-          font-weight: 600;
+          color: var(--color-primary);
+          font-family: var(--font-body);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-family: inherit;
-          transition: all 0.2s;
+          transition: var(--transition);
         }
         .program-link:hover {
+          color: var(--color-primary-dark);
           gap: 10px;
         }
-        
-        /* Geographic Focus */
+
+        /* ── Geographic Focus ── */
         .geo-section {
-          background: #F0F9FF;
-          border-radius: 28px;
-          padding: 40px 48px;
+          background: var(--color-primary-light);
+          border-radius: 0;           /* square */
+          padding: 48px;
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 48px;
           align-items: center;
         }
         .geo-label {
-          font-size: 12px;
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
+          color: var(--color-primary);
         }
         .geo-title {
-          font-family: var(--font-heading);
-          font-size: 24px;
-          font-weight: 700;
-          color: #111827;
-          margin: 12px 0 16px;
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(22px, 2.5vw, 30px);
+          font-weight: 400;
+          color: var(--color-navy);
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          margin: 10px 0 16px;
         }
         .geo-description {
+          font-family: var(--font-body);
           font-size: 15px;
-          color: #4B5563;
-          line-height: 1.6;
+          color: var(--color-text-muted);
+          line-height: 1.7;
         }
         .geo-cards {
           display: flex;
@@ -580,76 +618,61 @@ const Programs = () => {
           gap: 16px;
         }
         .geo-card {
-          background: #FFFFFF;
-          border-radius: 16px;
-          padding: 18px 20px;
+          background: var(--color-white);
+          border-radius: 0;           /* square */
+          padding: 20px 24px;
           display: flex;
           align-items: flex-start;
           gap: 14px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          box-shadow: var(--shadow-sm);
+          border-left: 4px solid var(--color-primary);
         }
-        .geo-icon {
-          color: #1D8FD4;
-          flex-shrink: 0;
-        }
+        .geo-icon { color: var(--color-primary); flex-shrink: 0; }
         .geo-card-label {
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 700;
-          color: #1D8FD4;
+          color: var(--color-primary);
           text-transform: uppercase;
-          letter-spacing: 0.08em;
+          letter-spacing: 1.5px;
           margin-bottom: 4px;
         }
         .geo-card-value {
+          font-family: var(--font-body);
           font-size: 14px;
           font-weight: 600;
-          color: #111827;
+          color: var(--color-navy);
           margin: 0;
         }
-        
-        /* Responsive */
+
+        /* ── Responsive ── */
         @media (max-width: 900px) {
-          .facility-row {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-          .programs-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
+          .facility-row,
+          .programs-grid,
           .geo-section {
             grid-template-columns: 1fr;
-            gap: 32px;
-            padding: 32px 28px;
+            gap: 2px;
           }
+          .geo-section { padding: 36px 28px; gap: 32px; }
         }
         @media (max-width: 600px) {
-          .hero-buttons {
-            flex-direction: column;
-          }
-          .btn-primary, .btn-outline {
-            text-align: center;
-            justify-content: center;
-          }
-          .geo-section {
-            padding: 28px 24px;
-          }
-          .facility-logo {
-            width: 220px;
-          }
+          .hero-buttons { flex-direction: column; }
+          .btn-primary, .btn-outline { justify-content: center; }
+          .facility-logo { width: 220px; }
+          .geo-section { padding: 28px 20px; }
         }
       `}</style>
 
       <Navbar />
       <ProgramsHero />
-      
+
       <div className="programs-overview">
         <div className="section-header">
           <div className="section-label">What We Do</div>
           <h2 className="section-title">Programs Overview</h2>
         </div>
 
-        {/* Two Main Facility Cards - NO IMAGES */}
+        {/* Two Main Facility Cards */}
         <div className="facility-row">
           <FacilityCard
             logo={logo2}

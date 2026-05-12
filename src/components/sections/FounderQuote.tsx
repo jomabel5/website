@@ -197,7 +197,7 @@ const FounderQuote = () => {
             Clara Ada Ogbaa is a Nigerian-American educator and humanitarian. Having experienced
             firsthand the life-saving power of quality healthcare, she made a
             profound decision to use her modest retirement savings to bring that
-            same standard of care to her hometown of Ufuma, Anambra State, Nigeria.
+            same standard of care, starting from Ufuma, Anambra State, Nigeria.
           </p>
           
           <div className="fq-pullquote">

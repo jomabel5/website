@@ -1,425 +1,368 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Heart, Building2, Users } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import outreach4 from '../../assests/images/outreach4.jpeg';
+
+const raised     = 7500000;
+const goal       = 10000000;
+const percentage = Math.round((raised / goal) * 100);
+
+const formatNaira = (amount: number): string =>
+  '₦' + amount.toLocaleString('en-NG');
 
 const CampaignBanner = () => {
   const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false);
-  const [animatedRaised, setAnimatedRaised] = useState(0);
-  const [animatedPercentage, setAnimatedPercentage] = useState(0);
+  const [isVisible, setIsVisible]             = useState(false);
+  const [animatedRaised, setAnimatedRaised]   = useState(0);
+  const [animatedPct, setAnimatedPct]         = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
-  
-  const raised = 7500000;
-  const goal = 10000000;
-  const percentage = Math.round((raised / goal) * 100);
 
-  const formatNaira = (amount: number): string =>
-    '₦' + amount.toLocaleString('en-NG');
-
+  /* ── Intersection observer ── */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    if (window.innerWidth < 768) {
+      const t = setTimeout(() => setIsVisible(true), 100);
+      return () => clearTimeout(t);
     }
-
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Animate numbers when section becomes visible
+  /* ── Count-up ── */
   useEffect(() => {
-    if (isVisible) {
-      // Animate raised amount
-      let startRaised = 0;
-      const raisedInterval = setInterval(() => {
-        if (startRaised < raised) {
-          startRaised += 100000;
-          setAnimatedRaised(prev => Math.min(prev + 100000, raised));
-        } else {
-          clearInterval(raisedInterval);
-        }
-      }, 20);
+    if (!isVisible) return;
+    const duration = 1400;
 
-      // Animate percentage
-      let startPercent = 0;
-      const percentInterval = setInterval(() => {
-        if (startPercent < percentage) {
-          startPercent++;
-          setAnimatedPercentage(prev => Math.min(prev + 1, percentage));
-        } else {
-          clearInterval(percentInterval);
-        }
-      }, 25);
-    }
-  }, [isVisible, raised, percentage]);
+    // Raised amount
+    const startR = performance.now();
+    const stepR = (now: number) => {
+      const p    = Math.min((now - startR) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      setAnimatedRaised(Math.round(ease * raised));
+      if (p < 1) requestAnimationFrame(stepR);
+    };
+    requestAnimationFrame(stepR);
+
+    // Percentage
+    const startP = performance.now();
+    const stepP = (now: number) => {
+      const p    = Math.min((now - startP) / (duration * 1.1), 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      setAnimatedPct(Math.round(ease * percentage));
+      if (p < 1) requestAnimationFrame(stepP);
+    };
+    requestAnimationFrame(stepP);
+  }, [isVisible]);
 
   return (
-    <div 
-      ref={sectionRef} 
-      className={`campaign-banner ${isVisible ? 'visible' : ''}`}
-    >
+    <div ref={sectionRef} className={`cb-wrap ${isVisible ? 'cb-visible' : ''}`}>
       <style>{`
-        .campaign-banner {
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        /* ─────────────────────────────────────────
+           OUTER WRAPPER — full bleed image
+        ───────────────────────────────────────── */
+        .cb-wrap {
           position: relative;
-          min-height: 500px;
+          min-height: 580px;
           display: flex;
-          align-items: center;
-          justify-content: center;
+          align-items: flex-end;
           font-family: var(--font-body);
           overflow: hidden;
         }
-        
-        /* Background Image */
-        .campaign-bg-image {
+        .cb-bg {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+          object-position: center 20%;
         }
-        
-        /* Overlay */
-        .campaign-overlay {
+        .cb-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 100%);
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.82) 0%,
+            rgba(0,0,0,0.35) 50%,
+            rgba(0,0,0,0.10) 100%
+          );
         }
-        
-        /* Content Container */
-        .campaign-container {
+
+        /* ─────────────────────────────────────────
+           CONTENT — left-aligned editorial
+        ───────────────────────────────────────── */
+        .cb-content {
           position: relative;
           z-index: 2;
-          max-width: 900px;
-          margin: 0 auto;
-          padding: 64px 32px;
-          text-align: center;
+          width: 100%;
+          padding: 0 clamp(24px, 5vw, 72px) 64px;
+          display: flex;
+          align-items: center;
+          gap: 64px;
+          flex-wrap: wrap;
         }
-        
-        /* Tag Animation */
-        .campaign-tag {
-          display: inline-block;
-          font-size: 12px;
+
+        /* Left: headline block */
+        .cb-left {
+          flex: 1;
+          min-width: 280px;
+        }
+        .cb-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 3px;
           text-transform: uppercase;
-          color: #1D8FD4;
-          background: rgba(255,255,255,0.15);
-          backdrop-filter: blur(8px);
-          padding: 6px 16px;
-          border-radius: 40px;
-          margin-bottom: 24px;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        /* Title Animation */
-        .campaign-title {
-          font-family: var(--font-heading);
-          font-size: clamp(32px, 5vw, 48px);
-          font-weight: 700;
-          color: #ffffff;
-          line-height: 1.2;
-          margin-bottom: 20px;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-          transition-delay: 0.1s;
-        }
-        
-        /* Description Animation */
-        .campaign-description {
-          font-size: 18px;
-          color: rgba(255,255,255,0.85);
-          line-height: 1.6;
-          max-width: 600px;
-          margin: 0 auto 32px auto;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-          transition-delay: 0.2s;
-        }
-        
-        .campaign-banner.visible .campaign-tag,
-        .campaign-banner.visible .campaign-title,
-        .campaign-banner.visible .campaign-description {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        /* Progress Card */
-        .progress-card {
-          background: rgba(255,255,255,0.98);
-          border-radius: 24px;
-          padding: 28px 32px;
-          margin-bottom: 32px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-          transition-delay: 0.3s;
-        }
-        
-        .campaign-banner.visible .progress-card {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .progress-stats {
-          display: flex;
-          justify-content: space-between;
-          align-items: baseline;
-          margin-bottom: 16px;
-          flex-wrap: wrap;
-          gap: 12px;
-        }
-        .progress-percentage {
-          font-family: var(--font-heading);
-          font-size: 28px;
-          font-weight: 800;
-          color: #1D8FD4;
-        }
-        .progress-amounts {
-          font-size: 16px;
-          color: #4B5563;
-        }
-        .progress-raised {
-          font-weight: 700;
-          color: #1D8FD4;
-        }
-        .progress-goal {
-          font-weight: 700;
-          color: #16A34A;
-        }
-        .progress-bar {
-          background-color: #E5E7EB;
-          border-radius: 100px;
-          height: 12px;
-          overflow: hidden;
-        }
-        .progress-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #1D8FD4 0%, #16A34A 100%);
-          border-radius: 100px;
-          transition: width 1s ease-out;
-          width: 0%;
-        }
-        
-        .campaign-banner.visible .progress-bar-fill {
-          width: ${percentage}%;
-        }
-        
-        /* Mini Stats Row */
-        .mini-stats {
-          display: flex;
-          justify-content: center;
-          gap: 48px;
-          margin-bottom: 32px;
-          flex-wrap: wrap;
-        }
-        .mini-stat {
+          color: var(--color-primary);
+          margin: 0 0 14px;
           display: flex;
           align-items: center;
           gap: 10px;
-          color: rgba(255,255,255,0.9);
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+          transform: translateY(16px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        
-        .campaign-banner.visible .mini-stat:nth-child(1) {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.4s;
+        .cb-kicker::before {
+          content: '';
+          display: inline-block;
+          width: 28px;
+          height: 2px;
+          background: var(--color-primary);
+          flex-shrink: 0;
         }
-        .campaign-banner.visible .mini-stat:nth-child(2) {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.5s;
+        .cb-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(30px, 4.5vw, 54px);
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 1.08;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          margin: 0 0 20px;
+          max-width: 560px;
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+          transition-delay: 0.1s;
         }
-        .campaign-banner.visible .mini-stat:nth-child(3) {
-          opacity: 1;
-          transform: translateY(0);
-          transition-delay: 0.6s;
+        .cb-desc {
+          font-family: var(--font-body);
+          font-size: clamp(13px, 1.3vw, 16px);
+          color: rgba(255,255,255,0.75);
+          line-height: 1.75;
+          max-width: 480px;
+          margin: 0 0 28px;
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+          transition-delay: 0.2s;
         }
-        
-        .mini-stat svg {
-          width: 20px;
-          height: 20px;
-          opacity: 0.8;
+
+        /* Right: progress card */
+        .cb-right {
+          flex-shrink: 0;
+          width: 340px;
+          opacity: 0;
+          transform: translateY(24px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+          transition-delay: 0.35s;
         }
-        .mini-stat span {
-          font-size: 14px;
-          font-weight: 500;
+
+        /* ── Progress card ── */
+        .cb-card {
+          background: rgba(255,255,255,0.97);
+          border-radius: 4px;
+          padding: 32px 28px 32px;
+          border-top: 3px solid var(--color-primary);
         }
-        
-        /* Buttons */
-        .campaign-buttons {
+        .cb-card-kicker {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
+          margin: 0 0 16px;
+        }
+        .cb-pct-row {
           display: flex;
-          gap: 16px;
-          justify-content: center;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 12px;
+          gap: 8px;
           flex-wrap: wrap;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-          transition-delay: 0.7s;
         }
-        
-        .campaign-banner.visible .campaign-buttons {
-          opacity: 1;
-          transform: translateY(0);
+        .cb-pct {
+          font-family: 'Anton', sans-serif;
+          font-size: 44px;
+          font-weight: 400;
+          color: var(--color-primary);
+          line-height: 1;
+          letter-spacing: 0.02em;
         }
-        
-        .btn-primary {
-          background: #16A34A;
+        .cb-pct-label {
+          font-family: var(--font-body);
+          font-size: 12px;
+          color: var(--color-text-light);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+        .cb-bar-track {
+          background: var(--color-surface-2);
+          border-radius: 100px;
+          height: 8px;
+          overflow: hidden;
+          margin-bottom: 20px;
+        }
+        .cb-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-green) 100%);
+          border-radius: 100px;
+          transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+          width: 0%;
+        }
+        .cb-bar-fill.cb-animated {
+          width: ${percentage}%;
+        }
+        .cb-amounts {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding-top: 4px;
+          border-top: 1px solid var(--color-border);
+        }
+        .cb-amount-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+        }
+        .cb-amount-label {
+          font-family: var(--font-body);
+          font-size: 11px;
+          color: var(--color-text-light);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+        .cb-amount-value {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        /* card buttons */
+        .cb-card-btns {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 24px;
+        }
+        .cb-btn-primary {
+          background: var(--color-green);
           color: #ffffff;
           border: none;
-          border-radius: 60px;
-          padding: 14px 40px;
-          font-size: 15px;
+          border-radius: var(--btn-radius);
+          padding: 14px 20px;
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: var(--transition);
+          letter-spacing: 0.2px;
+        }
+        .cb-btn-primary:hover {
+          background: var(--color-green-dark);
+          transform: translateY(-1px);
+          box-shadow: var(--shadow-md);
+        }
+        .cb-btn-outline {
+          background: transparent;
+          color: var(--color-navy);
+          border: 1.5px solid var(--color-border-dark);
+          border-radius: var(--btn-radius);
+          padding: 13px 20px;
+          font-family: var(--font-body);
+          font-size: 14px;
           font-weight: 600;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
-          display: inline-flex;
+          display: flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
+          transition: var(--transition);
         }
-        .btn-primary:hover {
-          background: #15803D;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(22,163,74,0.4);
+        .cb-btn-outline:hover {
+          background: var(--color-surface-2);
+          border-color: var(--color-navy);
         }
-        .btn-outline {
-          background: rgba(255,255,255,0.15);
-          backdrop-filter: blur(8px);
-          color: #ffffff;
-          border: 1px solid rgba(255,255,255,0.4);
-          border-radius: 60px;
-          padding: 14px 40px;
-          font-size: 15px;
-          font-weight: 600;
-          cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
+
+        /* ── Visible state ── */
+        .cb-wrap.cb-visible .cb-kicker,
+        .cb-wrap.cb-visible .cb-title,
+        .cb-wrap.cb-visible .cb-desc,
+        .cb-wrap.cb-visible .cb-right {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .btn-outline:hover {
-          background: rgba(255,255,255,0.25);
-          border-color: rgba(255,255,255,0.6);
-          transform: translateY(-2px);
+
+        /* ─────────────────────────────────────────
+           RESPONSIVE
+        ───────────────────────────────────────── */
+        @media (max-width: 900px) {
+          .cb-content  { flex-direction: column; align-items: flex-start; gap: 36px; padding-bottom: 48px; }
+          .cb-right    { width: 100%; max-width: 460px; }
+          .cb-wrap     { min-height: 640px; }
         }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-          .campaign-container {
-            padding: 48px 24px;
-          }
-          .campaign-title {
-            font-size: 28px;
-          }
-          .campaign-description {
-            font-size: 16px;
-          }
-          .progress-card {
-            padding: 20px 24px;
-          }
-          .progress-stats {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-          }
-          .mini-stats {
-            gap: 24px;
-          }
-          .campaign-buttons {
-            flex-direction: column;
-            width: 100%;
-          }
-          .btn-primary, .btn-outline {
-            justify-content: center;
-          }
+        @media (max-width: 600px) {
+          .cb-right    { max-width: 100%; }
+          .cb-pct      { font-size: 36px; }
         }
       `}</style>
 
-      {/* Background Image */}
-      <img
-        src={outreach4}
-        alt="JoMabel Healthcare Foundation medical outreach"
-        className="campaign-bg-image"
-      />
-      <div className="campaign-overlay" />
+      {/* Background - adjusted object-position to show the face */}
+      <img src={outreach4} alt="JoMabel Healthcare Foundation medical outreach" className="cb-bg" />
+      <div className="cb-overlay" />
 
       {/* Content */}
-      <div className="campaign-container">
-        <div className="campaign-tag">Active Campaign</div>
-        
-        <h2 className="campaign-title">
-          Complete the JoMabel Medical Campus
-        </h2>
-        
-        <p className="campaign-description">
-          Help us finish the 16,000+ sq. meter medical and training center in Ufuma, 
-          Anambra State — bringing dignified healthcare to thousands of families.
-        </p>
+      <div className="cb-content">
 
-        {/* Progress Card with Animated Numbers */}
-        <div className="progress-card">
-          <div className="progress-stats">
-            <div className="progress-percentage">{animatedPercentage}% Complete</div>
-            <div className="progress-amounts">
-              <span className="progress-raised">{formatNaira(animatedRaised)}</span>
-              <span style={{ color: '#9CA3AF' }}> raised of </span>
-              <span className="progress-goal">{formatNaira(goal)}</span>
-              <span style={{ color: '#9CA3AF' }}> goal</span>
+        {/* Left — headline */}
+        <div className="cb-left">
+          <p className="cb-kicker">Active Campaign</p>
+          <h2 className="cb-title">Complete the JoMabel Medical Campus</h2>
+          <p className="cb-desc">
+            Help us finish the 16,000+ sq. meter medical and training center in
+            Ufuma, Anambra State — bringing dignified healthcare to thousands of families.
+          </p>
+        </div>
+
+        {/* Right — progress card */}
+        <div className="cb-right">
+          <div className="cb-card">
+            <p className="cb-card-kicker">Fundraising Progress</p>
+            <div className="cb-pct-row">
+             
+            </div>
+            <div className="cb-card-btns">
+              <button className="cb-btn-primary" onClick={() => navigate('/donate')}>
+                Donate Now <ArrowRight size={15} />
+              </button>
+              <button className="cb-btn-outline" onClick={() => navigate('/contact')}>
+                Partner With Us
+              </button>
             </div>
           </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-bar-fill" 
-              style={{ width: `${animatedPercentage}%` }}
-            />
-          </div>
         </div>
 
-        {/* Mini Stats */}
-        <div className="mini-stats">
-          <div className="mini-stat">
-            <Heart size={18} />
-            <span>16,000+ sqm campus</span>
-          </div>
-          <div className="mini-stat">
-            <Building2 size={18} />
-            <span>Medical Center + Training Center</span>
-          </div>
-          <div className="mini-stat">
-            <Users size={18} />
-            <span>50,000+ lives impacted annually</span>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="campaign-buttons">
-          <button className="btn-primary" onClick={() => navigate('/donate')}>
-            Donate Now
-            <ArrowRight size={16} />
-          </button>
-          <button className="btn-outline" onClick={() => navigate('/contact')}>
-            Partner With Us
-          </button>
-        </div>
       </div>
     </div>
   );

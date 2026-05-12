@@ -1,196 +1,33 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { ArrowRight, Calendar, User, Tag, Search, ChevronRight } from 'lucide-react';
+import { Download, Eye, FileText } from 'lucide-react';
 
-// Images
 import heroImage from '../assests/images/outreach5.jpeg';
-import constructionImg from '../assests/images/an2.jpg';
-import outreachImg from '../assests/images/outreach2.jpeg';
-import founderImg from '../assests/images/founderphoto.jpeg';
-import maternalImg from '../assests/images/maternal-and-child-health-.jpg';
 
-// Blog post data
-const blogPosts = [
-  {
-    id: 1,
-    title: "Medical Center Construction Reaches 70% Completion",
-    excerpt: "The JoMabel Medical Center in Ufuma, Anambra State is now 70% complete. The facility will provide primary care, maternal health services, diagnostics, and chronic disease management to thousands of families.",
-    content: `
-      <p>The JoMabel Medical Center in Ufuma, Anambra State is now 70% complete. This milestone brings us one step closer to delivering quality healthcare to thousands of families in southeastern Nigeria.</p>
-      
-      <h3>Key Milestones Achieved</h3>
-      <ul>
-        <li>Building structure completed</li>
-        <li>Roof installation finished</li>
-        <li>Internal wiring underway</li>
-        <li>Plumbing systems installed</li>
-      </ul>
-      
-      <h3>What's Next</h3>
-      <p>The next phase includes equipment installation, interior finishing, and landscaping. We anticipate opening the doors to patients in early 2025.</p>
-      
-      <h3>Services Coming Soon</h3>
-      <ul>
-        <li>Primary & Preventive Care</li>
-        <li>Maternal & Child Health</li>
-        <li>Chronic Disease Management</li>
-        <li>Diagnostic & Laboratory Services</li>
-        <li>Emergency & Trauma Care</li>
-      </ul>
-      
-      <p>Your continued support makes this possible. Thank you for being part of this journey to transform healthcare in rural Nigeria.</p>
-    `,
-    category: "Construction Updates",
-    date: "April 5, 2024",
-    author: "JoMabel Team",
-    readTime: "3 min read",
-    image: constructionImg,
-    slug: "medical-center-construction-70-percent"
-  },
-  {
-    id: 2,
-    title: "A Message from Clara Ada Ogbaa: Why I Started JHF",
-    excerpt: "Healthcare should never be a privilege reserved for a few. It is a human right — and it is the legacy we are called to leave.",
-    content: `
-      <p>When I survived cancer twice and received a kidney transplant, I knew I had been given a second chance. That second chance belongs to Ufuma. That is why JoMabel Healthcare Foundation exists.</p>
-      
-      <h3>My Journey</h3>
-      <p>Born in Ufuma, Anambra State, I built a career as an educator in the United States. But it was my own journey through illness that transformed my life's mission entirely.</p>
-      
-      <p>I experienced firsthand what it means to fight for your life — and how access to quality healthcare can mean the difference between living and dying. I knew that millions in my hometown faced that same fight every day, without the resources I had been fortunate enough to access.</p>
-      
-      <h3>A Leap of Faith</h3>
-      <p>Using my own modest retirement savings, I began building a healthcare campus in Ufuma — not waiting for someone else to act, but breaking ground. Today, JoMabel Healthcare Foundation is that vision made real.</p>
-      
-      <h3>My Promise</h3>
-      <p>Healthcare should never be a privilege reserved for a few. It is a human right — and it is the legacy we are called to leave. Thank you for joining me on this journey.</p>
-      
-      <p>— Clara Ada Ogbaa, Ed.D., Founder & Executive Director</p>
-    `,
-    category: "Founder Updates",
-    date: "April 3, 2024",
-    author: "Clara Ada Ogbaa",
-    readTime: "4 min read",
-    image: founderImg,
-    slug: "message-from-founder-clara-ogbaa"
-  },
-  {
-    id: 3,
-    title: "Medical Outreach Serves 300+ Families in Ufuma",
-    excerpt: "Our recent medical outreach mission provided free consultations, screenings, and medications to over 300 families in Ufuma and surrounding communities.",
-    content: `
-      <p>Our recent medical outreach mission provided free consultations, screenings, and medications to over 300 families in Ufuma and surrounding communities. Working with local health workers, we identified critical health needs and provided referrals for follow-up care.</p>
-      
-      <h3>Services Provided</h3>
-      <ul>
-        <li>Blood pressure screening — 287 individuals</li>
-        <li>Malaria testing — 312 individuals</li>
-        <li>Blood sugar testing — 245 individuals</li>
-        <li>Health education sessions — 400+ attendees</li>
-        <li>Referrals for specialist care — 56 individuals</li>
-      </ul>
-      
-      <h3>Community Impact</h3>
-      <p>One community member shared: "Before JoMabel Healthcare Foundation reached our community, accessing medical care was a struggle. Today, my family receives proper treatment and health education. This foundation has truly restored hope to our family."</p>
-      
-      <h3>Thank You to Our Volunteers</h3>
-      <p>We extend our deepest gratitude to the healthcare workers and volunteers who made this mission possible. Your dedication saves lives.</p>
-      
-      <h3>Upcoming Missions</h3>
-      <p>Our next outreach mission is scheduled for May 2024. To support our work, please consider making a donation or volunteering with us.</p>
-    `,
-    category: "Community Outreach",
-    date: "March 28, 2024",
-    author: "JoMabel Team",
-    readTime: "3 min read",
-    image: outreachImg,
-    slug: "medical-outreach-serves-300-families"
-  },
-  {
-    id: 4,
-    title: "Maternal Health Initiative Expands to New Communities",
-    excerpt: "Our Maternal & Child Health Initiative is now reaching 5 new communities, providing safe pregnancy and delivery services to expectant mothers.",
-    content: `
-      <p>Our Maternal & Child Health Initiative is now reaching 5 new communities, providing safe pregnancy and delivery services to expectant mothers who previously had limited access to care.</p>
-      
-      <h3>Program Highlights</h3>
-      <ul>
-        <li>150+ expectant mothers currently enrolled</li>
-        <li>25 successful deliveries supported</li>
-        <li>200+ children received immunization</li>
-        <li>300+ mothers attended health education sessions</li>
-      </ul>
-      
-      <h3>Why Maternal Health Matters</h3>
-      <p>Nigeria ranks #6 among countries with the highest maternal death rates globally. Many of these deaths are preventable with proper prenatal care, skilled birth attendants, and emergency obstetric services.</p>
-      
-      <h3>Services We Provide</h3>
-      <ul>
-        <li>Prenatal checkups and screenings</li>
-        <li>Skilled birth attendance</li>
-        <li>Postnatal care for mothers and babies</li>
-        <li>Immunization and nutrition support</li>
-        <li>Health education for families</li>
-      </ul>
-      
-      <h3>Looking Ahead</h3>
-      <p>We plan to expand this initiative to 10 additional communities by the end of the year. Your support helps us reach more mothers and children with life-saving care.</p>
-    `,
-    category: "Program Updates",
-    date: "March 22, 2024",
-    author: "JoMabel Team",
-    readTime: "3 min read",
-    image: maternalImg,
-    slug: "maternal-health-initiative-expands"
-  }
-];
+const inauguralPDF = '/JHF_Inaugural_Newsletter_IRS..pdf';
 
-const categories = [
-  "All",
-  "Construction Updates",
-  "Founder Updates",
-  "Community Outreach",
-  "Program Updates",
-  "Health Education",
-  "Events"
-];
-
-const Blog = () => {
-  const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedPost, setSelectedPost] = useState<typeof blogPosts[0] | null>(null);
-
-  // Filter posts based on category and search
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+const Newsletter = () => {
+  const [showPdf, setShowPdf] = useState(false);
 
   return (
-    <div className="blog-page">
+    <div className="nl-page">
       <style>{`
-        .blog-page {
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        .nl-page {
           font-family: var(--font-body);
-          background-color: #FFFFFF;
+          background: var(--color-bg);
+          color: var(--color-text);
         }
-        
-        /* Hero Section */
-        .blog-hero {
+
+        /* ══ HERO ══ */
+        .nl-hero {
           position: relative;
-          height: 40vh;
-          min-height: 350px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
+          padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px);
           overflow: hidden;
         }
-        .blog-hero-image {
+        .nl-hero-img {
           position: absolute;
           inset: 0;
           width: 100%;
@@ -198,386 +35,411 @@ const Blog = () => {
           object-fit: cover;
           object-position: center;
         }
-        .blog-hero-overlay {
+        .nl-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+          background: linear-gradient(to right,
+            rgba(255,255,255,0.97) 45%,
+            rgba(255,255,255,0.75) 70%,
+            rgba(255,255,255,0.10) 100%
+          );
         }
-        .blog-hero-content {
+        .nl-hero-grid {
           position: relative;
           z-index: 2;
-          max-width: 800px;
-          padding: 0 24px;
-        }
-        .blog-hero h1 {
-          font-family: var(--font-heading);
-          font-size: 52px;
-          font-weight: 700;
-          color: #ffffff;
-          margin-bottom: 20px;
-        }
-        .blog-hero p {
-          font-size: 18px;
-          color: rgba(255,255,255,0.9);
-        }
-        
-        /* Blog Content */
-        .blog-container {
-          max-width: 1200px;
+          max-width: 1080px;
           margin: 0 auto;
-          padding: 64px 24px;
-        }
-        
-        /* Search and Filter Bar */
-        .blog-controls {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 20px;
-          margin-bottom: 48px;
-          padding-bottom: 24px;
-          border-bottom: 1px solid #E5E7EB;
-        }
-        .category-filters {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-        }
-        .category-btn {
-          padding: 8px 20px;
-          border-radius: 40px;
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-          background: #F3F4F6;
-          color: #4B5563;
-          border: none;
-        }
-        .category-btn:hover {
-          background: #EBF5FB;
-          color: #1D8FD4;
-        }
-        .category-btn.active {
-          background: #1D8FD4;
-          color: #ffffff;
-        }
-        .search-box {
-          display: flex;
-          align-items: center;
-          border: 1px solid #E5E7EB;
-          border-radius: 40px;
-          padding: 8px 16px;
-          background: #ffffff;
-        }
-        .search-box input {
-          border: none;
-          outline: none;
-          padding: 8px;
-          width: 200px;
-          font-size: 14px;
-        }
-        
-        /* Blog Grid */
-        .blog-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 40px;
+          grid-template-columns: 1fr 1px 1fr;
+          align-items: center;
+          min-height: 260px;
         }
-        .blog-card {
-          background: #ffffff;
-          border: 1px solid #E5E7EB;
-          border-radius: 24px;
-          overflow: hidden;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-        .blog-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.1);
-          border-color: #1D8FD4;
-        }
-        .blog-card-image {
-          width: 100%;
-          height: 240px;
-          object-fit: cover;
-        }
-        .blog-card-content {
-          padding: 24px;
-        }
-        .blog-category {
-          display: inline-block;
+        .nl-hero-left { padding-right: 64px; }
+        .nl-hero-kicker {
+          font-family: var(--font-body);
           font-size: 11px;
-          font-weight: 600;
-          color: #1D8FD4;
-          background: #EBF5FB;
-          padding: 4px 12px;
-          border-radius: 20px;
-          margin-bottom: 12px;
-        }
-        .blog-title {
-          font-family: var(--font-heading);
-          font-size: 20px;
           font-weight: 700;
-          color: #111827;
-          margin-bottom: 12px;
-          line-height: 1.3;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 14px;
+          display: block;
         }
-        .blog-excerpt {
-          font-size: 14px;
-          color: #6B7280;
-          line-height: 1.6;
-          margin-bottom: 16px;
+        .nl-hero-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(36px, 6vw, 64px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.0;
+          color: var(--color-navy);
+          margin: 0 0 20px;
         }
-        .blog-meta {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          font-size: 12px;
-          color: #9CA3AF;
-          margin-bottom: 16px;
+        .nl-hero-sub {
+          font-family: var(--font-body);
+          font-size: clamp(13px, 1.3vw, 15px);
+          color: var(--color-text-muted);
+          line-height: 1.8;
+          max-width: 360px;
+          margin: 0;
         }
-        .blog-meta span {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .read-more {
-          color: #1D8FD4;
-          font-size: 14px;
-          font-weight: 600;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          transition: gap 0.2s;
-        }
-        .read-more:hover {
-          gap: 10px;
-        }
-        
-        /* Modal */
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.8);
-          z-index: 1000;
+        .nl-hero-divider { background: var(--color-border); width: 1px; align-self: stretch; }
+        .nl-hero-right { padding-left: 64px; display: flex; justify-content: center; }
+        .nl-hero-icon-box {
+          border: 1px solid var(--color-border);
+          border-radius: 16px;
+          padding: 40px 56px;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px;
-          overflow-y: auto;
+          background: rgba(255,255,255,0.90);
+          box-shadow: var(--shadow-md);
         }
-        .modal-content {
-          max-width: 800px;
-          width: 100%;
-          background: #ffffff;
-          border-radius: 24px;
-          overflow: hidden;
-          max-height: 90vh;
-          overflow-y: auto;
+
+        /* ══ INNER ══ */
+        .nl-inner {
+          max-width: 1080px;
+          margin: 0 auto;
+          padding: 64px clamp(20px, 5vw, 56px);
         }
-        .modal-image {
-          width: 100%;
-          height: 300px;
-          object-fit: cover;
-        }
-        .modal-body {
-          padding: 32px;
-        }
-        .modal-category {
-          display: inline-block;
-          font-size: 12px;
-          font-weight: 600;
-          color: #1D8FD4;
-          background: #EBF5FB;
-          padding: 4px 12px;
-          border-radius: 20px;
-          margin-bottom: 16px;
-        }
-        .modal-title {
-          font-family: var(--font-heading);
-          font-size: 28px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 16px;
-        }
-        .modal-meta {
-          display: flex;
-          gap: 20px;
-          margin-bottom: 24px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid #E5E7EB;
-        }
-        .modal-content-text {
-          font-size: 16px;
-          color: #4B5563;
-          line-height: 1.7;
-        }
-        .modal-content-text h3 {
-          font-size: 20px;
-          font-weight: 700;
-          color: #111827;
-          margin: 24px 0 12px;
-        }
-        .modal-content-text ul {
-          margin: 12px 0;
+
+        /* ══ EDITORIAL SECTION HEADER ══ */
+        .nl-section-header {
+          border-left: 5px solid var(--color-navy);
           padding-left: 20px;
+          margin-bottom: 28px;
         }
-        .modal-content-text li {
-          margin: 8px 0;
-        }
-        .close-modal {
-          position: sticky;
-          top: 0;
-          right: 0;
-          float: right;
-          margin: 16px;
-          background: rgba(0,0,0,0.5);
-          border: none;
-          color: white;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          cursor: pointer;
-          font-size: 24px;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-          background: linear-gradient(135deg, #1D8FD4 0%, #1570A6 100%);
-          padding: 64px 24px;
-          text-align: center;
-          color: #ffffff;
-        }
-        .cta-title {
-          font-family: var(--font-heading);
-          font-size: 32px;
+        .nl-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          margin-bottom: 16px;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--color-primary);
+          margin: 0 0 10px;
         }
-        .cta-description {
-          font-size: 18px;
-          opacity: 0.95;
-          margin-bottom: 32px;
+        .nl-headline {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(24px, 3.5vw, 40px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          line-height: 1.1;
+          color: var(--color-navy);
+          margin: 0;
         }
-        .cta-btn {
-          background: #ffffff;
-          color: #1D8FD4;
-          border: none;
-          border-radius: 10px;
-          padding: 14px 36px;
-          font-size: 16px;
+
+        /* ══ DIVIDER LABEL ══ */
+        .nl-divider {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 0;
+        }
+        .nl-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--color-border);
+        }
+
+        /* ══ CURRENT ISSUE ══ */
+        .nl-issue-block {
+          border-top: 2px solid var(--color-navy);
+          padding-top: 36px;
+          margin-bottom: 56px;
+        }
+
+        /* Anton issue title */
+        .nl-issue-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(20px, 2.8vw, 32px);
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 8px;
+        }
+        .nl-issue-subtitle {
+          font-family: var(--font-body);
+          font-size: clamp(14px, 1.4vw, 16px);
+          color: var(--color-primary);
           font-weight: 600;
+          margin: 0 0 16px;
+          line-height: 1.5;
+        }
+        .nl-issue-meta {
+          display: flex;
+          gap: 24px;
+          flex-wrap: wrap;
+          margin-bottom: 28px;
+        }
+        .nl-meta-item {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--color-text-light);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        /* ══ ACTION BUTTONS ══ */
+        .nl-actions {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-bottom: 36px;
+        }
+        .nl-btn-primary {
+          background: var(--color-primary);
+          color: #ffffff;
+          border: none;
+          border-radius: var(--btn-radius);
+          padding: 12px 28px;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 8px;
+          transition: var(--transition);
+          text-decoration: none;
         }
-        
-        @media (max-width: 768px) {
-          .blog-hero h1 { font-size: 32px; }
-          .blog-grid { grid-template-columns: 1fr; }
-          .blog-controls { flex-direction: column; align-items: stretch; }
-          .search-box input { width: 100%; }
-          .modal-title { font-size: 22px; }
-          .modal-body { padding: 20px; }
+        .nl-btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+        .nl-btn-primary.active { background: var(--color-primary-dark); }
+
+        .nl-btn-outline {
+          background: var(--color-bg);
+          color: var(--color-primary);
+          border: 1.5px solid var(--color-primary);
+          border-radius: var(--btn-radius);
+          padding: 12px 28px;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: var(--transition);
+          text-decoration: none;
+        }
+        .nl-btn-outline:hover { background: var(--color-primary-light); transform: translateY(-1px); }
+
+        /* ══ PDF VIEWER ══ */
+        .nl-pdf-wrap {
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--card-radius);
+          overflow: hidden;
+          margin-bottom: 48px;
+          box-shadow: var(--shadow-md);
+        }
+        .nl-pdf-wrap iframe {
+          width: 100%;
+          height: 80vh;
+          min-height: 600px;
+          border: none;
+          display: block;
+        }
+
+        /* ══ ARCHIVE ══ */
+        .nl-archive-block {
+          border-top: 1px solid var(--color-border);
+          padding-top: 36px;
+        }
+
+        .nl-archive-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          border-top: 2px solid var(--color-navy);
+          padding-top: 32px;
+        }
+        .nl-archive-card {
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--card-radius);
+          padding: 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          transition: var(--transition);
+        }
+        .nl-archive-card:not(.disabled):hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+          border-color: var(--color-primary);
+        }
+        .nl-archive-card.disabled { opacity: 0.6; cursor: default; }
+
+        /* Anton archive card title */
+        .nl-archive-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(13px, 1.4vw, 16px);
+          font-weight: 400;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 5px;
+        }
+        .nl-archive-meta {
+          font-family: var(--font-body);
+          font-size: 12px;
+          color: var(--color-text-light);
+          margin: 0;
+        }
+        .nl-archive-badge {
+          font-family: var(--font-body);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--color-text-light);
+          background: var(--color-surface-2);
+          padding: 4px 10px;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .nl-archive-icon {
+          color: var(--color-primary);
+          flex-shrink: 0;
+          cursor: pointer;
+          transition: var(--transition);
+        }
+        .nl-archive-icon:hover { color: var(--color-primary-dark); }
+
+        /* ══ RESPONSIVE ══ */
+        @media (max-width: 860px) {
+          .nl-hero-grid { grid-template-columns: 1fr; min-height: unset; gap: 32px; }
+          .nl-hero-divider { display: none; }
+          .nl-hero-left { padding-right: 0; }
+          .nl-hero-right { padding-left: 0; justify-content: flex-start; }
+          .nl-archive-grid { grid-template-columns: 1fr; }
+          .nl-pdf-wrap iframe { height: 55vh; min-height: 400px; }
+        }
+        @media (max-width: 560px) {
+          .nl-actions { flex-direction: column; }
+          .nl-btn-primary, .nl-btn-outline { justify-content: center; }
+          .nl-hero-icon-box { padding: 28px 40px; }
         }
       `}</style>
 
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="blog-hero">
-        <img src={heroImage} alt="Blog" className="blog-hero-image" />
-        <div className="blog-hero-overlay" />
-        <div className="blog-hero-content">
-          <h1>Stories & Updates</h1>
-          <p>News, updates, and stories from JoMabel Healthcare Foundation</p>
-        </div>
-      </div>
-
-      {/* Blog Content */}
-      <div className="blog-container">
-        <div className="blog-controls">
-          <div className="category-filters">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                className={`category-btn ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+      {/* ── Hero ── */}
+      <div className="nl-hero">
+        <img src={heroImage} alt="Newsletter" className="nl-hero-img" />
+        <div className="nl-hero-overlay" />
+        <div className="nl-hero-grid">
+          <div className="nl-hero-left">
+            <span className="nl-hero-kicker">Stay Informed</span>
+            <h1 className="nl-hero-title">Newsletter</h1>
+            <p className="nl-hero-sub">
+              JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit foundation
+              developing a world-class 16,000+ sq. meter medical and training center
+              in Ufuma, Anambra State, Nigeria.
+            </p>
           </div>
-          <div className="search-box">
-            <Search size={18} color="#9CA3AF" />
-            <input
-              type="text"
-              placeholder="Search articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="blog-grid">
-          {filteredPosts.map(post => (
-            <div key={post.id} className="blog-card" onClick={() => setSelectedPost(post)}>
-              <img src={post.image} alt={post.title} className="blog-card-image" />
-              <div className="blog-card-content">
-                <span className="blog-category">{post.category}</span>
-                <h3 className="blog-title">{post.title}</h3>
-                <div className="blog-meta">
-                  <span><Calendar size={12} /> {post.date}</span>
-                  <span><User size={12} /> {post.author}</span>
-                  <span>📖 {post.readTime}</span>
-                </div>
-                <p className="blog-excerpt">{post.excerpt}</p>
-                <span className="read-more">Read More <ChevronRight size={14} /></span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredPosts.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '60px' }}>
-            <p>No articles found. Try a different search term.</p>
-          </div>
-        )}
-      </div>
-
-      {/* Modal for Full Article */}
-      {selectedPost && (
-        <div className="modal-overlay" onClick={() => setSelectedPost(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setSelectedPost(null)}>×</button>
-            <img src={selectedPost.image} alt={selectedPost.title} className="modal-image" />
-            <div className="modal-body">
-              <span className="modal-category">{selectedPost.category}</span>
-              <h2 className="modal-title">{selectedPost.title}</h2>
-              <div className="modal-meta">
-                <span><Calendar size={14} /> {selectedPost.date}</span>
-                <span><User size={14} /> {selectedPost.author}</span>
-                <span>📖 {selectedPost.readTime}</span>
-              </div>
-              <div className="modal-content-text" dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
+          <div className="nl-hero-divider" />
+          <div className="nl-hero-right">
+            <div className="nl-hero-icon-box">
+              <FileText size={72} color="var(--color-primary)" strokeWidth={1.2} />
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* CTA Section */}
-      <div className="cta-section">
-        <h3 className="cta-title">Stay Updated</h3>
-        <p className="cta-description">
-          Subscribe to our newsletter to receive the latest updates from JoMabel Healthcare Foundation.
-        </p>
-        <button className="cta-btn" onClick={() => navigate('/contact')}>
-          Subscribe Now
-          <ArrowRight size={16} />
-        </button>
+      <div className="nl-inner">
+
+        {/* ── Current Issue ── */}
+        <div className="nl-section-header">
+          <p className="nl-kicker">Latest Release</p>
+          <h2 className="nl-headline">Current Issue</h2>
+        </div>
+        <p className="nl-divider">Volume 1, Issue 1 — April 2025</p>
+
+        <div className="nl-issue-block">
+          <h3 className="nl-issue-title">Inaugural Newsletter</h3>
+          <p className="nl-issue-subtitle">
+            Building Systems. Restoring Health. Empowering Communities.
+          </p>
+          <div className="nl-issue-meta">
+            <span className="nl-meta-item">
+              <FileText size={13} color="var(--color-text-light)" />
+              Volume 1, Issue 1
+            </span>
+            <span className="nl-meta-item">
+              <Eye size={13} color="var(--color-text-light)" />
+              April 2025
+            </span>
+          </div>
+
+          <div className="nl-actions">
+            <button
+              className={`nl-btn-primary${showPdf ? ' active' : ''}`}
+              onClick={() => setShowPdf(v => !v)}
+            >
+              <Eye size={15} />
+              {showPdf ? 'Close Viewer' : 'Read Online'}
+            </button>
+            <a
+              href={inauguralPDF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nl-btn-outline"
+            >
+              <Download size={15} />
+              Download PDF
+            </a>
+          </div>
+
+          {showPdf && (
+            <div className="nl-pdf-wrap">
+              <iframe
+                src={`${inauguralPDF}#toolbar=0&navpanes=0`}
+                title="JoMabel Healthcare Foundation — Inaugural Newsletter"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* ── Archive ── */}
+        <div className="nl-archive-block">
+          <div className="nl-section-header" style={{ borderLeft: '5px solid var(--color-navy)' }}>
+            <p className="nl-kicker">Archive</p>
+            <h2 className="nl-headline">Past Issues</h2>
+          </div>
+          <p className="nl-divider">More editions coming as the foundation grows</p>
+
+          <div className="nl-archive-grid">
+            <div className="nl-archive-card disabled">
+              <div>
+                <h4 className="nl-archive-title">Spring 2026 Update</h4>
+                <p className="nl-archive-meta">Coming Soon</p>
+              </div>
+              <span className="nl-archive-badge">Coming Soon</span>
+            </div>
+            <div className="nl-archive-card disabled">
+              <div>
+                <h4 className="nl-archive-title">Construction Progress Report</h4>
+                <p className="nl-archive-meta">Coming Soon</p>
+              </div>
+              <span className="nl-archive-badge">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <Footer />
@@ -585,4 +447,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default Newsletter;

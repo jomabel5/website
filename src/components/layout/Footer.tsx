@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Youtube } from 'lucide-react';
 import logo from '../../assests/images/logo.jpeg';
 
 const Footer = () => {
@@ -108,6 +108,21 @@ const Footer = () => {
           border-color: var(--color-primary);
           transform: translateY(-2px);
         }
+        .footer-disclaimer {
+          background-color: rgba(0,0,0,0.2);
+          padding: 12px clamp(20px, 5vw, 48px);
+          text-align: center;
+          font-size: 11px;
+          color: rgba(255,255,255,0.5);
+          line-height: 1.5;
+        }
+        .footer-disclaimer a {
+          color: rgba(255,255,255,0.6);
+          text-decoration: underline;
+        }
+        .footer-disclaimer a:hover {
+          color: var(--color-primary);
+        }
 
         @media (max-width: 900px) {
           .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
@@ -131,28 +146,34 @@ const Footer = () => {
               <img src={logo} alt="JoMabel Healthcare Foundation" style={{ height: '52px', width: 'auto', display: 'block' }} />
             </div>
             <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12.5px', lineHeight: '1.8', margin: '0 0 6px' }}>
-              JoMabel Healthcare Foundation is a faith-guided, U.S.-based nonprofit
+              JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit foundation
               developing a world-class 16,000+ sq. meter medical and training campus
               in Ufuma, Anambra State, Nigeria.
             </p>
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11.5px', lineHeight: '1.6', margin: '0 0 4px' }}>
-              Website: jomabelfoundation.org
+              Website: jomabelhf.org
             </p>
             <a href="/donate" className="footer-donate-btn">Donate Now</a>
           </div>
 
-          {/* Col 2 — Quick Links */}
+          {/* Col 2 — Quick Links - Updated with new pages */}
           <div>
             <h4 className="footer-col-heading">Quick Links</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { label: 'Home',        path: '/' },
-                { label: 'About Us',    path: '/about' },
-                { label: 'Programs',    path: '/programs' },
-                { label: 'Campaign',    path: '/campaign' },
-                { label: 'Legacy Giving', path: '/legacy' },
-                { label: 'Contact Us',  path: '/contact' },
-                { label: 'Donate',      path: '/donate' },
+                { label: 'Home',           path: '/' },
+                { label: 'Mission & Vision', path: '/mission-vision' },
+                { label: 'Our Story',      path: '/our-story' },
+                { label: "Founder's Story", path: '/founder-story' },
+                { label: 'Leadership',     path: '/leadership' },
+                { label: 'Programs',       path: '/programs' },
+                { label: 'Campaign',       path: '/campaign' },
+                { label: 'Impact',         path: '/impact' },
+                { label: 'ROI',            path: '/roi' },
+                { label: 'Legacy Giving',  path: '/legacy' },
+                { label: 'Newsletter',     path: '/newsletter' },
+                { label: 'Contact Us',     path: '/contact' },
+                { label: 'Donate',         path: '/donate' },
               ].map((item) => (
                 <li key={item.path}>
                   <Link to={item.path} className="footer-link">{item.label}</Link>
@@ -191,8 +212,8 @@ const Footer = () => {
                 </div>
                 <div>
                   <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 2px' }}>Email</p>
-                  <a href="mailto:info@jomabelhf.org" className="footer-link" style={{ fontSize: '12.5px' }}>
-                    info@jomabelhf.org
+                  <a href="mailto:foundation@jomabelhf.org" className="footer-link" style={{ fontSize: '12.5px' }}>
+                    foundation@jomabelhf.org
                   </a>
                 </div>
               </div>
@@ -204,7 +225,7 @@ const Footer = () => {
                 <div>
                   <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 2px' }}>Phone</p>
                   <a href="tel:+15125080277" className="footer-link" style={{ fontSize: '12.5px' }}>
-                    +1 (512) 508-0277
+                    1-512-508-0277
                   </a>
                 </div>
               </div>
@@ -230,41 +251,68 @@ const Footer = () => {
         <hr className="footer-divider" />
       </div>
 
+      {/* ── DISCLAIMER SECTION (Medical & Educational) ── */}
+      <div className="footer-disclaimer">
+        <p>
+          <strong>Medical Disclaimer:</strong> The information on this website is for educational and informational purposes only 
+          and does not constitute medical advice. It is not a substitute for professional medical advice, diagnosis, or treatment. 
+          Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+        </p>
+        <p style={{ marginTop: '8px' }}>
+          <Link to="/privacy-policy" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'underline' }}>Privacy Policy</Link>
+          {' '}|{' '}
+          <Link to="/terms" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'underline' }}>Terms of Service</Link>
+        </p>
+      </div>
+
       {/* ── BOTTOM BAR ── */}
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <p style={{ color: 'rgba(255,255,255,0.70)', fontSize: '12px', margin: 0 }}>
-            © 2026 JoMabel Healthcare Foundation. All rights reserved.
-            &nbsp;·&nbsp; jomabelfoundation.org
+            © 2025 JoMabel Healthcare Foundation. All rights reserved.
+            &nbsp;·&nbsp; jomabelhf.org
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: '12px' }}>Follow us:</span>
 
-            {/* X / Twitter */}
-            <a href="#" className="footer-social-icon" aria-label="X / Twitter">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffffff">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
-              </svg>
-            </a>
-
-            {/* Facebook */}
-            <a href="#" className="footer-social-icon" aria-label="Facebook">
-              <Facebook size={14} color="#ffffff" />
-            </a>
-
-            {/* LinkedIn */}
-            <a href="#" className="footer-social-icon" aria-label="LinkedIn">
-              <Linkedin size={14} color="#ffffff" />
-            </a>
-
             {/* Instagram */}
-            <a href="#" className="footer-social-icon" aria-label="Instagram">
+            <a 
+              href="https://www.instagram.com/jhfoundation663/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="footer-social-icon" 
+              aria-label="Instagram"
+            >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                 <circle cx="12" cy="12" r="4"/>
                 <circle cx="17.5" cy="6.5" r="0.5" fill="#ffffff"/>
               </svg>
+            </a>
+
+            {/* X / Twitter */}
+            <a 
+              href="https://x.com/jomabel176441" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="footer-social-icon" 
+              aria-label="X / Twitter"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffffff">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+              </svg>
+            </a>
+
+            {/* YouTube */}
+            <a 
+              href="https://youtube.com/@jomabelhealthcarefoundation" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="footer-social-icon" 
+              aria-label="YouTube"
+            >
+              <Youtube size={14} color="#ffffff" />
             </a>
 
           </div>

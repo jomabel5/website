@@ -11,7 +11,13 @@ import Campaign from './Pages/Campaign';
 import LegacyGiving from './Pages/LegacyGiving';
 import ROI from './Pages/ROI';
 import Impact from './Pages/Impact';
-import Blog from './Pages/Blog';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
+import Terms from './Pages/Terms';
+import Newsletter from './Pages/Blog';
+import MissionVision from './Pages/MissionVision';
+import OurStory from './Pages/OurStory';
+import FounderStory from './Pages/FounderStory';
+import Leadership from './Pages/Leadership';
 
 function App() {
   return (
@@ -28,8 +34,13 @@ function App() {
           <Route path="/legacy" element={<LegacyGiving />} />
           <Route path="/roi" element={<ROI />} />
           <Route path="/impact" element={<Impact />} />
-          <Route path="/blog" element={<Blog />} />
-          
+          <Route path="/newsletter" element={<Newsletter />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/terms" element={<Terms />} />
+          <Route path="/mission-vision" element={<MissionVision />} />
+<Route path="/our-story" element={<OurStory />} />
+<Route path="/founder-story" element={<FounderStory />} />
+<Route path="/leadership" element={<Leadership />} />
         </Routes>
       </div>
       

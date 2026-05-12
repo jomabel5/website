@@ -47,7 +47,6 @@ const Impact = () => {
 
   useEffect(() => {
     if (isVisible) {
-      // Animate patients
       let startPatients = 0;
       const patientsInterval = setInterval(() => {
         if (startPatients < 5000) {
@@ -58,7 +57,6 @@ const Impact = () => {
         }
       }, 15);
 
-      // Animate workers
       let startWorkers = 0;
       const workersInterval = setInterval(() => {
         if (startWorkers < 250) {
@@ -69,7 +67,6 @@ const Impact = () => {
         }
       }, 20);
 
-      // Animate campus
       let startCampus = 0;
       const campusInterval = setInterval(() => {
         if (startCampus < 16000) {
@@ -80,7 +77,6 @@ const Impact = () => {
         }
       }, 15);
 
-      // Animate communities
       let startCommunities = 0;
       const communitiesInterval = setInterval(() => {
         if (startCommunities < 25) {
@@ -91,7 +87,6 @@ const Impact = () => {
         }
       }, 40);
 
-      // Animate economic impact
       let startAnnual = 0;
       const annualInterval = setInterval(() => {
         if (startAnnual < 547500) {
@@ -131,22 +126,26 @@ const Impact = () => {
   return (
     <div ref={sectionRef} className="impact-page">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
         .impact-page {
           font-family: var(--font-body);
-          background-color: #FFFFFF;
+          background: var(--color-bg);
+          color: var(--color-text);
         }
-        
-        /* Hero Section */
+
+        /* ══════════════════════════════════════
+           HERO — original style with overlay
+        ══════════════════════════════════════ */
         .impact-hero {
           position: relative;
-          height: 50vh;
-          min-height: 400px;
+          padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px);
+          min-height: 480px;
           display: flex;
           align-items: center;
-          justify-content: center;
-          text-align: center;
           overflow: hidden;
         }
+
         .impact-hero-image {
           position: absolute;
           inset: 0;
@@ -155,115 +154,196 @@ const Impact = () => {
           object-fit: cover;
           object-position: center;
         }
+
         .impact-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+          background: linear-gradient(
+            to right,
+            rgba(0,0,0,0.85) 0%,
+            rgba(0,0,0,0.65) 60%,
+            rgba(0,0,0,0.30) 100%
+          );
         }
+
         .impact-hero-content {
           position: relative;
           z-index: 2;
-          max-width: 800px;
-          padding: 0 24px;
+          max-width: 700px;
         }
-        .impact-hero h1 {
-          font-family: var(--font-heading);
-          font-size: 48px;
+
+        .impact-hero-kicker {
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: #1D8FD4;
+          margin: 0 0 16px;
+          display: block;
+        }
+
+        .impact-hero h1 {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(36px, 5vw, 56px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
           color: #ffffff;
-          margin-bottom: 20px;
+          line-height: 1.1;
+          margin: 0 0 20px;
         }
+
         .impact-hero p {
+          font-family: var(--font-body);
           font-size: 18px;
-          color: rgba(255,255,255,0.9);
+          color: rgba(255,255,255,0.8);
+          line-height: 1.6;
+          max-width: 500px;
+          margin: 0;
         }
-        
-        /* Metrics Grid */
+
+        /* ══════════════════════════════════════
+           METRICS SECTION — editorial style
+        ══════════════════════════════════════ */
         .metrics-section {
-          padding: 64px 24px;
-          background: #F9FAFB;
+          padding: 80px clamp(20px, 5vw, 64px);
+          background: var(--color-surface);
         }
+
+        .metrics-header {
+          text-align: center;
+          margin-bottom: 48px;
+        }
+
+        .metrics-label {
+          display: inline-block;
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: #1D8FD4;
+          background: #EBF5FB;
+          padding: 5px 14px;
+          border-radius: 4px;
+          margin-bottom: 16px;
+        }
+
+        .metrics-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 42px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 12px;
+        }
+
+        .metrics-description {
+          font-family: var(--font-body);
+          font-size: 17px;
+          color: var(--color-text-muted);
+          max-width: 650px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+
         .metrics-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 32px;
+          gap: 24px;
           max-width: 1200px;
-          margin: 0 auto;
+          margin: 48px auto 0;
         }
+
         .metric-card {
-          text-align: center;
-          padding: 32px 24px;
           background: #ffffff;
-          border-radius: 24px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-          transition: transform 0.3s ease;
+          border-radius: 16px;
+          padding: 32px 20px;
+          text-align: center;
+          border: 1px solid #E5E7EB;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .metric-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-3px);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
         }
+
         .metric-icon {
-          width: 64px;
-          height: 64px;
-          margin: 0 auto 20px;
+          width: 56px;
+          height: 56px;
+          margin: 0 auto 16px;
           background: #EBF5FB;
-          border-radius: 20px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
           color: #1D8FD4;
         }
-        .metric-icon svg {
-          width: 32px;
-          height: 32px;
-        }
+
         .metric-number {
-          font-family: var(--font-heading);
+          font-family: 'Anton', sans-serif;
           font-size: 42px;
-          font-weight: 800;
+          font-weight: 400;
+          letter-spacing: 0.01em;
           color: #1D8FD4;
           margin-bottom: 8px;
         }
+
         .metric-label {
-          font-size: 16px;
+          font-family: var(--font-body);
+          font-size: 14px;
           font-weight: 600;
           color: #111827;
         }
-        
-        /* Areas Section */
+
+        /* ══════════════════════════════════════
+           AREAS SECTION — editorial cards
+        ══════════════════════════════════════ */
         .areas-section {
-          padding: 80px 24px;
-          background: #FFFFFF;
+          padding: 80px clamp(20px, 5vw, 64px);
+          background: #ffffff;
         }
+
         .section-header {
           text-align: center;
           margin-bottom: 56px;
         }
+
         .section-label {
           display: inline-block;
-          font-size: 12px;
+          font-family: var(--font-body);
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
           color: #1D8FD4;
           background: #EBF5FB;
-          padding: 6px 16px;
-          border-radius: 40px;
+          padding: 5px 14px;
+          border-radius: 4px;
           margin-bottom: 16px;
         }
+
         .section-title {
-          font-family: var(--font-heading);
-          font-size: 38px;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 16px;
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 42px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 12px;
         }
+
         .section-description {
-          font-size: 18px;
-          color: #4B5563;
-          max-width: 700px;
+          font-family: var(--font-body);
+          font-size: 17px;
+          color: var(--color-text-muted);
+          max-width: 650px;
           margin: 0 auto;
         }
-        
+
         .areas-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -271,145 +351,232 @@ const Impact = () => {
           max-width: 1100px;
           margin: 0 auto;
         }
+
         .area-card {
           display: flex;
           gap: 24px;
           background: #F9FAFB;
+          border: 1px solid #E5E7EB;
           border-radius: 20px;
           overflow: hidden;
-          transition: transform 0.3s ease;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .area-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-3px);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
         }
+
         .area-image {
           width: 40%;
           object-fit: cover;
         }
+
         .area-content {
           flex: 1;
-          padding: 24px 24px 24px 0;
+          padding: 28px 24px 28px 0;
         }
+
         .area-icon {
           width: 48px;
           height: 48px;
           background: #EBF5FB;
-          border-radius: 14px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
           color: #1D8FD4;
           margin-bottom: 16px;
         }
-        .area-icon svg {
-          width: 24px;
-          height: 24px;
-        }
+
         .area-title {
+          font-family: 'Anton', sans-serif;
           font-size: 20px;
-          font-weight: 700;
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
           color: #111827;
           margin-bottom: 12px;
         }
+
         .area-description {
+          font-family: var(--font-body);
           font-size: 14px;
           color: #6B7280;
           line-height: 1.6;
         }
-        
-        /* Economic Section */
+
+        /* ══════════════════════════════════════
+           ECONOMIC SECTION — dark band with stats
+        ══════════════════════════════════════ */
         .economic-section {
-          background: linear-gradient(135deg, #1D8FD4 0%, #1570A6 100%);
-          padding: 64px 24px;
+          background: var(--color-navy);
+          padding: 80px clamp(20px, 5vw, 64px);
           text-align: center;
-          color: #ffffff;
         }
+
+        .economic-header {
+          margin-bottom: 48px;
+        }
+
+        .economic-label {
+          display: inline-block;
+          font-family: var(--font-body);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: #1D8FD4;
+          background: rgba(255,255,255,0.15);
+          padding: 5px 14px;
+          border-radius: 4px;
+          margin-bottom: 16px;
+        }
+
+        .economic-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 42px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          color: #ffffff;
+          margin: 0;
+        }
+
         .economic-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 48px;
+          gap: 32px;
           max-width: 900px;
           margin: 48px auto 0;
         }
+
         .economic-card {
-          text-align: center;
-          padding: 24px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 20px;
-          transition: transform 0.3s ease;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 16px;
+          padding: 32px 24px;
+          transition: transform 0.2s ease, background 0.2s ease;
         }
+
         .economic-card:hover {
-          transform: translateY(-4px);
-          background: rgba(255,255,255,0.2);
+          transform: translateY(-3px);
+          background: rgba(255,255,255,0.12);
         }
+
         .economic-number {
-          font-family: var(--font-heading);
-          font-size: 36px;
-          font-weight: 800;
-          margin-bottom: 8px;
+          font-family: 'Anton', sans-serif;
+          font-size: 40px;
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          color: #1D8FD4;
+          margin-bottom: 12px;
         }
-        .economic-label {
+
+        .economic-label-text {
+          font-family: var(--font-body);
           font-size: 14px;
-          opacity: 0.9;
+          color: rgba(255,255,255,0.7);
         }
-        
-        /* CTA Section */
+
+        /* ══════════════════════════════════════
+           CTA SECTION
+        ══════════════════════════════════════ */
         .cta-section {
-          padding: 64px 24px;
+          padding: 80px clamp(20px, 5vw, 64px);
           text-align: center;
-          background: #FFFFFF;
+          background: #ffffff;
+          border-top: 1px solid #E5E7EB;
         }
+
+        .cta-title {
+          font-family: 'Anton', sans-serif;
+          font-size: clamp(28px, 4vw, 38px);
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          color: var(--color-navy);
+          margin: 0 0 16px;
+        }
+
+        .cta-description {
+          font-family: var(--font-body);
+          font-size: 17px;
+          color: var(--color-text-muted);
+          max-width: 600px;
+          margin: 0 auto 32px;
+        }
+
         .cta-buttons {
           display: flex;
           gap: 16px;
           justify-content: center;
-          margin-top: 32px;
+          flex-wrap: wrap;
         }
+
         .btn-primary {
           background: #16A34A;
           color: #ffffff;
           border: none;
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 14px 32px;
-          font-size: 15px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 700;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 8px;
+          transition: all 0.2s ease;
+          letter-spacing: 0.5px;
         }
+
         .btn-primary:hover {
           background: #15803D;
           transform: translateY(-2px);
         }
+
         .btn-outline {
           background: transparent;
           color: #1D8FD4;
           border: 1.5px solid #1D8FD4;
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 14px 32px;
-          font-size: 15px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 700;
           cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+          letter-spacing: 0.5px;
         }
+
         .btn-outline:hover {
           background: #EBF5FB;
           transform: translateY(-2px);
         }
-        
+
+        /* Responsive */
         @media (max-width: 1024px) {
           .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-          .areas-grid { grid-template-columns: 1fr; }
           .economic-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        @media (max-width: 768px) {
-          .impact-hero h1 { font-size: 32px; }
-          .metrics-grid { grid-template-columns: 1fr; }
+
+        @media (max-width: 900px) {
+          .areas-grid { grid-template-columns: 1fr; }
           .area-card { flex-direction: column; }
-          .area-image { width: 100%; height: 180px; }
-          .area-content { padding: 20px; }
+          .area-image { width: 100%; height: 220px; }
+          .area-content { padding: 24px; }
+        }
+
+        @media (max-width: 768px) {
+          .impact-hero { min-height: 400px; text-align: center; }
+          .impact-hero-content { max-width: 100%; }
+          .impact-hero p { max-width: 100%; }
+          .metrics-grid { grid-template-columns: 1fr; }
           .economic-grid { grid-template-columns: 1fr; gap: 20px; }
-          .cta-buttons { flex-direction: column; }
+          .cta-buttons { flex-direction: column; align-items: center; }
+          .btn-primary, .btn-outline { width: 100%; max-width: 260px; justify-content: center; }
         }
       `}</style>
 
@@ -420,13 +587,19 @@ const Impact = () => {
         <img src={heroImage} alt="Impact" className="impact-hero-image" />
         <div className="impact-hero-overlay" />
         <div className="impact-hero-content">
+          <span className="impact-hero-kicker">Our Impact</span>
           <h1>Transforming Healthcare Access</h1>
           <p>Measurable impact across communities in southeastern Nigeria</p>
         </div>
       </div>
 
-      {/* Metrics */}
+      {/* Metrics Grid */}
       <div className="metrics-section">
+        <div className="metrics-header">
+          <div className="metrics-label">By The Numbers</div>
+          <h2 className="metrics-title">Measurable Outcomes, Tangible Change</h2>
+          <p className="metrics-description">Every number represents a life touched, a family supported, and a community strengthened.</p>
+        </div>
         <div className="metrics-grid">
           {impactMetrics.map((metric, i) => {
             const IconComponent = metric.icon;
@@ -467,30 +640,30 @@ const Impact = () => {
 
       {/* Economic Impact */}
       <div className="economic-section">
-        <div className="section-header">
-          <div className="section-label" style={{ background: 'rgba(255,255,255,0.2)' }}>Economic Impact</div>
-          <h2 className="section-title" style={{ color: '#fff' }}>Return on Investment</h2>
+        <div className="economic-header">
+          <div className="economic-label">Economic Impact</div>
+          <h2 className="economic-title">Return on Investment</h2>
         </div>
         <div className="economic-grid">
           <div className="economic-card">
             <div className="economic-number">${animatedEconomic.annual.toLocaleString()}</div>
-            <div className="economic-label">Annual Impact</div>
+            <div className="economic-label-text">Annual Impact</div>
           </div>
           <div className="economic-card">
             <div className="economic-number">${(animatedEconomic.fiveYear / 1000000).toFixed(1)}M</div>
-            <div className="economic-label">5-Year Impact</div>
+            <div className="economic-label-text">5-Year Impact</div>
           </div>
           <div className="economic-card">
             <div className="economic-number">2.7x</div>
-            <div className="economic-label">ROI Multiplier</div>
+            <div className="economic-label-text">ROI Multiplier</div>
           </div>
         </div>
       </div>
 
-      {/* CTA */}
+      {/* CTA Section */}
       <div className="cta-section">
-        <h3 className="section-title">Help Us Scale Our Impact</h3>
-        <p className="section-description">Your support enables us to reach more communities and save more lives.</p>
+        <h3 className="cta-title">Help Us Scale Our Impact</h3>
+        <p className="cta-description">Your support enables us to reach more communities and save more lives.</p>
         <div className="cta-buttons">
           <button className="btn-primary" onClick={() => navigate('/donate')}>
             Donate Now <ArrowRight size={16} />

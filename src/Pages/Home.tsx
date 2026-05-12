@@ -9,6 +9,7 @@ import OurPrograms from '../components/sections/Ourprograms';
 import CampaignBanner from '../components/sections/CampaignBanner';
 import Testimonies from '../components/sections/Testimonies';
 import Contact from '../components/sections/Contact';
+import OurFocus from '../components/sections/OurFocus';
 
 // ── New board-requested sections ──
 import TheProblem from '../components/sections/TheProblem';
@@ -18,11 +19,13 @@ import FounderStory from '../components/sections/FounderStory';
 //import ImpactMetrics from '../components/sections/ImpactMetrics';
 import PartnershipInvitation from '../components/sections/PartnershipInvitation';
 
+
 const Home = () => {
   return (
     <div>
       <Navbar />
       <Hero />
+      <OurFocus />
       <TheProblem />
       <TheSolution />
       
