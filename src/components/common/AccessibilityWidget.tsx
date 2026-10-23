@@ -1,50 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Accessibility, Type, Contrast, ZoomIn, ZoomOut, Volume2, X } from 'lucide-react';
 
 const AccessibilityWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
+  const [zoomLevel, setZoomLevel] = useState(100);
   const [highContrast, setHighContrast] = useState(false);
   const [readableFont, setReadableFont] = useState(false);
 
+  // Capture the site's real body font once, so turning "readable font" off
+  // restores whatever the pages actually use — not a hardcoded guess.
+  const originalFontRef = useRef<string | null>(null);
   useEffect(() => {
-    // Apply font size
-    document.documentElement.style.fontSize = `${fontSize}%`;
-    
-    // Apply high contrast
-    if (highContrast) {
-      document.documentElement.style.filter = 'contrast(1.5) brightness(1.1)';
-    } else {
-      document.documentElement.style.filter = '';
+    if (originalFontRef.current === null) {
+      const computed = getComputedStyle(document.documentElement)
+        .getPropertyValue('--font-body')
+        .trim();
+      originalFontRef.current = computed || "'Inter', 'Segoe UI', sans-serif";
     }
-    
-    // Apply readable font
+  }, []);
+
+  useEffect(() => {
+    // Text size: use zoom on <html> instead of font-size.
+    // font-size only scales rem/em values — this site's pages are built with
+    // px and clamp(px, vw, px), which never respond to a root font-size change.
+    // zoom scales the whole rendered page uniformly, so it works everywhere
+    // regardless of what unit any individual page happens to use.
+    document.documentElement.style.zoom = zoomLevel !== 100 ? `${zoomLevel}%` : '';
+
+    // High contrast
+    document.documentElement.style.filter = highContrast ? 'contrast(1.5) brightness(1.1)' : '';
+
+    // Readable font — restore the captured original instead of a hardcoded value
     if (readableFont) {
       document.documentElement.style.setProperty('--font-body', "'Open Dyslexic', 'Comic Neue', 'Inter', sans-serif");
-    } else {
-      document.documentElement.style.setProperty('--font-body', "'Inter', 'Segoe UI', sans-serif");
+    } else if (originalFontRef.current) {
+      document.documentElement.style.setProperty('--font-body', originalFontRef.current);
     }
-    
+
     return () => {
-      document.documentElement.style.fontSize = '';
+      document.documentElement.style.zoom = '';
       document.documentElement.style.filter = '';
     };
-  }, [fontSize, highContrast, readableFont]);
+  }, [zoomLevel, highContrast, readableFont]);
 
   const increaseFont = () => {
-    if (fontSize < 150) {
-      setFontSize(prev => prev + 10);
+    if (zoomLevel < 150) {
+      setZoomLevel(prev => prev + 10);
     }
   };
 
   const decreaseFont = () => {
-    if (fontSize > 70) {
-      setFontSize(prev => prev - 10);
+    if (zoomLevel > 70) {
+      setZoomLevel(prev => prev - 10);
     }
   };
 
   const resetAll = () => {
-    setFontSize(100);
+    setZoomLevel(100);
     setHighContrast(false);
     setReadableFont(false);
   };
@@ -181,6 +193,11 @@ const AccessibilityWidget = () => {
           border-color: #1D8FD4;
         }
         
+        .font-btn:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+        
         .font-size-value {
           font-size: 14px;
           font-weight: 600;
@@ -257,12 +274,12 @@ const AccessibilityWidget = () => {
                   Text Size
                 </div>
                 <div className="font-controls">
-                  <button className="font-btn" onClick={decreaseFont}>
+                  <button className="font-btn" onClick={decreaseFont} disabled={zoomLevel <= 70}>
                     <ZoomOut size={14} />
                     A-
                   </button>
-                  <span className="font-size-value">{fontSize}%</span>
-                  <button className="font-btn" onClick={increaseFont}>
+                  <span className="font-size-value">{zoomLevel}%</span>
+                  <button className="font-btn" onClick={increaseFont} disabled={zoomLevel >= 150}>
                     <ZoomIn size={14} />
                     A+
                   </button>

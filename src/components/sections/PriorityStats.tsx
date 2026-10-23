@@ -128,7 +128,7 @@ const PriorityStats = () => {
           margin: '0 auto',
         }}>
           Through our medical center, outreach missions, and partnerships, we serve
-          thousands of individuals each year — bringing hope, healing, and dignity
+          thousands of individuals each year bringing hope, healing, and dignity
           to communities in need.
         </p>
       </div>

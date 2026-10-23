@@ -1,31 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Building2, HeartPulse } from 'lucide-react';
 
 const OurFocus = () => {
   const navigate = useNavigate();
 
-  const focusCards = [
+  // #31 is ON HOLD: figures stay as they are until the founder sends
+  // verified percentages, "As of [Month Year]" dates and sources.
+  const stats = [
     {
-      title: "Our History",
-      description: "Look at our history at JoMabel Healthcare Foundation",
-      buttonText: "LEARN MORE",
-      buttonLink: "/our-story",
-      bgVar: "var(--color-primary)"
+      icon: Building2,
+      percent: '50%',
+      label: 'Medical Center Completed',
     },
     {
-      title: "Get Involved",
-      description: "Join us in bringing life-saving healthcare closer to families in need",
-      buttonText: "LEARN MORE",
-      buttonLink: "/campaign",
-      bgVar: "var(--color-primary-dark)"
+      icon: HeartPulse,
+      percent: '30%',
+      label: 'Healthcare Training Center Completed',
     },
-    {
-      title: "Leadership",
-      description: "Meet our board of directors who oversee JoMabel Healthcare Foundation",
-      buttonText: "LEARN MORE",
-      buttonLink: "/leadership",
-      bgVar: "var(--color-navy-mid)"
-    }
   ];
 
   return (
@@ -37,126 +29,136 @@ const OurFocus = () => {
           font-family: var(--font-body);
         }
 
-        /* ── Top white intro ── */
-        .focus-intro {
-          background-color: var(--color-bg);
-          padding: var(--section-padding-y) var(--section-padding-x);
+        /* ── Stats block ── */
+        .focus-stats-block {
+          background: linear-gradient(90deg, #dce9f6 0%, #e9f5ec 100%);
+          padding: 64px 24px 72px;
           text-align: center;
         }
 
-        .focus-headline {
+        .focus-stats-headline {
           font-family: 'Anton', sans-serif;
-          font-size: clamp(26px, 3.5vw, 44px);
           font-weight: 400;
+          font-size: clamp(28px, 3.6vw, 38px);
           color: var(--color-navy);
-          margin: 0 auto 28px;
-          max-width: 700px;
-          line-height: 1.15;
+          margin: 0 0 10px;
           letter-spacing: 0.01em;
-          text-transform: uppercase;
         }
 
-        .focus-mission {
+        .focus-stats-subtext {
           font-family: var(--font-body);
-          font-size: clamp(15px, 1.4vw, 18px);
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
           color: var(--color-text-muted);
-          max-width: 680px;
-          margin: 0 auto;
-          line-height: 1.8;
-          font-weight: 400;
+          margin: 0 0 48px;
         }
 
-        /* ── Three-panel strip ── */
-        .focus-panels {
+        .focus-stats-cards {
           display: flex;
-          width: 100%;
+          justify-content: center;
+          gap: 32px;
+          flex-wrap: wrap;
+          max-width: 900px;
+          margin: 0 auto 40px;
         }
 
-        .focus-panel {
+        .focus-stat-card {
+          background: var(--color-white);
           flex: 1;
-          padding: 56px 40px;
-          text-align: center;
+          min-width: 220px;
+          max-width: 380px;
+          padding: 48px 32px 32px;
+          position: relative;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        .focus-stat-icon {
+          width: 68px;
+          height: 68px;
+          border-radius: 50%;
+          background: var(--color-primary);
+          box-shadow: 0 0 0 6px rgba(59, 100, 158, 0.15);
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
+          margin: -80px auto 20px;
         }
 
-        .focus-panel-title {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(17px, 1.8vw, 22px);
-          font-weight: 400;
-          color: var(--color-white);
-          margin: 0 0 18px;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .focus-panel-description {
+        .focus-stat-percent {
           font-family: var(--font-body);
-          font-size: clamp(13px, 1.2vw, 15px);
-          color: rgba(255,255,255,0.88);
-          line-height: 1.65;
-          margin: 0 0 32px;
-          max-width: 280px;
-          font-weight: 400;
+          font-size: clamp(30px, 3.4vw, 40px);
+          font-weight: 700;
+          color: var(--color-primary);
+          margin-bottom: 10px;
         }
 
-        .focus-panel-btn {
-          background: transparent;
-          border: 1.5px solid rgba(255,255,255,0.80);
-          border-radius: 0;
-          color: var(--color-white);
+        .focus-stat-label {
           font-family: var(--font-body);
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 1.8px;
-          text-transform: uppercase;
+          font-size: 15px;
+          font-weight: 500;
+          color: var(--color-text-muted);
+        }
+
+        /* ── Standard button size — used across the whole site ── */
+        .focus-stats-btn {
+          background: var(--color-primary);
+          color: var(--color-white);
+          border: none;
+          border-radius: var(--btn-radius);
+          padding: 14px 32px;
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 700;
           cursor: pointer;
-          padding: 12px 28px;
           transition: var(--transition);
         }
 
-        .focus-panel-btn:hover {
-          background: rgba(255,255,255,0.15);
-          border-color: var(--color-white);
+        .focus-stats-btn:hover {
+          background: var(--color-primary-dark);
         }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-          .focus-panels { flex-direction: column; }
-          .focus-panel  { padding: 48px 32px; }
+        /* ── Mobile: tighter spacing ── */
+        @media (max-width: 640px) {
+          .focus-stats-block { padding: 44px 20px 48px; }
+          .focus-stats-subtext { margin-bottom: 36px; }
+          .focus-stats-cards {
+            flex-direction: column;
+            align-items: center;
+            gap: 44px;
+            margin-bottom: 28px;
+          }
+          .focus-stat-card {
+            width: 100%;
+            max-width: 320px;
+            padding: 44px 24px 24px;
+          }
         }
       `}</style>
 
-      <div className="focus-intro">
-        <h1 className="focus-headline">
-          Welcome to JoMabel Healthcare Foundation
-        </h1>
-        <p className="focus-mission">
-          Our mission is to promote the physical health, mental wellness, and healthcare access
-          of people living in underserved communities, with a primary focus on Ufuma,
-          Anambra State, Nigeria, and surrounding regions.
-        </p>
-      </div>
+      <div className="focus-stats-block">
+        <h3 className="focus-stats-headline">JoMabel Integrated Healthcare System</h3>
+        <p className="focus-stats-subtext">Under Construction</p>
 
-      <div className="focus-panels">
-        {focusCards.map((card, index) => (
-          <div
-            key={index}
-            className="focus-panel"
-            style={{ background: card.bgVar }}
-          >
-            <h3 className="focus-panel-title">{card.title}</h3>
-            <p className="focus-panel-description">{card.description}</p>
-            <button
-              className="focus-panel-btn"
-              onClick={() => navigate(card.buttonLink)}
-            >
-              {card.buttonText}
-            </button>
-          </div>
-        ))}
+        <div className="focus-stats-cards">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div key={index} className="focus-stat-card">
+                <div className="focus-stat-icon">
+                  <Icon size={28} color="#ffffff" />
+                </div>
+                <div className="focus-stat-percent">{stat.percent}</div>
+                <div className="focus-stat-label">{stat.label}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        <button className="focus-stats-btn" onClick={() => navigate('/impact')}>
+          See Our Impact
+        </button>
       </div>
     </section>
   );

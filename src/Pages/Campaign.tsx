@@ -43,7 +43,7 @@ const CampaignHero = () => {
           for generational impact.
         </p>
         <div className="hero-buttons">
-          <button className="btn-primary" onClick={() => navigate('/donate')}>
+          <button className="btn-primary" onClick={() => navigate('/donate#payment-section')}>
             Donate to the Campaign
             <ArrowRight size={16} />
           </button>
@@ -128,9 +128,11 @@ const FacilitiesBreakdown = () => {
     return () => observer.disconnect();
   }, []);
 
+  // #31 is ON HOLD: progress figures (50 / 30) stay until the founder sends
+  // verified percentages with an "As of [Month Year]" date (see #56e).
   useEffect(() => {
     if (!isVisible) return;
-    let m = 0; const mi = setInterval(() => { if (m < 70) { m++; setAnimatedProgress(p => ({ ...p, medical: m })); } else clearInterval(mi); }, 25);
+    let m = 0; const mi = setInterval(() => { if (m < 50) { m++; setAnimatedProgress(p => ({ ...p, medical: m })); } else clearInterval(mi); }, 25);
     let t = 0; const ti = setInterval(() => { if (t < 30) { t++; setAnimatedProgress(p => ({ ...p, training: t })); } else clearInterval(ti); }, 40);
   }, [isVisible]);
 
@@ -140,7 +142,8 @@ const FacilitiesBreakdown = () => {
       status: `${animatedProgress.medical}% Completed`, pct: animatedProgress.medical,
       accentColor: 'var(--color-primary)', badge: 'Under Construction',
       badgeBg: 'var(--color-navy-light)', badgeColor: 'var(--color-navy-mid)',
-      description: 'The operational heart of the JoMabel campus delivering primary care, diagnostics, and specialist services to Ufuma and surrounding communities.',
+      // #56b
+      description: 'The planned heart of the JoMabel campus, designed to deliver primary care, diagnostics, and specialist services to Ufuma and surrounding communities once open.',
       services: ['Primary & Preventive Care', 'Maternal & Child Health', 'Chronic Disease Management', 'Diagnostic & Laboratory Services', 'Emergency & Trauma Care', 'Digital Health & Telemedicine'],
       render: render1,
     },
@@ -149,7 +152,8 @@ const FacilitiesBreakdown = () => {
       status: `${animatedProgress.training}% Completed`, pct: animatedProgress.training,
       accentColor: 'var(--color-green)', badge: 'Foundation Stage',
       badgeBg: 'var(--color-green-light)', badgeColor: 'var(--color-green-dark)',
-      description: 'A world-class training facility investing in the next generation of healthcare professionals through hands-on clinical education and community health worker programs.',
+      // #56c
+      description: 'A planned training facility for future healthcare workers, focused on community health worker programs and practical skills.',
       services: ['Community Health Worker Training', 'Clinical Skills & Simulation Labs', 'Nursing & Midwifery Programs', 'Health Leadership Development', 'Digital Health Training', 'Vocational & Skills Acquisition'],
       render: render6,
     },
@@ -161,9 +165,10 @@ const FacilitiesBreakdown = () => {
         <div className="section-header">
           <span className="section-label">The Center Facilities</span>
           <h2 className="section-title">Two Facilities. One Integrated Vision.</h2>
+          {/* #56a */}
           <p className="section-description">
-            Together, the Medical Center and Training Center form a fully integrated
-            healthcare campus delivering care today while building the workforce of tomorrow.
+            Together, the Medical Center and Training Center will form an integrated
+            healthcare campus, delivering care and building the local healthcare workforce.
           </p>
         </div>
 
@@ -201,7 +206,7 @@ const FacilitiesBreakdown = () => {
                     ))}
                   </div>
                 </div>
-                <button className="facility-cta" style={{ background: f.accentColor }} onClick={() => navigate('/donate')}>
+                <button className="facility-cta" style={{ background: f.accentColor }} onClick={() => navigate('/donate#payment-section')}>
                   Help Complete This Center <ArrowRight size={14} />
                 </button>
               </div>
@@ -337,8 +342,9 @@ const OutreachCampaigns = () => {
   }, []);
 
   const campaigns = [
-    { img: outreach5, title: 'Medical Outreach Mission — Ufuma', desc: 'Free consultations, screenings, medications and referrals delivered directly to community members in Ufuma, Anambra State — reaching hundreds of families in a single day.', tag: 'Outreach Mission' },
-    { img: outreach1, title: 'Community Health Screenings', desc: 'Working alongside the Nigerian Red Cross, our teams deliver free health screenings and consultations to underserved communities, identifying critical health needs early.', tag: 'Health Screening' },
+    // #56d: "free" removed (both places) and "— reaching hundreds of families in a single day" removed
+    { img: outreach5, title: 'Medical Outreach Mission — Ufuma', desc: 'Consultations, screenings, medications and referrals delivered directly to community members in Ufuma, Anambra State.', tag: 'Outreach Mission' },
+    { img: outreach1, title: 'Community Health Screenings', desc: 'Working alongside the Nigerian Red Cross, our teams deliver health screenings and consultations to underserved communities, identifying critical health needs early.', tag: 'Health Screening' },
     { img: outreach4, title: 'Medical Outreach Team in Action', desc: 'Our dedicated Medical Outreach Team delivers essential services directly to the people who need them most.', tag: 'Community Impact' },
     { img: outreach3, title: 'Volunteer & Staff Network', desc: 'A growing team of committed volunteers, healthcare workers, and community leaders working together to expand JoMabel\'s reach across southeastern Nigeria.', tag: 'Volunteers' },
     { img: outreach2, title: 'Registration & Preventive Care', desc: 'Outreach stations provide registration, triage, and preventive care services — ensuring every community member receives the attention and follow-up they deserve.', tag: 'Preventive Care' },
@@ -375,7 +381,7 @@ const OutreachCampaigns = () => {
           </div>
         </div>
         <div className="outreach-cta">
-          <button className="btn-green-large" onClick={() => navigate('/donate')}>
+          <button className="btn-green-large" onClick={() => navigate('/donate#payment-section')}>
             Support Our Campaigns <ArrowRight size={16} />
           </button>
         </div>
@@ -416,7 +422,7 @@ const Campaign = () => (
         color: var(--color-primary);
         background: var(--color-primary-light);
         padding: 6px 16px;
-        border-radius: 0;
+        border-radius: 999px;
       }
       .section-title {
         font-family: 'Anton', sans-serif;
@@ -442,7 +448,7 @@ const Campaign = () => (
         background: var(--color-green);
         color: var(--color-white);
         border: none;
-        border-radius: 0;
+        border-radius: var(--btn-radius);
         padding: 14px 32px;
         font-family: var(--font-body);
         font-size: 13px;
@@ -461,7 +467,7 @@ const Campaign = () => (
         background: transparent;
         color: var(--color-white);
         border: 1.5px solid rgba(255,255,255,0.45);
-        border-radius: 0;
+        border-radius: var(--btn-radius);
         padding: 14px 32px;
         font-family: var(--font-body);
         font-size: 13px;
@@ -477,7 +483,7 @@ const Campaign = () => (
         background: var(--color-green);
         color: var(--color-white);
         border: none;
-        border-radius: 0;
+        border-radius: var(--btn-radius);
         padding: 16px 48px;
         font-family: var(--font-body);
         font-size: 14px;
@@ -527,24 +533,24 @@ const Campaign = () => (
       }
       .hero-tag {
         display: inline-block;
-        background: rgba(29,143,212,0.20);
-        border: 1px solid rgba(29,143,212,0.45);
-        color: var(--color-primary);
+        background: var(--color-primary);
+        border: 1px solid var(--color-primary);
+        color: #ffffff;
         font-family: var(--font-body);
-        font-size: 11px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 800;
         letter-spacing: 2.5px;
         text-transform: uppercase;
-        padding: 6px 16px;
-        border-radius: 0;
+        padding: 7px 18px;
+        border-radius: 999px;
         margin-bottom: 24px;
       }
       .hero-title {
         font-family: 'Anton', sans-serif;
         color: var(--color-white);
-        font-size: clamp(36px, 6vw, 68px);
+        font-size: clamp(28px, 3.6vw, 38px);
         font-weight: 400;
-        line-height: 1.0;
+        line-height: 1.15;
         text-transform: uppercase;
         letter-spacing: 0.02em;
         margin-bottom: 20px;
@@ -563,7 +569,6 @@ const Campaign = () => (
       .vision-stats {
         background: var(--color-surface);
         padding: 80px clamp(20px, 5vw, 48px);
-        border-top: 3px solid var(--color-navy);
       }
       .vision-stats .stat-card {
         opacity: 0; transform: translateY(30px);
@@ -586,14 +591,20 @@ const Campaign = () => (
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 2px;             /* tight seam */
+        gap: 20px;
         margin-bottom: 56px;
       }
       .stat-card {
         background: var(--color-bg);
         border-top: 4px solid var(--color-primary);
+        border-radius: var(--card-radius);
         padding: 32px 24px;
         text-align: center;
+        transition: var(--transition);
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
       }
       .stat-number {
         font-family: 'Anton', sans-serif;
@@ -655,13 +666,13 @@ const Campaign = () => (
       .facilities-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2px;
+        gap: 28px;
         margin-bottom: 48px;
       }
       .facility-card {
         background: var(--color-bg);
         border: 1px solid var(--color-border);
-        border-radius: 0;
+        border-radius: var(--card-radius);
         overflow: hidden;
         transition: var(--transition);
       }
@@ -676,12 +687,12 @@ const Campaign = () => (
       .facility-badge {
         font-family: var(--font-body);
         font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-        padding: 5px 12px; border-radius: 0;
+        padding: 5px 12px; border-radius: 999px;
       }
       .facility-size {
         background: rgba(0,0,0,0.55); color: var(--color-white);
         font-family: var(--font-body);
-        font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 0;
+        font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px;
       }
       .facility-content { padding: 32px; }
       .facility-name {
@@ -696,27 +707,25 @@ const Campaign = () => (
       }
       .progress-section {
         background: var(--color-surface);
-        border-left: 3px solid var(--color-border);
-        padding: 14px 16px; margin-bottom: 24px;
+        border-radius: var(--card-radius);
+        padding: 16px 18px; margin-bottom: 24px;
       }
       .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
       .progress-label { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); font-weight: 600; }
       .progress-status { font-family: var(--font-body); font-size: 13px; font-weight: 700; }
-      .progress-bar { height: 8px; background: var(--color-border); border-radius: 0; overflow: hidden; }
-      .progress-fill { height: 100%; border-radius: 0; transition: width 0.5s ease; }
+      .progress-bar { height: 8px; background: var(--color-border); border-radius: 999px; overflow: hidden; }
+      .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
       .services-section { margin-bottom: 28px; }
       .services-label {
         font-family: var(--font-body);
         font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
         text-transform: uppercase; color: var(--color-text-light); margin-bottom: 14px;
-        display: flex; align-items: center; gap: 10px;
       }
-      .services-label::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
-      .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
       .service-item { display: flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); }
-      .service-dot { width: 5px; height: 5px; border-radius: 0; flex-shrink: 0; }
+      .service-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
       .facility-cta {
-        width: 100%; border: none; border-radius: 0;
+        width: 100%; border: none; border-radius: var(--btn-radius);
         padding: 14px; font-family: var(--font-body);
         font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
         color: var(--color-white); cursor: pointer;
@@ -728,9 +737,9 @@ const Campaign = () => (
       /* ── Why Ufuma ── */
       .why-ufuma {
         background: var(--color-primary-light);
-        border-left: 5px solid var(--color-primary);
+        border-radius: var(--card-radius);
         padding: 48px;
-        margin-top: 2px;
+        margin-top: 8px;
       }
       .why-header { text-align: center; margin-bottom: 36px; }
       .why-label {
@@ -754,7 +763,6 @@ const Campaign = () => (
       .gallery-section {
         background: var(--color-surface);
         padding: 80px clamp(20px, 5vw, 48px);
-        border-top: 3px solid var(--color-navy);
       }
       .gallery-section .gallery-main,
       .gallery-section .gallery-thumbs { opacity:0; transform:translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
@@ -766,8 +774,8 @@ const Campaign = () => (
       .gallery-section.visible .section-title { opacity:1; transform:translateY(0); transition-delay:0.1s; }
 
       .gallery-main {
-        position: relative; border-radius: 0;
-        overflow: hidden; margin-bottom: 4px;
+        position: relative; border-radius: var(--card-radius);
+        overflow: hidden; margin-bottom: 12px;
         box-shadow: var(--shadow-xl);
       }
       .gallery-main img { width: 100%; height: clamp(280px, 45vw, 540px); object-fit: cover; display: block; }
@@ -777,11 +785,11 @@ const Campaign = () => (
         padding: 24px 24px 20px;
       }
       .gallery-caption p { color: var(--color-white); font-family: var(--font-body); font-size: 14px; font-weight: 600; margin: 0; }
-      .gallery-thumbs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+      .gallery-thumbs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
       .gallery-thumb {
         overflow: hidden; cursor: pointer;
         border: 2px solid transparent;
-        border-radius: 0;
+        border-radius: 10px;
         transition: var(--transition); opacity: 0.55;
       }
       .gallery-thumb.active { border-color: var(--color-primary); opacity: 1; }
@@ -808,17 +816,16 @@ const Campaign = () => (
       .videos-section.visible .section-title { opacity:1; transform:translateY(0); transition-delay:0.1s; }
       .videos-section.visible .section-description { opacity:1; transform:translateY(0); transition-delay:0.2s; }
 
-      .videos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
-      .video-card { background: var(--color-text); border-radius: 0; overflow: hidden; }
+      .videos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .video-card { background: var(--color-text); border-radius: var(--card-radius); overflow: hidden; }
       .video-player { width: 100%; display: block; max-height: 280px; object-fit: cover; }
-      .video-label { padding: 14px 16px; border-top: 2px solid rgba(255,255,255,0.06); }
+      .video-label { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
       .video-label p { font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-white); margin: 0; }
 
       /* ══ OUTREACH SECTION ══ */
       .outreach-section {
         background: var(--color-surface);
         padding: 80px clamp(20px, 5vw, 48px);
-        border-top: 3px solid var(--color-navy);
       }
       .outreach-section .campaign-large,
       .outreach-section .campaign-card { opacity:0; transform:translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
@@ -832,8 +839,8 @@ const Campaign = () => (
       .outreach-section.visible .section-label { opacity:1; transform:translateY(0); }
       .outreach-section.visible .section-title { opacity:1; transform:translateY(0); transition-delay:0.1s; }
 
-      .campaign-mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 48px; }
-      .campaign-large { position: relative; border-radius: 0; overflow: hidden; height: 520px; }
+      .campaign-mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; }
+      .campaign-large { position: relative; border-radius: var(--card-radius); overflow: hidden; height: 520px; }
       .campaign-large img { width: 100%; height: 100%; object-fit: cover; display: block; }
       .campaign-large-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88), transparent 55%); }
       .campaign-large-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px; }
@@ -841,13 +848,13 @@ const Campaign = () => (
         display: inline-block; background: var(--color-primary); color: var(--color-white);
         font-family: var(--font-body); font-size: 10px; font-weight: 700;
         letter-spacing: 1.5px; text-transform: uppercase;
-        padding: 4px 12px; border-radius: 0; margin-bottom: 12px;
+        padding: 4px 12px; border-radius: 999px; margin-bottom: 12px;
       }
       .campaign-title { font-family: 'Anton', sans-serif; font-size: clamp(17px, 2vw, 22px); font-weight: 400; text-transform: uppercase; color: var(--color-white); margin-bottom: 8px; letter-spacing: 0.02em; }
       .campaign-desc { font-family: var(--font-body); font-size: 14px; color: rgba(255,255,255,0.78); line-height: 1.65; }
 
-      .campaign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-      .campaign-card { background: var(--color-bg); border-radius: 0; overflow: hidden; border: 1px solid var(--color-border); transition: var(--transition); }
+      .campaign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .campaign-card { background: var(--color-bg); border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--color-border); transition: var(--transition); }
       .campaign-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
       .campaign-card-image { width: 100%; height: 150px; object-fit: cover; display: block; }
       .campaign-card-content { padding: 18px; }
@@ -855,7 +862,7 @@ const Campaign = () => (
         display: inline-block; background: var(--color-primary-light); color: var(--color-primary);
         font-family: var(--font-body); font-size: 10px; font-weight: 700;
         letter-spacing: 1.2px; text-transform: uppercase;
-        padding: 3px 10px; border-radius: 0; margin-bottom: 10px;
+        padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
       }
       .campaign-card-title { font-family: 'Anton', sans-serif; font-size: 14px; font-weight: 400; text-transform: uppercase; color: var(--color-navy); margin-bottom: 6px; letter-spacing: 0.03em; }
       .campaign-card-desc { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); line-height: 1.55; }

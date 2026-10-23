@@ -1,14 +1,68 @@
 import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { Download, Eye, FileText } from 'lucide-react';
+import { Download, Eye, FileText, ArrowRight } from 'lucide-react';
 
 import heroImage from '../assests/images/outreach5.jpeg';
+import archiveImage from '../assests/images/outreach2.jpeg';
 
 const inauguralPDF = '/JHF_Inaugural_Newsletter_IRS..pdf';
 
+// #41: the "Spring 2026 Update" card is removed. The "Construction Progress
+// Report" card stays hidden until the founder confirms a report is planned.
+// Set this to true once she confirms.
+const SHOW_CONSTRUCTION_REPORT_CARD = false;
+
 const Newsletter = () => {
   const [showPdf, setShowPdf] = useState(false);
+  const [subName, setSubName] = useState('');
+  const [subEmail, setSubEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [subLoading, setSubLoading] = useState(false);
+  const [subError, setSubError] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!subName || !subEmail) {
+      setSubError('Please enter your name and email.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(subEmail)) {
+      setSubError('Please enter a valid email address.');
+      return;
+    }
+
+    setSubLoading(true);
+    setSubError('');
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('name', subName);
+      formData.append('email', subEmail);
+      formData.append('subject', 'Newsletter Signup');
+      formData.append('message', `${subName} (${subEmail}) would like to join the JoMabel Healthcare Foundation mailing list.`);
+
+      const response = await fetch('/contact-handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        setSubscribed(true);
+        setSubName('');
+        setSubEmail('');
+      } else {
+        setSubError(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      console.error('Newsletter signup error:', err);
+      setSubError('Network error. Please check your connection and try again.');
+    } finally {
+      setSubLoading(false);
+    }
+  };
 
   return (
     <div className="nl-page">
@@ -21,40 +75,16 @@ const Newsletter = () => {
           color: var(--color-text);
         }
 
-        /* ══ HERO ══ */
+        /* ══ HERO: open, photo right / text left ══ */
         .nl-hero {
-          position: relative;
-          padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px);
-          overflow: hidden;
-        }
-        .nl-hero-img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-        }
-        .nl-hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to right,
-            rgba(255,255,255,0.97) 45%,
-            rgba(255,255,255,0.75) 70%,
-            rgba(255,255,255,0.10) 100%
-          );
-        }
-        .nl-hero-grid {
-          position: relative;
-          z-index: 2;
-          max-width: 1080px;
+          max-width: 1200px;
           margin: 0 auto;
+          padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px);
           display: grid;
-          grid-template-columns: 1fr 1px 1fr;
+          grid-template-columns: 1fr 1.1fr;
+          gap: clamp(32px, 5vw, 64px);
           align-items: center;
-          min-height: 260px;
         }
-        .nl-hero-left { padding-right: 64px; }
         .nl-hero-kicker {
           font-family: var(--font-body);
           font-size: 11px;
@@ -66,49 +96,54 @@ const Newsletter = () => {
           display: block;
         }
         .nl-hero-title {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(36px, 6vw, 64px);
-          font-weight: 400;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          line-height: 1.0;
+          font-family: var(--font-body);
+          font-size: clamp(30px, 4vw, 46px);
+          font-weight: 700;
+          letter-spacing: 0;
+          text-transform: none;
+          line-height: 1.1;
           color: var(--color-navy);
           margin: 0 0 20px;
         }
         .nl-hero-sub {
           font-family: var(--font-body);
-          font-size: clamp(13px, 1.3vw, 15px);
+          font-size: clamp(14px, 1.3vw, 16px);
           color: var(--color-text-muted);
           line-height: 1.8;
-          max-width: 360px;
+          max-width: 420px;
           margin: 0;
         }
-        .nl-hero-divider { background: var(--color-border); width: 1px; align-self: stretch; }
-        .nl-hero-right { padding-left: 64px; display: flex; justify-content: center; }
-        .nl-hero-icon-box {
-          border: 1px solid var(--color-border);
-          border-radius: 16px;
-          padding: 40px 56px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255,255,255,0.90);
-          box-shadow: var(--shadow-md);
+        .nl-hero-photo-wrap {
+          border-radius: var(--card-radius);
+          overflow: hidden;
+        }
+        .nl-hero-photo {
+          width: 100%;
+          height: 100%;
+          min-height: 320px;
+          object-fit: cover;
+          display: block;
+        }
+
+        @media (max-width: 860px) {
+          .nl-hero { grid-template-columns: 1fr; }
+          .nl-hero-photo { min-height: 260px; }
         }
 
         /* ══ INNER ══ */
         .nl-inner {
           max-width: 1080px;
           margin: 0 auto;
-          padding: 64px clamp(20px, 5vw, 56px);
+          padding: 0 clamp(20px, 5vw, 56px) 64px;
         }
 
-        /* ══ EDITORIAL SECTION HEADER ══ */
+        /* ══ OPEN, CENTERED SECTION HEADER ══ */
         .nl-section-header {
-          border-left: 5px solid var(--color-navy);
-          padding-left: 20px;
-          margin-bottom: 28px;
+          text-align: center;
+          max-width: 560px;
+          margin: 0 auto 8px;
         }
+        .nl-section-header.left { text-align: left; margin: 0 0 8px; }
         .nl-kicker {
           font-family: var(--font-body);
           font-size: 11px;
@@ -119,74 +154,53 @@ const Newsletter = () => {
           margin: 0 0 10px;
         }
         .nl-headline {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(24px, 3.5vw, 40px);
-          font-weight: 400;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          line-height: 1.1;
+          font-family: var(--font-body);
+          font-size: clamp(26px, 3.5vw, 40px);
+          font-weight: 700;
+          letter-spacing: 0;
+          text-transform: none;
+          line-height: 1.15;
           color: var(--color-navy);
           margin: 0;
         }
 
-        /* ══ DIVIDER LABEL ══ */
         .nl-divider {
           font-family: var(--font-body);
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          color: var(--color-text-light);
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 0;
-        }
-        .nl-divider::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: var(--color-border);
-        }
-
-        /* ══ CURRENT ISSUE ══ */
-        .nl-issue-block {
-          border-top: 2px solid var(--color-navy);
-          padding-top: 36px;
-          margin-bottom: 56px;
-        }
-
-        /* Anton issue title */
-        .nl-issue-title {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(20px, 2.8vw, 32px);
-          font-weight: 400;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          color: var(--color-navy);
+          font-size: 13px;
+          color: var(--color-text-muted);
+          text-align: center;
           margin: 0 0 8px;
+        }
+        .nl-divider.left { text-align: left; }
+
+        /* ══ CURRENT ISSUE: centered gradient block ══ */
+        .nl-issue-block {
+          background: linear-gradient(90deg, #dce9f6 0%, #e9f5ec 100%);
+          border-radius: var(--card-radius);
+          padding: 56px clamp(24px, 5vw, 64px);
+          margin-bottom: 56px;
+          text-align: center;
+        }
+        .nl-issue-title {
+          font-family: var(--font-body);
+          font-size: clamp(22px, 2.8vw, 30px);
+          font-weight: 700;
+          color: var(--color-navy);
+          margin: 32px 0 8px;
         }
         .nl-issue-subtitle {
           font-family: var(--font-body);
           font-size: clamp(14px, 1.4vw, 16px);
-          color: var(--color-primary);
+          color: var(--color-text);
           font-weight: 600;
-          margin: 0 0 16px;
+          margin: 0 0 8px;
           line-height: 1.5;
         }
         .nl-issue-meta {
-          display: flex;
-          gap: 24px;
-          flex-wrap: wrap;
-          margin-bottom: 28px;
-        }
-        .nl-meta-item {
           font-family: var(--font-body);
           font-size: 13px;
-          color: var(--color-text-light);
-          display: flex;
-          align-items: center;
-          gap: 6px;
+          color: var(--color-text-muted);
+          margin: 0 0 28px;
         }
 
         /* ══ ACTION BUTTONS ══ */
@@ -194,14 +208,15 @@ const Newsletter = () => {
           display: flex;
           gap: 14px;
           flex-wrap: wrap;
-          margin-bottom: 36px;
+          justify-content: center;
+          margin-bottom: 0;
         }
         .nl-btn-primary {
-          background: var(--color-primary);
+          background: var(--color-green);
           color: #ffffff;
           border: none;
           border-radius: var(--btn-radius);
-          padding: 12px 28px;
+          padding: 13px 32px;
           font-family: var(--font-body);
           font-size: 13px;
           font-weight: 700;
@@ -213,15 +228,15 @@ const Newsletter = () => {
           transition: var(--transition);
           text-decoration: none;
         }
-        .nl-btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
-        .nl-btn-primary.active { background: var(--color-primary-dark); }
+        .nl-btn-primary:hover { background: var(--color-green-dark); transform: translateY(-1px); }
+        .nl-btn-primary.active { background: var(--color-green-dark); }
 
         .nl-btn-outline {
-          background: var(--color-bg);
-          color: var(--color-primary);
-          border: 1.5px solid var(--color-primary);
+          background: #ffffff;
+          color: var(--color-navy);
+          border: 1.5px solid var(--color-border);
           border-radius: var(--btn-radius);
-          padding: 12px 28px;
+          padding: 13px 32px;
           font-family: var(--font-body);
           font-size: 13px;
           font-weight: 700;
@@ -233,16 +248,17 @@ const Newsletter = () => {
           transition: var(--transition);
           text-decoration: none;
         }
-        .nl-btn-outline:hover { background: var(--color-primary-light); transform: translateY(-1px); }
+        .nl-btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
         /* ══ PDF VIEWER ══ */
         .nl-pdf-wrap {
-          background: var(--color-surface);
+          background: #ffffff;
           border: 1px solid var(--color-border);
           border-radius: var(--card-radius);
           overflow: hidden;
-          margin-bottom: 48px;
+          margin-top: 32px;
           box-shadow: var(--shadow-md);
+          text-align: left;
         }
         .nl-pdf-wrap iframe {
           width: 100%;
@@ -252,86 +268,129 @@ const Newsletter = () => {
           display: block;
         }
 
-        /* ══ ARCHIVE ══ */
-        .nl-archive-block {
-          border-top: 1px solid var(--color-border);
-          padding-top: 36px;
-        }
-
+        /* ══ ARCHIVE: text+photo left/right, navy bars ══ */
         .nl-archive-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-          border-top: 2px solid var(--color-navy);
-          padding-top: 32px;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          align-items: start;
         }
-        .nl-archive-card {
-          background: var(--color-surface);
-          border: 1px solid var(--color-border);
-          border-radius: var(--card-radius);
-          padding: 24px;
+        .nl-archive-list {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 16px;
-          transition: var(--transition);
+          flex-direction: column;
+          gap: 14px;
+          margin-top: 24px;
         }
-        .nl-archive-card:not(.disabled):hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
-          border-color: var(--color-primary);
+        .nl-archive-bar {
+          background: var(--color-navy);
+          border-radius: var(--card-radius);
+          padding: 22px 26px;
         }
-        .nl-archive-card.disabled { opacity: 0.6; cursor: default; }
-
-        /* Anton archive card title */
         .nl-archive-title {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(13px, 1.4vw, 16px);
-          font-weight: 400;
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-          color: var(--color-navy);
-          margin: 0 0 5px;
+          font-family: var(--font-body);
+          font-size: 18px;
+          font-weight: 700;
+          color: #ffffff;
+          margin: 0 0 4px;
         }
         .nl-archive-meta {
           font-family: var(--font-body);
-          font-size: 12px;
-          color: var(--color-text-light);
+          font-size: 13px;
+          color: rgba(255,255,255,0.65);
           margin: 0;
         }
-        .nl-archive-badge {
-          font-family: var(--font-body);
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: var(--color-text-light);
-          background: var(--color-surface-2);
-          padding: 4px 10px;
-          border-radius: 4px;
-          flex-shrink: 0;
+        .nl-archive-photo-wrap {
+          border-radius: var(--card-radius);
+          overflow: hidden;
         }
-        .nl-archive-icon {
-          color: var(--color-primary);
-          flex-shrink: 0;
-          cursor: pointer;
+        .nl-archive-photo {
+          width: 100%;
+          height: 100%;
+          min-height: 260px;
+          object-fit: cover;
+          display: block;
+        }
+
+        @media (max-width: 860px) {
+          .nl-archive-grid { grid-template-columns: 1fr; }
+          .nl-archive-photo-wrap { order: -1; }
+        }
+
+        /* ══ MAILING LIST SIGNUP ══ */
+        .nl-signup-section {
+          background: var(--color-green-light);
+          padding: 64px clamp(20px, 5vw, 56px);
+          margin-top: 64px;
+        }
+        .nl-signup-inner {
+          max-width: 700px;
+          margin: 0 auto;
+          text-align: center;
+        }
+        .nl-signup-title {
+          font-family: var(--font-body);
+          font-size: clamp(24px, 3vw, 34px);
+          font-weight: 700;
+          color: var(--color-navy);
+          margin: 0 0 28px;
+        }
+        .nl-signup-row {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .nl-signup-input {
+          flex: 1;
+          min-width: 180px;
+          padding: 13px 16px;
+          border: 1.5px solid var(--color-border);
+          border-radius: var(--btn-radius);
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: var(--color-text);
+          background: #ffffff;
+          outline: none;
           transition: var(--transition);
         }
-        .nl-archive-icon:hover { color: var(--color-primary-dark); }
+        .nl-signup-input:focus { border-color: var(--color-primary); }
+        .nl-signup-btn {
+          background: var(--color-green);
+          color: #ffffff;
+          border: none;
+          border-radius: var(--btn-radius);
+          padding: 13px 32px;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          cursor: pointer;
+          transition: var(--transition);
+          white-space: nowrap;
+        }
+        .nl-signup-btn:hover { background: var(--color-green-dark); }
+        .nl-signup-success {
+          font-family: var(--font-body);
+          font-size: 14px;
+          color: var(--color-green-dark);
+          font-weight: 600;
+        }
+        .nl-signup-error {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: #991b1b;
+          font-weight: 600;
+          margin: 0 0 14px;
+        }
+        .nl-signup-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
 
         /* ══ RESPONSIVE ══ */
-        @media (max-width: 860px) {
-          .nl-hero-grid { grid-template-columns: 1fr; min-height: unset; gap: 32px; }
-          .nl-hero-divider { display: none; }
-          .nl-hero-left { padding-right: 0; }
-          .nl-hero-right { padding-left: 0; justify-content: flex-start; }
-          .nl-archive-grid { grid-template-columns: 1fr; }
-          .nl-pdf-wrap iframe { height: 55vh; min-height: 400px; }
-        }
         @media (max-width: 560px) {
           .nl-actions { flex-direction: column; }
           .nl-btn-primary, .nl-btn-outline { justify-content: center; }
-          .nl-hero-icon-box { padding: 28px 40px; }
+          .nl-signup-row { flex-direction: column; }
         }
       `}</style>
 
@@ -339,51 +398,33 @@ const Newsletter = () => {
 
       {/* ── Hero ── */}
       <div className="nl-hero">
-        <img src={heroImage} alt="Newsletter" className="nl-hero-img" />
-        <div className="nl-hero-overlay" />
-        <div className="nl-hero-grid">
-          <div className="nl-hero-left">
-            <span className="nl-hero-kicker">Stay Informed</span>
-            <h1 className="nl-hero-title">Newsletter</h1>
-            <p className="nl-hero-sub">
-              JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit foundation
-              developing a world-class 16,000+ sq. meter medical and training center
-              in Ufuma, Anambra State, Nigeria.
-            </p>
-          </div>
-          <div className="nl-hero-divider" />
-          <div className="nl-hero-right">
-            <div className="nl-hero-icon-box">
-              <FileText size={72} color="var(--color-primary)" strokeWidth={1.2} />
-            </div>
-          </div>
+        <div>
+          <span className="nl-hero-kicker">Stay Informed</span>
+          <h1 className="nl-hero-title">Newsletter</h1>
+          <p className="nl-hero-sub">
+            JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit foundation
+            developing a world-class 16,000+ sq. meter medical and training center
+            in Ufuma, Anambra State, Nigeria.
+          </p>
+        </div>
+        <div className="nl-hero-photo-wrap">
+          <img src={heroImage} alt="Newsletter" className="nl-hero-photo" />
         </div>
       </div>
 
       <div className="nl-inner">
 
         {/* ── Current Issue ── */}
-        <div className="nl-section-header">
-          <p className="nl-kicker">Latest Release</p>
-          <h2 className="nl-headline">Current Issue</h2>
-        </div>
-        <p className="nl-divider">Volume 1, Issue 1 — April 2025</p>
-
         <div className="nl-issue-block">
-          <h3 className="nl-issue-title">Inaugural Newsletter</h3>
-          <p className="nl-issue-subtitle">
-            Building Systems. Restoring Health. Empowering Communities.
-          </p>
-          <div className="nl-issue-meta">
-            <span className="nl-meta-item">
-              <FileText size={13} color="var(--color-text-light)" />
-              Volume 1, Issue 1
-            </span>
-            <span className="nl-meta-item">
-              <Eye size={13} color="var(--color-text-light)" />
-              April 2025
-            </span>
+          <div className="nl-section-header">
+            <p className="nl-kicker">Latest Release</p>
+            <h2 className="nl-headline">Current Issue</h2>
           </div>
+          <p className="nl-divider">Volume 1, Issue 1, April 2025</p>
+
+          <h3 className="nl-issue-title">Inaugural Newsletter</h3>
+          <p className="nl-issue-subtitle">Building Systems. Restoring Health. Empowering Communities.</p>
+          <p className="nl-issue-meta">Volume 1, Issue 1, April 2025</p>
 
           <div className="nl-actions">
             <button
@@ -391,7 +432,7 @@ const Newsletter = () => {
               onClick={() => setShowPdf(v => !v)}
             >
               <Eye size={15} />
-              {showPdf ? 'Close Viewer' : 'Read Online'}
+              {showPdf ? 'Close Viewer' : 'Read Now'}
             </button>
             <a
               href={inauguralPDF}
@@ -408,38 +449,70 @@ const Newsletter = () => {
             <div className="nl-pdf-wrap">
               <iframe
                 src={`${inauguralPDF}#toolbar=0&navpanes=0`}
-                title="JoMabel Healthcare Foundation — Inaugural Newsletter"
+                title="JoMabel Healthcare Foundation Inaugural Newsletter"
               />
             </div>
           )}
         </div>
 
         {/* ── Archive ── */}
-        <div className="nl-archive-block">
-          <div className="nl-section-header" style={{ borderLeft: '5px solid var(--color-navy)' }}>
-            <p className="nl-kicker">Archive</p>
-            <h2 className="nl-headline">Past Issues</h2>
-          </div>
-          <p className="nl-divider">More editions coming as the foundation grows</p>
+        <div className="nl-archive-grid">
+          <div>
+            <div className="nl-section-header left">
+              <p className="nl-kicker">Archive</p>
+              <h2 className="nl-headline">Past Issues</h2>
+            </div>
+            <p className="nl-divider left">More editions coming as the foundation grows</p>
 
-          <div className="nl-archive-grid">
-            <div className="nl-archive-card disabled">
-              <div>
-                <h4 className="nl-archive-title">Spring 2026 Update</h4>
-                <p className="nl-archive-meta">Coming Soon</p>
+            {SHOW_CONSTRUCTION_REPORT_CARD && (
+              <div className="nl-archive-list">
+                <div className="nl-archive-bar">
+                  <h4 className="nl-archive-title">Construction Progress Report</h4>
+                  <p className="nl-archive-meta">Coming Soon</p>
+                </div>
               </div>
-              <span className="nl-archive-badge">Coming Soon</span>
-            </div>
-            <div className="nl-archive-card disabled">
-              <div>
-                <h4 className="nl-archive-title">Construction Progress Report</h4>
-                <p className="nl-archive-meta">Coming Soon</p>
-              </div>
-              <span className="nl-archive-badge">Coming Soon</span>
-            </div>
+            )}
+          </div>
+
+          <div className="nl-archive-photo-wrap">
+            <img src={archiveImage} alt="JoMabel healthcare team" className="nl-archive-photo" />
           </div>
         </div>
 
+      </div>
+
+      {/* ── Mailing List Signup ── */}
+      <div className="nl-signup-section">
+        <div className="nl-signup-inner">
+          <h2 className="nl-signup-title">Join Our Mailing List</h2>
+          {subscribed ? (
+            <p className="nl-signup-success">✓ Thanks for subscribing. We'll keep you posted.</p>
+          ) : (
+            <>
+              {subError && <p className="nl-signup-error">{subError}</p>}
+              <div className="nl-signup-row">
+                <input
+                  className="nl-signup-input"
+                  placeholder="Name*"
+                  value={subName}
+                  onChange={e => setSubName(e.target.value)}
+                  disabled={subLoading}
+                />
+                <input
+                  className="nl-signup-input"
+                  type="email"
+                  placeholder="Email*"
+                  value={subEmail}
+                  onChange={e => setSubEmail(e.target.value)}
+                  disabled={subLoading}
+                />
+                <button className="nl-signup-btn" onClick={handleSubscribe} disabled={subLoading}>
+                  {subLoading ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <Footer />

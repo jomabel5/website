@@ -2,13 +2,17 @@ import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import logo from '../assests/images/logo.jpeg';
-import { Heart, Eye, Target, Shield, Users, Lightbulb, HandHeart } from 'lucide-react';
+import { Eye, Target, Shield, Heart, Users, Lightbulb, HandHeart } from 'lucide-react';
 import heroImage from '../assests/images/outreach1.jpeg';
+import WhyJHF from '../components/sections/WhyJHF';
 
 const coreValues = [
-  { icon: HandHeart, title: 'Dignity',               desc: 'Every human being deserves respectful, compassionate care.' },
-  { icon: Shield,    title: 'Equity',                desc: 'We prioritize communities historically excluded from quality healthcare.' },
-  { icon: Heart,     title: 'Service',               desc: 'We serve with humility, excellence, and a commitment to healing.' },
+  // #10
+  { icon: HandHeart, title: 'Dignity',               desc: 'Every human being deserves respectful and compassionate care.' },
+  // #11
+  { icon: Shield,    title: 'Equity',                desc: 'We prioritize communities with limited access to quality healthcare.' },
+  // #12
+  { icon: Heart,     title: 'Service',               desc: 'We serve with humility, excellence, and a commitment to healing and wellness.' },
   { icon: Target,    title: 'Sustainability',         desc: 'We build systems that last beyond individual projects.' },
   { icon: Shield,    title: 'Integrity',              desc: 'We steward resources with transparency and accountability.' },
   { icon: Users,     title: 'Community Empowerment', desc: 'We invest in local leadership, youth, and families.' },
@@ -19,7 +23,7 @@ const MissionVision = () => {
   return (
     <div className="mv-page">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
         .mv-page {
           font-family: var(--font-body);
@@ -29,7 +33,7 @@ const MissionVision = () => {
         }
 
         /* ─────────────────────────────────────────
-           HERO — kept as loved, lightly polished
+           HERO
         ───────────────────────────────────────── */
         .mv-hero {
           position: relative;
@@ -129,85 +133,82 @@ const MissionVision = () => {
           width: auto;
         }
 
+        /* Hero — mobile / tablet fix: stack instead of squeezing 3 columns */
+        @media (max-width: 900px) {
+          .mv-hero-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+            min-height: unset;
+            text-align: left;
+          }
+          .mv-hero-divider { display: none; }
+          .mv-hero-left  { padding-right: 0; }
+          .mv-hero-right { padding-left: 0; justify-content: flex-start; }
+        }
+        @media (max-width: 480px) {
+          .mv-hero { padding: 48px 20px; }
+          .mv-logo-box { padding: 28px 36px; }
+          .mv-logo-box img { height: 80px; }
+        }
+
         /* ─────────────────────────────────────────
-           MISSION & VISION — full bleed two-col
+           MISSION & VISION — side by side
         ───────────────────────────────────────── */
         .mv-mv-section {
+          padding: 56px clamp(20px, 5vw, 56px);
+        }
+        .mv-mv-grid {
+          max-width: 1000px;
+          margin: 0 auto;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          border-top: 2px solid var(--color-navy);
-          width: 100%;
+          gap: 24px;
+          align-items: stretch;
         }
         .mv-mv-card {
-          padding: 64px clamp(24px, 5vw, 72px);
-          border-right: 1px solid var(--color-border);
+          background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-navy-mid) 100%);
+          border-radius: var(--card-radius);
+          padding: 48px 36px;
           display: flex;
           flex-direction: column;
-          gap: 20px;
-        }
-        .mv-mv-card:last-child { border-right: none; }
-        .mv-mv-card:nth-child(2) { background: var(--color-surface); }
-
-        .mv-mv-icon {
-          width: 52px;
-          height: 52px;
-          border-radius: 12px;
-          background: var(--color-primary-light);
-          display: flex;
           align-items: center;
+          text-align: center;
           justify-content: center;
-          color: var(--color-primary);
-          flex-shrink: 0;
+          color: #ffffff;
         }
-        .mv-mv-label {
+        .mv-mv-card-icon {
+          margin-bottom: 18px;
+        }
+        .mv-mv-card-title {
+          font-family: 'Anton', sans-serif;
+          font-weight: 400;
+          font-size: clamp(28px, 3.6vw, 38px);
+          letter-spacing: 0.01em;
+          margin: 0 0 16px;
+        }
+        .mv-mv-card-text {
           font-family: var(--font-body);
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          color: var(--color-primary);
+          font-size: 14px;
+          line-height: 1.7;
           margin: 0;
-          display: flex;
-          align-items: center;
-          gap: 8px;
+          opacity: 0.95;
         }
-        .mv-mv-label::before {
-          content: '';
-          display: inline-block;
-          width: 18px;
-          height: 2px;
-          background: var(--color-primary);
-          flex-shrink: 0;
-        }
-        .mv-mv-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(24px, 2.8vw, 34px);
-          font-weight: 700;
-          color: var(--color-navy);
-          line-height: 1.15;
-          margin: 0;
-        }
-        .mv-mv-text {
-          font-family: var(--font-body);
-          font-size: clamp(14px, 1.3vw, 16px);
-          color: var(--color-text-muted);
-          line-height: 1.8;
-          margin: 0;
-          max-width: 480px;
+
+        @media (max-width: 760px) {
+          .mv-mv-grid { grid-template-columns: 1fr; }
         }
 
         /* ─────────────────────────────────────────
-           CORE VALUES
+           CORE VALUES — plain background, icon + text list
         ───────────────────────────────────────── */
         .mv-values-section {
-          padding: 80px clamp(24px, 5vw, 72px);
+          padding: 72px clamp(24px, 5vw, 72px);
           background: var(--color-bg);
         }
         .mv-values-header {
-          max-width: 1200px;
-          margin: 0 auto 56px;
-          border-left: 4px solid var(--color-navy);
-          padding-left: 20px;
+          max-width: 700px;
+          margin: 0 auto 48px;
+          text-align: center;
         }
         .mv-values-kicker {
           font-family: var(--font-body);
@@ -220,98 +221,65 @@ const MissionVision = () => {
         }
         .mv-values-headline {
           font-family: 'Anton', sans-serif;
-          font-size: clamp(26px, 3.5vw, 44px);
           font-weight: 400;
+          font-size: clamp(28px, 3.6vw, 38px);
           letter-spacing: 0.01em;
-          text-transform: uppercase;
-          line-height: 1.1;
           color: var(--color-navy);
-          margin: 0 0 12px;
+          margin: 0 0 16px;
         }
         .mv-values-sub {
           font-family: var(--font-body);
-          font-size: clamp(13px, 1.2vw, 15px);
+          font-size: clamp(14px, 1.2vw, 16px);
           color: var(--color-text-muted);
-          line-height: 1.75;
-          max-width: 560px;
+          line-height: 1.7;
           margin: 0;
         }
 
-        /* values grid — full bleed flush */
-        .mv-values-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          width: 100%;
-          border-top: 2px solid var(--color-navy);
-          max-width: 1200px;
+        .mv-values-list {
+          max-width: 780px;
           margin: 0 auto;
-        }
-        /* last row — 3 cards, center them */
-        .mv-value-card {
-          padding: 36px 28px 40px;
-          border-right: 1px solid var(--color-border);
-          border-bottom: 1px solid var(--color-border);
           display: flex;
           flex-direction: column;
-          gap: 14px;
-          transition: background 0.25s ease;
         }
-        .mv-value-card:hover { background: var(--color-surface); }
-        /* remove right border on every 4th */
-        .mv-value-card:nth-child(4n) { border-right: none; }
-        /* last row bottom borders off */
-        .mv-value-card:nth-last-child(-n+3) { border-bottom: none; }
+
+        .mv-value-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 18px;
+          padding: 20px 0;
+          border-bottom: 1px solid var(--color-border);
+        }
+        .mv-value-row:last-child {
+          border-bottom: none;
+        }
 
         .mv-value-icon {
           width: 44px;
           height: 44px;
           border-radius: 10px;
           background: var(--color-primary-light);
+          color: var(--color-primary);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--color-primary);
           flex-shrink: 0;
         }
-        .mv-value-title {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(15px, 1.4vw, 17px);
-          font-weight: 700;
-          color: var(--color-navy);
-          margin: 0;
-          line-height: 1.2;
-        }
-        .mv-value-desc {
+
+        .mv-value-text {
           font-family: var(--font-body);
-          font-size: 13px;
-          color: var(--color-text-muted);
+          font-size: 15px;
           line-height: 1.65;
+          color: var(--color-text-muted);
           margin: 0;
+          padding-top: 8px;
+        }
+        .mv-value-text strong {
+          color: var(--color-navy);
+          font-weight: 700;
         }
 
-        /* ─────────────────────────────────────────
-           RESPONSIVE
-        ───────────────────────────────────────── */
-        @media (max-width: 900px) {
-          .mv-hero-grid         { grid-template-columns: 1fr; gap: 32px; min-height: unset; }
-          .mv-hero-divider      { display: none; }
-          .mv-hero-left         { padding-right: 0; }
-          .mv-hero-right        { padding-left: 0; justify-content: flex-start; }
-          .mv-mv-section        { grid-template-columns: 1fr; }
-          .mv-mv-card           { border-right: none; border-bottom: 1px solid var(--color-border); }
-          .mv-mv-card:last-child { border-bottom: none; }
-          .mv-values-grid       { grid-template-columns: repeat(2, 1fr); }
-          .mv-value-card:nth-child(4n)       { border-right: 1px solid var(--color-border); }
-          .mv-value-card:nth-child(2n)       { border-right: none; }
-          .mv-value-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--color-border); }
-          .mv-value-card:nth-last-child(-n+2) { border-bottom: none; }
-        }
-        @media (max-width: 600px) {
-          .mv-values-grid       { grid-template-columns: 1fr; }
-          .mv-value-card        { border-right: none !important; }
-          .mv-value-card:not(:last-child) { border-bottom: 1px solid var(--color-border) !important; }
-          .mv-logo-box          { padding: 28px 36px; }
-          .mv-logo-box img      { height: 80px; }
+        @media (max-width: 560px) {
+          .mv-value-row { gap: 14px; }
         }
       `}</style>
 
@@ -325,8 +293,9 @@ const MissionVision = () => {
           <div className="mv-hero-left">
             <p className="mv-hero-kicker">Our Purpose</p>
             <h1 className="mv-hero-h1">Mission<br />&amp; Vision</h1>
+            {/* #07 */}
             <p className="mv-hero-desc">
-              JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit
+              JoMabel Healthcare Foundation is a nonprofit entity with a goal of
               developing a world-class 16,000+ sq. meter medical and training
               center in Ufuma, Anambra State, Nigeria.
             </p>
@@ -340,50 +309,56 @@ const MissionVision = () => {
         </div>
       </div>
 
-      {/* ── Mission & Vision — full bleed ── */}
+      {/* ── Mission & Vision — side by side ── */}
       <div className="mv-mv-section">
-        <div className="mv-mv-card">
-          <div className="mv-mv-icon"><Target size={26} /></div>
-          <p className="mv-mv-label">Our Mission</p>
-          <h2 className="mv-mv-title">Compassionate,<br />Accessible Care</h2>
-          <p className="mv-mv-text">
-            To provide compassionate, accessible, and quality care and capacity
-            building to underserved communities — ensuring no family is left behind
-            because of where they live or what they earn.
-          </p>
-        </div>
-        <div className="mv-mv-card">
-          <div className="mv-mv-icon"><Eye size={26} /></div>
-          <p className="mv-mv-label">Our Vision</p>
-          <h2 className="mv-mv-title">Healthcare for<br />Every Person</h2>
-          <p className="mv-mv-text">
-            A world where every person — regardless of location, income, or social
-            status — has access to dignified, life-saving healthcare, supported by
-            empowered communities, trained local professionals, and sustainable
-            health infrastructure.
-          </p>
+        <div className="mv-mv-grid">
+          <div className="mv-mv-card">
+            <Eye size={36} className="mv-mv-card-icon" />
+            <h2 className="mv-mv-card-title">Our Vision</h2>
+            <p className="mv-mv-card-text">
+              To create a sustainable model of healthcare excellence in
+              underserved communities in Nigeria that can be replicated across
+              rural communities in Sub-Saharan Africa and beyond.
+            </p>
+          </div>
+
+          <div className="mv-mv-card">
+            <Target size={36} className="mv-mv-card-icon" />
+            <h2 className="mv-mv-card-title">Our Mission</h2>
+            <p className="mv-mv-card-text">
+              To provide compassionate, accessible, and high-quality
+              healthcare, strengthen community health systems, and build local
+              healthcare capacity in underserved communities across
+              Sub-Saharan Africa and beyond.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* ── Core Values ── */}
+      {/* ── Why JHF — inserted directly under Mission & Vision (#08 lives in this component) ── */}
+      <WhyJHF />
+
+      {/* ── Core Values — plain background, icon + text list ── */}
       <div className="mv-values-section">
         <div className="mv-values-header">
           <p className="mv-values-kicker">What Guides Us</p>
           <h2 className="mv-values-headline">Our Core Values</h2>
+          {/* #09 */}
           <p className="mv-values-sub">
-            Seven principles that shape every decision, every program, and every
+            Seven principles shape every decision, every program, and every
             relationship we build in the communities we serve.
           </p>
         </div>
 
-        <div className="mv-values-grid">
+        <div className="mv-values-list">
           {coreValues.map((value, i) => {
             const Icon = value.icon;
             return (
-              <div className="mv-value-card" key={i}>
-                <div className="mv-value-icon"><Icon size={22} /></div>
-                <h3 className="mv-value-title">{value.title}</h3>
-                <p className="mv-value-desc">{value.desc}</p>
+              <div className="mv-value-row" key={i}>
+                <div className="mv-value-icon"><Icon size={20} strokeWidth={1.75} /></div>
+                <p className="mv-value-text">
+                  <strong>{value.title}</strong> — {value.desc}
+                </p>
               </div>
             );
           })}

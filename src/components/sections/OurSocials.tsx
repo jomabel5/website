@@ -51,84 +51,79 @@ const OurSocials = () => (
   <section className="socials-section">
     <style>{`
       .socials-section {
-        background-color: #f9fafb;
-        padding: clamp(40px, 6vw, 64px) clamp(16px, 5vw, 64px) clamp(48px, 7vw, 72px);
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background-color: var(--color-surface);
+        padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px);
+        font-family: var(--font-body);
         text-align: center;
       }
-      .socials-heading {
-        font-size: clamp(20px, 4vw, 24px);
+      .socials-kicker {
+        font-family: var(--font-body);
+        font-size: 11px;
         font-weight: 700;
-        color: #111827;
-        margin-bottom: 40px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--color-primary);
+        margin: 0 0 10px;
+      }
+      .socials-heading {
+        font-size: clamp(24px, 3.2vw, 34px);
+        font-weight: 700;
+        color: var(--color-navy);
+        margin: 0 0 48px;
       }
       .socials-grid {
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px);
         max-width: 1080px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        background-color: #ffffff;
+        gap: 24px;
       }
       .social-card {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 12px;
-        padding: 16px 12px;
-        border-right: 1px solid #f3f4f6;
+        padding: 32px 24px;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--card-radius);
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: var(--transition);
         cursor: pointer;
-      }
-      .social-card:last-child {
-        border-right: none;
       }
       .social-card:hover {
         transform: translateY(-4px);
-        background-color: #fafafa;
+        box-shadow: var(--shadow-md);
+        border-color: var(--color-primary);
       }
       .social-handle {
+        font-family: var(--font-body);
         font-size: 15px;
         font-weight: 700;
-        color: #111827;
+        color: var(--color-navy);
         margin: 0;
       }
       .social-username {
+        font-family: var(--font-body);
         font-size: 12px;
-        color: #1D8FD4;
+        color: var(--color-primary);
         margin: 0;
         text-decoration: none;
       }
       .social-description {
+        font-family: var(--font-body);
         font-size: 12.5px;
-        color: #6b7280;
+        color: var(--color-text-muted);
         line-height: 1.65;
         margin: 0;
         white-space: pre-line;
         text-align: center;
       }
 
-      /* Tablet — 2×2 grid (3 items → 2 then 1) */
+      /* Tablet — 2 columns */
       @media (max-width: 760px) {
         .socials-grid {
           grid-template-columns: repeat(2, 1fr);
-        }
-        .social-card {
-          border-right: none;
-          border-bottom: 1px solid #f3f4f6;
-        }
-        .social-card:nth-child(odd) {
-          border-right: 1px solid #f3f4f6;
-        }
-        .social-card:nth-child(2),
-        .social-card:nth-child(3) {
-          border-bottom: none;
-        }
-        .social-card:nth-child(3) {
-          border-right: none;
         }
       }
 
@@ -137,16 +132,10 @@ const OurSocials = () => (
         .socials-grid {
           grid-template-columns: 1fr;
         }
-        .social-card {
-          border-right: none !important;
-          border-bottom: 1px solid #f3f4f6;
-        }
-        .social-card:last-child {
-          border-bottom: none;
-        }
       }
     `}</style>
 
+    <p className="socials-kicker">Stay Connected</p>
     <h2 className="socials-heading">Follow Our Journey</h2>
 
     <div className="socials-grid">

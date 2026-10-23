@@ -1,7 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Youtube } from 'lucide-react';
+import { Mail, MapPin, Youtube } from 'lucide-react';
 import logo from '../../assests/images/logo.jpeg';
+
+// #52a: six new programs, same order and anchors as the /programs page
+const footerPrograms = [
+  { label: 'Primary Care & Community Outreach',                     path: '/programs#primary-care-community-outreach' },
+  { label: 'Blood Pressure, Diabetes & Kidney Health',              path: '/programs#blood-pressure-diabetes-kidney-health' },
+  { label: 'Maternal & Child Health',                               path: '/programs#maternal-child-health' },
+  { label: 'Eye Health & Vision Care',                              path: '/programs#eye-health-vision-care' },
+  { label: 'Cancer Awareness, Early Detection & Patient Support',   path: '/programs#cancer-awareness-early-detection' },
+  { label: 'Community Health Worker Training & Patient Navigation', path: '/programs#community-health-worker-training' },
+];
 
 const Footer = () => {
   return (
@@ -146,7 +156,7 @@ const Footer = () => {
               <img src={logo} alt="JoMabel Healthcare Foundation" style={{ height: '52px', width: 'auto', display: 'block' }} />
             </div>
             <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12.5px', lineHeight: '1.8', margin: '0 0 6px' }}>
-              JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit foundation
+              JoMabel Healthcare Foundation is a nonprofit foundation
               developing a world-class 16,000+ sq. meter medical and training campus
               in Ufuma, Anambra State, Nigeria.
             </p>
@@ -156,7 +166,7 @@ const Footer = () => {
             <a href="/donate" className="footer-donate-btn">Donate Now</a>
           </div>
 
-          {/* Col 2 — Quick Links - Updated with new pages */}
+          {/* Col 2 — Quick Links (#52b: Our Centers added) */}
           <div>
             <h4 className="footer-col-heading">Quick Links</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -167,9 +177,9 @@ const Footer = () => {
                 { label: "Founder's Story", path: '/founder-story' },
                 { label: 'Leadership',     path: '/leadership' },
                 { label: 'Programs',       path: '/programs' },
-                { label: 'Campaign',       path: '/campaign' },
+                { label: 'Our Centers',    path: '/our-centers' },
+                { label: 'Capital Campaign',       path: '/campaign' },
                 { label: 'Impact',         path: '/impact' },
-                { label: 'ROI',            path: '/roi' },
                 { label: 'Legacy Giving',  path: '/legacy' },
                 { label: 'Newsletter',     path: '/newsletter' },
                 { label: 'Contact Us',     path: '/contact' },
@@ -182,26 +192,19 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Col 3 — Programs */}
+          {/* Col 3 — Programs (#52a) */}
           <div>
             <h4 className="footer-col-heading">Our Programs</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {[
-                'JoMabel Medical Center',
-                'Medical Outreach Missions',
-                'Youth Training & Empowerment',
-                'Maternal & Child Health',
-                'Community Health Education',
-                'Infrastructure Development',
-              ].map((item) => (
-                <li key={item}>
-                  <Link to="/programs" className="footer-link">{item}</Link>
+              {footerPrograms.map((item) => (
+                <li key={item.path}>
+                  <Link to={item.path} className="footer-link">{item.label}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Col 4 — Contact */}
+          {/* Col 4 — Contact (#42: phone number removed) */}
           <div>
             <h4 className="footer-col-heading">Contact Us</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -214,18 +217,6 @@ const Footer = () => {
                   <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 2px' }}>Email</p>
                   <a href="mailto:foundation@jomabelhf.org" className="footer-link" style={{ fontSize: '12.5px' }}>
                     foundation@jomabelhf.org
-                  </a>
-                </div>
-              </div>
-
-              <div className="footer-contact-item">
-                <div className="footer-contact-icon">
-                  <Phone size={13} color="var(--color-primary)" />
-                </div>
-                <div>
-                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 2px' }}>Phone</p>
-                  <a href="tel:+15125080277" className="footer-link" style={{ fontSize: '12.5px' }}>
-                    1-512-508-0277
                   </a>
                 </div>
               </div>
@@ -268,17 +259,18 @@ const Footer = () => {
       {/* ── BOTTOM BAR ── */}
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
+          {/* #24: year updates automatically */}
           <p style={{ color: 'rgba(255,255,255,0.70)', fontSize: '12px', margin: 0 }}>
-            © 2025 JoMabel Healthcare Foundation. All rights reserved.
+            © {new Date().getFullYear()} JoMabel Healthcare Foundation. All rights reserved.
             &nbsp;·&nbsp; jomabelhf.org
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: '12px' }}>Follow us:</span>
 
-            {/* Instagram */}
+            {/* Instagram (#46a) */}
             <a 
-              href="https://www.instagram.com/jhfoundation663/" 
+              href="https://www.instagram.com/jomabelhealthcarefoundation/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="footer-social-icon" 
@@ -291,20 +283,9 @@ const Footer = () => {
               </svg>
             </a>
 
-            {/* X / Twitter */}
-            <a 
-              href="https://x.com/jomabel176441" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="footer-social-icon" 
-              aria-label="X / Twitter"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ffffff">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
-              </svg>
-            </a>
+            {/* X removed (#46b) until the account is renamed to a professional handle */}
 
-            {/* YouTube */}
+            {/* YouTube (#46c) */}
             <a 
               href="https://youtube.com/@jomabelhealthcarefoundation" 
               target="_blank" 

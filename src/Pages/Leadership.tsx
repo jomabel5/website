@@ -15,6 +15,7 @@ import chiamakaImg      from '../assests/images/chiamaka-ezeokonkwo.jpeg';
 import justinaImg       from '../assests/images/justina-osa.jpeg';
 import lynneImg         from '../assests/images/lynne-ikwuagwu.jpeg';
 import sharonbilletImg  from '../assests/images/sharonbillet-otah.jpeg';
+import akinolaTaiwoImg   from '../assests/images/AkinolaA.Taiwo.jpeg';
 
 // Hero image
 import heroImage from '../assests/images/outreach1.jpeg';
@@ -47,6 +48,12 @@ const boardMembers = [
     img: doyinImg,
     bio: 'Doyin Antiabong is a strategy and transformation executive with 17 years of experience closing the gap between bold vision and measurable results — across four Fortune 500 companies: Accenture, Diageo, Amazon, and Microsoft. She currently serves as Founder and CEO of Zarn Group, where she is building lifestyle and home products. As a board member of JoMabel Healthcare Foundation, she focuses on designing operational systems and governance frameworks that turn bold vision into lasting institution.',
   },
+  {
+  name: 'Akinola A. Taiwo, BSc, FCA, ACIT',
+  title: 'Board Member',
+  img: akinolaTaiwoImg,
+  bio: 'Akinola A. Taiwo is an accomplished financial professional, technocrat, consultant, and corporate leader with extensive experience spanning Nigeria\u2019s public and private sectors. A Fellow of the Institute of Chartered Accountants of Nigeria (FCA) and Associate of the Institute of Taxation of Nigeria (ACIT), he has held senior leadership positions in finance, economic development, infrastructure, investment, audit, and corporate governance. He previously served as Ogun State Commissioner for Finance and Economic Development and has provided consulting leadership on projects involving the World Bank, African Development Bank, Shelter Afrique, and Nigerian government institutions. His experience is particularly relevant to JHF through his four years as a Director of the College of Medicine, Enugu, service on the Council of the University of Nigeria, Nsukka, and extensive board and infrastructure oversight experience. Mr. Taiwo also has a longstanding commitment to philanthropy, education, mentorship, and support for underserved communities. He brings to JHF valuable expertise in financial stewardship, governance, infrastructure, strategic planning, and institutional development.',
+},
 ];
 
 const advisoryMembers = [
@@ -93,7 +100,8 @@ const oversightStructure = [
 ];
 
 /* ─────────────────────────────────────────
-   PERSON ROW — editorial layout
+   PERSON CARD — photo top, name, title,
+   truncated bio, Read More button
 ───────────────────────────────────────── */
 type PersonMember = {
   name: string;
@@ -102,38 +110,28 @@ type PersonMember = {
   bio: string;
 };
 
-type PersonRowProps = {
+type PersonCardProps = {
   member: PersonMember;
-  showTitle?: boolean;
 };
 
-const PersonRow = ({ member, showTitle = false }: PersonRowProps) => {
+const PersonCard = ({ member }: PersonCardProps) => {
   const [expanded, setExpanded] = useState(false);
-  const LIMIT = 320;
+  const LIMIT = 140;
   const isLong = member.bio.length > LIMIT;
   const preview = isLong ? member.bio.substring(0, LIMIT) + '…' : member.bio;
 
   return (
-    <div className="ld-person-row">
-      {/* Left column: photo + name + title */}
-      <div className="ld-person-left">
-        <div className="ld-person-photo-wrap">
-          <img src={member.img} alt={member.name} className="ld-person-photo" />
-        </div>
-        <div className="ld-person-id">
-          <strong className="ld-person-name">{member.name}</strong>
-          {(member.title || showTitle) && (
-            <span className="ld-person-title">{member.title}</span>
-          )}
-        </div>
+    <div className="ld-card">
+      <div className="ld-card-photo-wrap">
+        <img src={member.img} alt={member.name} className="ld-card-photo" />
       </div>
-
-      {/* Right column: bio */}
-      <div className="ld-person-right">
-        <p className="ld-person-bio">{expanded ? member.bio : preview}</p>
+      <div className="ld-card-body">
+        <h3 className="ld-card-name">{member.name}</h3>
+        {member.title && <span className="ld-card-title">{member.title}</span>}
+        <p className="ld-card-bio">{expanded ? member.bio : preview}</p>
         {isLong && (
-          <button className="ld-read-more" onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Read Less ↑' : 'Read More ↓'}
+          <button className="ld-card-btn" onClick={() => setExpanded(!expanded)}>
+            {expanded ? 'Read Less' : 'Read More'}
           </button>
         )}
       </div>
@@ -222,7 +220,7 @@ const Leadership = () => {
 
         /* ══ CONTENT WRAPPER ══ */
         .ld-content {
-          max-width: 1080px;
+          max-width: 1200px;
           margin: 0 auto;
           padding: 0 clamp(20px, 5vw, 56px) 80px;
         }
@@ -235,7 +233,8 @@ const Leadership = () => {
 
         /* ══ EDITORIAL SECTION HEADER ══ */
         .ld-section-head {
-          margin-bottom: 32px;
+          margin-bottom: 40px;
+          text-align: center;
         }
         .ld-section-kicker {
           font-family: var(--font-body);
@@ -249,11 +248,11 @@ const Leadership = () => {
         }
         .ld-section-title {
           font-family: 'Anton', sans-serif;
-          font-size: clamp(26px, 4vw, 42px);
+          font-size: clamp(28px, 3.6vw, 38px);
           font-weight: 400;
-          text-transform: uppercase;
-          letter-spacing: 0.02em;
-          line-height: 1.0;
+          text-transform: none;
+          letter-spacing: 0.01em;
+          line-height: 1.15;
           color: var(--color-navy);
           margin: 0 0 10px;
         }
@@ -263,104 +262,86 @@ const Leadership = () => {
           color: var(--color-text-muted);
           line-height: 1.7;
           max-width: 620px;
-          margin: 0;
-        }
-        /* Thick rule under section title */
-        .ld-section-rule {
-          border: none;
-          border-top: 3px solid var(--color-navy);
-          margin: 20px 0 0;
+          margin: 0 auto;
         }
 
-        /* ══ PERSON ROW — editorial left-photo / right-bio ══ */
-        .ld-person-row {
+        /* ══ MEMBER CARD GRID ══ */
+        .ld-card-grid {
           display: grid;
-          grid-template-columns: 180px 1fr;
-          gap: 32px;
-          padding: 40px 0;
-          border-bottom: 1px solid var(--color-border);
+          grid-template-columns: repeat(3, 1fr);
+          gap: 28px;
         }
-        .ld-person-row:last-child {
-          border-bottom: none;
-        }
-
-        /* Left: photo stacked above name */
-        .ld-person-left {
+        .ld-card {
+          background: var(--color-surface);
+          border-radius: var(--card-radius);
+          overflow: hidden;
           display: flex;
           flex-direction: column;
-          gap: 14px;
         }
-        .ld-person-photo-wrap {
-          width: 180px;
-          height: 200px;
+        .ld-card-photo-wrap {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
           overflow: hidden;
-          background: var(--color-surface-2);
+          margin: 28px auto 0;
           flex-shrink: 0;
         }
-        .ld-person-photo {
+        .ld-card-photo {
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center top;
           display: block;
         }
-        .ld-person-id {
+        .ld-card-body {
+          padding: 20px 28px 28px;
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          align-items: center;
+          text-align: center;
+          flex: 1;
         }
-        .ld-person-name {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(13px, 1.3vw, 15px);
-          font-weight: 400;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-          color: var(--color-navy);
-          line-height: 1.2;
-          display: block;
-        }
-        .ld-person-title {
+        .ld-card-name {
           font-family: var(--font-body);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          color: var(--color-primary);
-          display: block;
-          line-height: 1.4;
-        }
-
-        /* Right: bio */
-        .ld-person-right {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          padding-top: 4px;
-        }
-        .ld-person-bio {
-          font-family: var(--font-body);
-          font-size: 14px;
-          color: var(--color-text-muted);
-          line-height: 1.8;
-          margin: 0 0 12px;
-        }
-        .ld-read-more {
-          background: none;
-          border: none;
-          padding: 0;
-          font-family: var(--font-body);
-          font-size: 12px;
+          font-size: 19px;
           font-weight: 700;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          color: var(--color-primary);
-          cursor: pointer;
-          transition: var(--transition);
-          text-align: left;
-          width: fit-content;
+          color: var(--color-navy);
+          margin: 0 0 6px;
+          line-height: 1.25;
         }
-        .ld-read-more:hover {
-          color: var(--color-primary-dark);
+        .ld-card-title {
+          font-family: var(--font-body);
+          font-size: 12.5px;
+          font-weight: 600;
+          color: var(--color-text-light);
+          margin: 0 0 14px;
+          display: block;
+        }
+        .ld-card-bio {
+          font-family: var(--font-body);
+          font-size: 13.5px;
+          color: var(--color-text-muted);
+          line-height: 1.7;
+          margin: 0 0 18px;
+          flex: 1;
+        }
+        .ld-card-btn {
+          background: var(--color-primary);
+          color: #ffffff;
+          border: none;
+          border-radius: var(--btn-radius);
+          padding: 10px 20px;
+          font-family: var(--font-body);
+          font-size: 12.5px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          cursor: pointer;
+          width: fit-content;
+          margin: 0 auto;
+          transition: var(--transition);
+        }
+        .ld-card-btn:hover {
+          background: var(--color-primary-dark);
         }
 
         /* ══ GOVERNANCE CARDS ══ */
@@ -431,16 +412,11 @@ const Leadership = () => {
           color: #ffffff;
           font-weight: 700;
         }
-        .ld-cta-text a {
-          color: var(--color-primary);
-          text-decoration: underline;
-          font-weight: 600;
-        }
         .ld-cta-btn {
-          background: var(--color-green);
+          background: var(--color-primary);
           color: #ffffff;
           border: none;
-          border-radius: 0;
+          border-radius: var(--btn-radius);
           padding: 14px 32px;
           font-family: var(--font-body);
           font-size: 13px;
@@ -453,22 +429,16 @@ const Leadership = () => {
           flex-shrink: 0;
         }
         .ld-cta-btn:hover {
-          background: var(--color-green-dark);
+          background: var(--color-primary-dark);
         }
 
         /* ══ RESPONSIVE ══ */
+        @media (max-width: 900px) {
+          .ld-card-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 720px) {
-          .ld-person-row {
-            grid-template-columns: 1fr;
-            gap: 20px;
-          }
-          .ld-person-photo-wrap {
-            width: 140px;
-            height: 160px;
-          }
-          .ld-gov-grid {
-            grid-template-columns: 1fr;
-          }
+          .ld-card-grid { grid-template-columns: 1fr; }
+          .ld-gov-grid { grid-template-columns: 1fr; }
           .ld-cta-strip {
             flex-direction: column;
             align-items: flex-start;
@@ -486,7 +456,7 @@ const Leadership = () => {
           <span className="ld-hero-kicker">Our Leaders</span>
           <h1 className="ld-hero-title">Leadership</h1>
           <p className="ld-hero-sub">
-            JoMabel Healthcare Foundation is a Texas-based U.S. nonprofit developing a
+            JoMabel Healthcare Foundation is a nonprofit developing a
             world-class 16,000+ sq. meter medical and training center in Ufuma, Anambra State, Nigeria.
           </p>
         </div>
@@ -498,47 +468,48 @@ const Leadership = () => {
         <div className="ld-block">
           <div className="ld-section-head">
             <span className="ld-section-kicker">Leadership Team</span>
-            <h2 className="ld-section-title">Our Executive Board.</h2>
+            <h2 className="ld-section-title">Meet the Board of Directors</h2>
             <p className="ld-section-desc">
               The JoMabel Healthcare Foundation board oversees our work to deliver on our mission —
               bringing quality, compassionate healthcare to communities in need. We are committed
               to transparency and accountability to our supporters, partners, and all we serve.
             </p>
-            <hr className="ld-section-rule" />
           </div>
 
-          {boardMembers.map((member, i) => (
-            <PersonRow key={i} member={member} showTitle />
-          ))}
+          <div className="ld-card-grid">
+            {boardMembers.map((member, i) => (
+              <PersonCard key={i} member={member} />
+            ))}
+          </div>
         </div>
 
         {/* ── Advisory Board ── */}
         <div className="ld-block">
           <div className="ld-section-head">
             <span className="ld-section-kicker">Advisory Board</span>
-            <h2 className="ld-section-title">Our Advisory Board.</h2>
+            <h2 className="ld-section-title">Meet the Advisory Board</h2>
             <p className="ld-section-desc">
               Specialists providing clinical, legal, public health and quality assurance
               leadership — drawn from a wide field of experience including children's rights,
               healthcare, strategy, law and business.
             </p>
-            <hr className="ld-section-rule" />
           </div>
 
-          {advisoryMembers.map((member, i) => (
-            <PersonRow key={i} member={member} showTitle />
-          ))}
+          <div className="ld-card-grid">
+            {advisoryMembers.map((member, i) => (
+              <PersonCard key={i} member={member} />
+            ))}
+          </div>
         </div>
 
         {/* ── Governance ── */}
         <div className="ld-block">
           <div className="ld-section-head">
             <span className="ld-section-kicker">Governance & Transparency</span>
-            <h2 className="ld-section-title">Commitment to Accountability.</h2>
+            <h2 className="ld-section-title">Commitment to Accountability</h2>
             <p className="ld-section-desc">
               Responsible stewardship of resources and mission-driven operations at every level of our organisation.
             </p>
-            <hr className="ld-section-rule" />
           </div>
 
           <div className="ld-gov-grid">
@@ -575,7 +546,7 @@ const Leadership = () => {
           <strong>Support JoMabel Healthcare Foundation</strong> — help us bring life-saving
           healthcare closer to families in underserved communities in Ufuma, Anambra State, Nigeria.
         </p>
-        <button className="ld-cta-btn" onClick={() => window.location.href = '/donate'}>
+        <button className="ld-cta-btn" onClick={() => window.location.href = '/donate#payment-section'}>
           ♥ Donate Now
         </button>
       </div>

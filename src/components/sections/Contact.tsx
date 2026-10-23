@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react";
 import outreachImage from '../../assests/images/outreach2.jpeg';
 
 const contactDetails = [
   {
     icon: Mail,
     label: 'Email Us',
-    value: 'foundation@jomabelhf.org',
-    href: 'mailto:foundation@jomabelhf.org',
-  },
-  {
-    icon: Phone,
-    label: 'Call Us',
-    value: '+1 (512) 508-0277',
-    href: 'tel:+15125080277',
+    value: 'foundation@jomabel.org',
+    href: 'mailto:foundation@jomabel.org',
   },
   {
     icon: MapPin,
@@ -24,13 +19,13 @@ const contactDetails = [
   {
     icon: Clock,
     label: 'Office Hours',
-    value: 'Monday – Friday\n9:00 AM – 5:00 PM (CST)',
+    value: 'Monday – Friday\n9:00 AM – 5:00 PM (US Central Time)',
     href: null,
   },
 ];
 
 const subjectOptions = [
-  'General Enquiry',
+  'General Inquiry',
   'Donations',
   'Partnership',
   'Volunteer',
@@ -48,6 +43,7 @@ const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -96,7 +92,7 @@ const Contact = () => {
       const data = await response.json();
       
       if (data.success) {
-        // Success - reset form and show success message
+        // Success: reset form and show success message
         setSubmitted(true);
         setForm({ name: '', email: '', subject: '', message: '' });
         setTimeout(() => setSubmitted(false), 5000);
@@ -128,7 +124,7 @@ const Contact = () => {
         }
 
         /* ─────────────────────────────────────────
-           HERO — bottom-anchored like OurPrograms
+           HERO: bottom-anchored like OurPrograms
         ───────────────────────────────────────── */
         .ct-hero {
           position: relative;
@@ -202,16 +198,15 @@ const Contact = () => {
         }
 
         /* ─────────────────────────────────────────
-           BODY — two-col grid
+           BODY: two-col grid
         ───────────────────────────────────────── */
         .ct-body {
           display: grid;
           grid-template-columns: 1fr 1.35fr;
-          border-top: 2px solid var(--color-navy);
           min-height: 600px;
         }
 
-        /* ── LEFT — info panel ── */
+        /* ── LEFT: info panel ── */
         .ct-info {
           background: var(--color-navy);
           padding: 56px clamp(24px, 4vw, 52px) 56px;
@@ -262,7 +257,7 @@ const Contact = () => {
         .ct-detail-icon {
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: var(--card-radius);
           background: rgba(255,255,255,0.07);
           display: flex;
           align-items: center;
@@ -294,7 +289,7 @@ const Contact = () => {
         /* map */
         .ct-map {
           margin-top: 40px;
-          border-radius: 8px;
+          border-radius: var(--card-radius);
           overflow: hidden;
           height: 180px;
           border: 1px solid rgba(255,255,255,0.10);
@@ -308,7 +303,7 @@ const Contact = () => {
           filter: grayscale(30%);
         }
 
-        /* ── RIGHT — form panel ── */
+        /* ── RIGHT: form panel ── */
         .ct-form-panel {
           background: var(--color-bg);
           padding: 56px clamp(24px, 4vw, 60px) 56px;
@@ -341,30 +336,28 @@ const Contact = () => {
 
         /* success & error messages */
         .ct-success {
-          background: #dcfce7;
+          background: var(--color-green-light);
           color: #166534;
           padding: 14px 18px;
-          border-radius: 8px;
+          border-radius: var(--card-radius);
           display: flex;
           align-items: center;
           gap: 10px;
           font-size: 14px;
           font-weight: 600;
           margin-bottom: 24px;
-          border-left: 3px solid #22c55e;
         }
         .ct-error {
           background: #fee2e2;
           color: #991b1b;
           padding: 14px 18px;
-          border-radius: 8px;
+          border-radius: var(--card-radius);
           display: flex;
           align-items: center;
           gap: 10px;
           font-size: 14px;
           font-weight: 600;
           margin-bottom: 24px;
-          border-left: 3px solid #ef4444;
         }
 
         /* form fields */
@@ -392,13 +385,13 @@ const Contact = () => {
           width: 100%;
           padding: 13px 16px;
           border: 1.5px solid var(--color-border);
-          border-radius: 6px;
+          border-radius: var(--btn-radius);
           font-family: var(--font-body);
           font-size: 14px;
           color: var(--color-text);
           outline: none;
           background: var(--color-bg);
-          transition: all 0.3s ease;
+          transition: var(--transition);
           box-sizing: border-box;
         }
         .ct-input:focus,
@@ -420,7 +413,7 @@ const Contact = () => {
           background: var(--color-navy);
           color: #ffffff;
           border: none;
-          border-radius: 6px;
+          border-radius: var(--btn-radius);
           padding: 16px 28px;
           width: 100%;
           font-family: var(--font-body);
@@ -432,17 +425,33 @@ const Contact = () => {
           align-items: center;
           justify-content: center;
           gap: 10px;
-          transition: all 0.3s ease;
+          transition: var(--transition);
           margin-top: 4px;
         }
         .ct-submit:hover:not(:disabled) {
           background: var(--color-primary);
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          box-shadow: var(--shadow-md);
         }
         .ct-submit:disabled {
           opacity: 0.7;
           cursor: not-allowed;
+        }
+
+        /* privacy notice (#40) */
+        .ct-privacy {
+          font-family: var(--font-body);
+          font-size: 11.5px;
+          color: var(--color-text-light);
+          line-height: 1.6;
+          text-align: center;
+          margin: 14px 0 0;
+        }
+        .ct-privacy a {
+          color: var(--color-primary);
+          font-weight: 600;
+          text-decoration: underline;
+          text-underline-offset: 2px;
         }
 
         /* ─────────────────────────────────────────
@@ -476,7 +485,7 @@ const Contact = () => {
 
       {/* Body Grid */}
       <div className="ct-body">
-        {/* Left — Contact Info */}
+        {/* Left: Contact Info */}
         <div className="ct-info">
           <p className="ct-info-kicker">Get In Touch</p>
           <h2 className="ct-info-title">Reach Out<br />to Our Team</h2>
@@ -512,7 +521,7 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Right — Contact Form */}
+        {/* Right: Contact Form */}
         <div className="ct-form-panel">
           <p className="ct-form-kicker">Send a Message</p>
           <h3 className="ct-form-title">We'd Love to<br />Hear From You</h3>
@@ -599,6 +608,12 @@ const Contact = () => {
               {isLoading ? 'Sending...' : 'Send Message'}
               {!isLoading && <Send size={15} />}
             </button>
+
+            <p className="ct-privacy">
+              By sending this message, you agree that JoMabel Healthcare Foundation may use
+              your details to respond to you. We never sell or share your information. See
+              our <Link to="/privacy-policy">Privacy Policy</Link>.
+            </p>
           </form>
         </div>
       </div>

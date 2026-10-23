@@ -60,116 +60,97 @@ const TheProblem = () => {
         @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
         .tp-section {
-          background: #FFFFFF;
-          padding: 48px clamp(20px, 5vw, 56px);
+          background: var(--color-bg);
+          padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 56px);
           font-family: var(--font-body);
           color: var(--color-text);
         }
 
         .tp-inner {
-          max-width: 1080px;
+          max-width: 1200px;
           margin: 0 auto;
         }
 
-        /* ── Editorial header — Anton to match OurFocus ── */
+        /* ── Header ── */
         .tp-header {
-          border-left: 5px solid var(--color-navy);
-          padding-left: 20px;
-          margin-bottom: 28px;
+          text-align: center;
+          margin-bottom: 20px;
         }
 
-        .tp-kicker {
-          font-family: var(--font-body);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 2.5px;
-          text-transform: uppercase;
-          color: var(--color-primary);
-          margin: 0 0 10px;
-        }
+      .tp-kicker {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin: 0 0 10px;
+}
 
-        .tp-headline {
-          font-family: 'Anton', sans-serif;
-          font-size: clamp(28px, 4vw, 48px);
-          font-weight: 400;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          line-height: 1.1;
-          color: var(--color-navy);
-          margin: 0;
-        }
+       .tp-headline {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--color-navy);
+  margin: 0;
+}
 
-        /* ── Body — Inter to match OurFocus ── */
+        /* ── Body ── */
         .tp-body {
           font-family: var(--font-body);
           font-size: clamp(15px, 1.4vw, 17px);
           color: var(--color-text-muted);
           line-height: 1.8;
-          max-width: 720px;
-          margin: 0 0 52px;
-          padding-left: 25px;
+          max-width: 640px;
+          margin: 0 auto 56px;
+          text-align: center;
         }
 
         /* ── Section divider label ── */
         .tp-section-label {
           font-family: var(--font-body);
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
-          color: var(--color-text-light);
-          margin-bottom: 0;
-          display: flex;
-          align-items: center;
-          gap: 12px;
+          color: var(--color-primary);
+          margin: 0 0 24px;
         }
 
-        .tp-section-label::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: var(--color-border);
-        }
-
-        /* ── Stat rows ── */
-        .tp-stats {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 0;
-          border-top: 2px solid var(--color-navy);
-          margin-bottom: 40px;
-        }
-
+        /* ── Stat card grid ── */
+        .tp-stats,
         .tp-stats-2 {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 0;
-          border-top: 1px solid var(--color-border);
+          gap: 20px;
+          margin-bottom: 56px;
         }
+        .tp-stats-2 { margin-bottom: 0; }
 
         .tp-stat {
-          padding: 32px 28px 32px 0;
-          border-right: 1px solid var(--color-border);
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--card-radius);
+          padding: 28px 24px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
           transition: var(--transition);
         }
-
-        .tp-stat:last-child {
-          border-right: none;
-          padding-right: 0;
-        }
-
-        .tp-stat:not(:first-child) {
-          padding-left: 28px;
+        .tp-stat:hover {
+          transform: translateY(-4px);
+          box-shadow: var(--shadow-md);
+          border-color: var(--color-primary);
         }
 
         /* ── Icon chip ── */
         .tp-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 8px;
+          width: 44px;
+          height: 44px;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -178,43 +159,29 @@ const TheProblem = () => {
         }
 
         .tp-icon svg {
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           fill: none;
           stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
         }
 
-        /* Anton for stat numbers — matches focus-panel-title rhythm */
         .tp-num {
           font-family: 'Anton', sans-serif;
-          font-size: clamp(26px, 3.2vw, 38px);
+          font-size: clamp(26px, 3vw, 34px);
           font-weight: 400;
           letter-spacing: 0.02em;
           color: var(--color-navy);
           line-height: 1;
         }
 
-        /* Inter for labels — matches focus-panel-description rhythm */
         .tp-lbl {
           font-family: var(--font-body);
           font-size: 13px;
           font-weight: 400;
           color: var(--color-text-muted);
-          line-height: 1.5;
-          max-width: 180px;
-        }
-
-        /* ── Source footnote ── */
-        .tp-source {
-          margin-top: 36px;
-          padding-top: 20px;
-          border-top: 1px solid var(--color-border);
-          font-family: var(--font-body);
-          font-size: 11px;
-          color: var(--color-text-light);
-          letter-spacing: 0.3px;
+          line-height: 1.55;
         }
 
         /* ── Responsive ── */
@@ -222,17 +189,6 @@ const TheProblem = () => {
           .tp-stats,
           .tp-stats-2 {
             grid-template-columns: repeat(2, 1fr);
-          }
-          .tp-stat {
-            border-right: none;
-            border-bottom: 1px solid var(--color-border);
-            padding: 28px 0;
-          }
-          .tp-stat:not(:first-child) {
-            padding-left: 0;
-          }
-          .tp-stat:last-child {
-            border-bottom: none;
           }
         }
 
@@ -246,19 +202,19 @@ const TheProblem = () => {
 
       <div className="tp-inner">
 
-        {/* Editorial header */}
+        {/* Header */}
         <div className="tp-header">
           <p className="tp-kicker">The Problem</p>
           <h2 className="tp-headline">
-            The Healthcare Access Crisis<br />in Rural Nigeria
+            Healthcare Access Challenges<br />in Rural Nigeria
           </h2>
         </div>
 
         {/* Body */}
         <p className="tp-body">
           For too many families in rural Nigeria, basic and specialist healthcare
-          remain dangerously out of reach — costing lives, deepening inequality,
-          and leaving communities without the care they deserve.
+          remain difficult to access, deepening inequality, and leaving
+          communities without the care they deserve.
         </p>
 
         {/* Row 1 */}
@@ -312,8 +268,8 @@ const TheProblem = () => {
         </div>
 
         {/* Row 2 */}
-        <p className="tp-section-label" style={{ marginTop: '36px' }}>
-          Anambra state primary health centres — 66 facilities surveyed
+        <p className="tp-section-label" style={{ marginTop: '8px' }}>
+          Anambra state primary health centres (PHC) — 66 facilities surveyed
         </p>
 
         <div className="tp-stats-2">
@@ -365,8 +321,6 @@ const TheProblem = () => {
           </div>
 
         </div>
-
-
 
       </div>
     </section>

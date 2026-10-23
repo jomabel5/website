@@ -1,22 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.0c5689ab.css",
-    "main.js": "/static/js/main.2dc583cd.js",
+    "main.css": "/static/css/main.c5cb0c4b.css",
+    "main.js": "/static/js/main.e88a8d87.js",
     "static/js/453.a0be1bc5.chunk.js": "/static/js/453.a0be1bc5.chunk.js",
     "static/media/construction2.mp4": "/static/media/construction2.f35e5f19a8c4744a7bf6.mp4",
     "static/media/construction1.mp4": "/static/media/construction1.d790bd150284861c659d.mp4",
     "static/media/construction4.mp4": "/static/media/construction4.f088e0b0b6645d39cc0e.mp4",
-    "static/media/IMG_3338.png": "/static/media/IMG_3338.88ba724c4fbb46478acb.png",
-    "static/media/imag1.png": "/static/media/imag1.34641e0fd80c7dbbe8c5.png",
     "static/media/construction3.mp4": "/static/media/construction3.e2b4b65e7b7be30bb024.mp4",
     "static/media/nneka-ogbaa.png": "/static/media/nneka-ogbaa.0c8548825e0e9c373e56.png",
-    "static/media/Rose.jpg": "/static/media/Rose.31fc84eafb65cc3ba1f9.jpg",
     "static/media/outreach1.jpeg": "/static/media/outreach1.0276fa5e58f0344aa431.jpeg",
     "static/media/comfort-obi.jpeg": "/static/media/comfort-obi.efd56f9a945af18ad888.jpeg",
     "static/media/founderphoto.jpeg": "/static/media/founderphoto.350cd90bcd4f0391b251.jpeg",
     "static/media/ike-ogbaa.jpeg": "/static/media/ike-ogbaa.4ed60c9ba94d6bf7a51a.jpeg",
     "static/media/outreach5.jpeg": "/static/media/outreach5.dec6ac1376592deb08d9.jpeg",
-    "static/media/logonavbar.png": "/static/media/logonavbar.83aec3d312a7d74ab3b0.png",
+    "static/media/AkinolaA.Taiwo.jpeg": "/static/media/AkinolaA.Taiwo.8e9d0add5a7cf2d585c9.jpeg",
     "static/media/outreach4.jpeg": "/static/media/outreach4.b5c2419f4101d4a402cc.jpeg",
     "static/media/maternal-and-child-health-.jpg": "/static/media/maternal-and-child-health-.6f0bedc3e54a19520c54.jpg",
     "static/media/logo3.png": "/static/media/logo3.b5c24de26681385529b0.png",
@@ -28,20 +25,23 @@
     "static/media/sharonbillet-otah.jpeg": "/static/media/sharonbillet-otah.a9dcd2474d9db0699be4.jpeg",
     "static/media/an2.jpg": "/static/media/an2.62bde11b7bce42a671df.jpg",
     "static/media/lynne-ikwuagwu.jpeg": "/static/media/lynne-ikwuagwu.57d58aae906f2944a98b.jpeg",
+    "static/media/bgg5.jpg": "/static/media/bgg5.71da02b7c30cab56fe4e.jpg",
     "static/media/outreach3.jpeg": "/static/media/outreach3.d59985466d606c2d9927.jpeg",
     "static/media/an1.jpg": "/static/media/an1.8403b300f0bcd461196b.jpg",
     "static/media/justina-osa.jpeg": "/static/media/justina-osa.1b4bf6b587b3dc04d5f3.jpeg",
     "static/media/an4.jpg": "/static/media/an4.82512c69a8ba33a0dbe7.jpg",
     "static/media/logo.jpeg": "/static/media/logo.291ede29fee3dbb982e8.jpeg",
+    "static/media/logonavbar.png": "/static/media/logonavbar.a0e353c1dcc6516fcbc6.png",
     "static/media/doyin.jpeg": "/static/media/doyin.aa9da1a3a85e796c58e6.jpeg",
     "static/media/chiamaka-ezeokonkwo.jpeg": "/static/media/chiamaka-ezeokonkwo.d5f7cd247f11b00ef6ce.jpeg",
+    "static/media/testimonial-bg.avif": "/static/media/testimonial-bg.c713ff6e3fbefb264004.avif",
     "index.html": "/index.html",
-    "main.0c5689ab.css.map": "/static/css/main.0c5689ab.css.map",
-    "main.2dc583cd.js.map": "/static/js/main.2dc583cd.js.map",
+    "main.c5cb0c4b.css.map": "/static/css/main.c5cb0c4b.css.map",
+    "main.e88a8d87.js.map": "/static/js/main.e88a8d87.js.map",
     "453.a0be1bc5.chunk.js.map": "/static/js/453.a0be1bc5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0c5689ab.css",
-    "static/js/main.2dc583cd.js"
+    "static/css/main.c5cb0c4b.css",
+    "static/js/main.e88a8d87.js"
   ]
 }

@@ -23,11 +23,11 @@ const styles = `
     margin: 0 auto;
   }
 
-  /* ── Editorial header block ── */
+  /* ── Open, centered section header — no boxed border ── */
   .lg-edit-header {
-    border-left: 5px solid var(--color-navy);
-    padding-left: 20px;
-    margin-bottom: 28px;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 12px;
   }
   .lg-kicker {
     font-family: var(--font-body);
@@ -49,24 +49,14 @@ const styles = `
     margin: 0;
   }
 
-  /* ── Divider label ── */
+  /* ── Divider label — plain centered subline, no rule ── */
   .lg-divider {
     font-family: var(--font-body);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-text-light);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 0;
-  }
-  .lg-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--color-border);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 0 0 40px;
   }
 
   /* ── Body text ── */
@@ -80,39 +70,29 @@ const styles = `
   .lg-body:last-child { margin-bottom: 0; }
 
   /* ═══════════════════════════════════
-     HERO
+     HERO — open photo-left / text-right
   ═══════════════════════════════════ */
   .lg-hero {
-    position: relative;
-    min-height: 520px;
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
+    padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px);
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
     font-family: var(--font-body);
   }
+  .lg-hero-photo-wrap {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
   .lg-hero-img {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
+    min-height: 340px;
     object-fit: cover;
     object-position: center;
-  }
-  .lg-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to right,
-      rgba(17,24,39,0.94) 0%,
-      rgba(17,24,39,0.75) 55%,
-      rgba(17,24,39,0.20) 100%
-    );
-  }
-  .lg-hero-content {
-    position: relative;
-    z-index: 2;
-    padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 64px);
-    max-width: 680px;
+    display: block;
   }
   .lg-hero-kicker {
     font-family: var(--font-body);
@@ -120,31 +100,35 @@ const styles = `
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: var(--color-primary-light);
-    margin: 0 0 16px;
+    color: var(--color-primary);
+    margin: 0 0 14px;
     display: block;
   }
-  /* Anton hero title */
   .lg-hero-title {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(32px, 5.5vw, 60px);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    line-height: 1.05;
-    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: clamp(28px, 3.6vw, 44px);
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.15;
+    color: var(--color-navy);
     margin: 0 0 20px;
   }
-  .lg-hero-title span { color: var(--color-primary-light); }
+  .lg-hero-title span { color: var(--color-navy); }
   .lg-hero-sub {
     font-family: var(--font-body);
-    font-size: clamp(13px, 1.4vw, 15px);
-    color: rgba(255,255,255,0.78);
-    line-height: 1.85;
+    font-size: clamp(14px, 1.3vw, 16px);
+    color: var(--color-text-muted);
+    line-height: 1.8;
     margin: 0 0 32px;
-    max-width: 500px;
+    max-width: 460px;
   }
   .lg-hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .lg-hero { grid-template-columns: 1fr; }
+    .lg-hero-img { min-height: 280px; }
+  }
 
   /* ── CTA buttons ── */
   .lg-btn-primary {
@@ -166,9 +150,9 @@ const styles = `
   .lg-btn-primary:hover { background: var(--color-green-dark); transform: translateY(-1px); }
 
   .lg-btn-ghost {
-    background: rgba(255,255,255,0.10);
-    color: #ffffff;
-    border: 1.5px solid rgba(255,255,255,0.40);
+    background: transparent;
+    color: var(--color-green);
+    border: 1.5px solid var(--color-green);
     border-radius: var(--btn-radius);
     padding: 13px 28px;
     font-family: var(--font-body);
@@ -177,7 +161,7 @@ const styles = `
     cursor: pointer;
     transition: var(--transition);
   }
-  .lg-btn-ghost:hover { background: rgba(255,255,255,0.20); }
+  .lg-btn-ghost:hover { background: var(--color-green-light); }
 
   .lg-btn-dark {
     background: var(--color-navy);
@@ -211,19 +195,23 @@ const styles = `
   }
 
   /* ═══════════════════════════════════
-     INTRO — two col
+     INTRO — two col, open (no divider line)
   ═══════════════════════════════════ */
   .lg-intro-grid {
     display: grid;
-    grid-template-columns: 1fr 1px 1fr;
-    gap: 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
     align-items: start;
-    border-top: 2px solid var(--color-navy);
-    padding-top: 36px;
   }
-  .lg-intro-left  { padding-right: 56px; }
-  .lg-intro-right { padding-left: 56px; display: flex; flex-direction: column; gap: 20px; }
-  .lg-intro-divider { background: var(--color-border); width: 1px; align-self: stretch; }
+  .lg-intro-right { display: flex; flex-direction: column; gap: 20px; }
+  .lg-intro-right-title {
+    font-family: var(--font-body);
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 8px;
+    line-height: 1.25;
+  }
 
   /* way-to-give item */
   .lg-way {
@@ -232,97 +220,84 @@ const styles = `
     gap: 14px;
   }
   .lg-way-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
-    background: var(--color-primary-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--color-green);
     flex-shrink: 0;
-    color: var(--color-primary);
+    margin-top: 2px;
   }
   .lg-way-title {
-    font-family: 'Anton', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
     color: var(--color-navy);
     margin: 0 0 4px;
   }
   .lg-way-desc {
     font-family: var(--font-body);
-    font-size: 12.5px;
+    font-size: 13.5px;
     color: var(--color-text-muted);
     line-height: 1.65;
     margin: 0;
   }
 
   /* ═══════════════════════════════════
-     NAMING OPPORTUNITIES
+     NAMING OPPORTUNITIES — flat uniform cards
   ═══════════════════════════════════ */
-  .lg-naming-bg { background: var(--color-surface); }
+  .lg-naming-bg { background: var(--color-bg); }
 
   .lg-naming-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    border-top: 2px solid var(--color-navy);
-    padding-top: 32px;
   }
   .lg-naming-card {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
+    background: var(--color-green-light);
     border-radius: var(--card-radius);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: var(--transition);
   }
-  .lg-naming-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+  .lg-naming-card-top { padding: 32px 32px 24px; flex: 1; }
+  .lg-naming-card-footer { padding: 0 32px 32px; }
+  .lg-naming-badge {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: none;
+    display: block;
+    margin-bottom: 8px;
   }
-  .lg-naming-card-top { padding: 28px 28px 20px; flex: 1; }
-  .lg-naming-card-footer {
-    padding: 16px 28px 24px;
-    border-top: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-  /* Anton naming tier title */
   .lg-naming-tier {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(15px, 1.6vw, 18px);
-    font-weight: 400;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: clamp(18px, 2vw, 22px);
+    font-weight: 700;
     color: var(--color-navy);
-    margin: 8px 0 6px;
+    margin: 0 0 6px;
   }
   .lg-naming-amount {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(22px, 2.8vw, 30px);
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    font-family: var(--font-body);
+    font-size: clamp(24px, 2.6vw, 30px);
+    font-weight: 700;
+    color: var(--color-green-dark);
     margin: 0 0 4px;
   }
-  .lg-naming-ngn {
-    font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--color-text-light);
-    margin: 0 0 18px;
-  }
+.lg-naming-ngn {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-navy-mid);
+  margin: 0 0 18px;
+}
   .lg-perk {
     display: flex;
     align-items: flex-start;
     gap: 9px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .lg-perk-text {
     font-family: var(--font-body);
-    font-size: 12.5px;
-    color: var(--color-text-muted);
+    font-size: 13.5px;
+    color: var(--color-navy-mid);
     line-height: 1.6;
     margin: 0;
   }
@@ -335,43 +310,38 @@ const styles = `
     grid-template-columns: 1fr 1fr;
     gap: 64px;
     align-items: start;
-    border-top: 2px solid var(--color-navy);
-    padding-top: 36px;
   }
   .lg-brick-tier {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-primary);
+    background: var(--color-navy);
     border-radius: var(--card-radius);
-    padding: 14px 18px;
+    padding: 20px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .lg-brick-tier-name {
-    font-family: 'Anton', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-navy);
-    margin: 0 0 3px;
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 4px;
   }
   .lg-brick-tier-desc {
     font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--color-text-muted);
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.65);
     margin: 0;
   }
   .lg-brick-price {
-    font-family: 'Anton', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--color-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
     flex-shrink: 0;
     white-space: nowrap;
+    text-align: right;
   }
   .lg-brick-sample-grid {
     display: grid;
@@ -380,9 +350,8 @@ const styles = `
   }
   .lg-brick-tile {
     aspect-ratio: 2/1;
-    border-radius: 6px;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -391,7 +360,7 @@ const styles = `
     transition: var(--transition);
     cursor: default;
   }
-  .lg-brick-tile:hover { background: var(--color-primary-light); border-color: var(--color-primary); }
+  .lg-brick-tile:hover { background: var(--color-primary-light); }
   .lg-brick-tile.empty { opacity: 0.28; }
   .lg-brick-tile p {
     font-family: var(--font-body);
@@ -404,55 +373,49 @@ const styles = `
   }
 
   /* ═══════════════════════════════════
-     CIRCLE OF DIGNITY
+     CIRCLE OF DIGNITY — flat uniform cards
   ═══════════════════════════════════ */
-  .lg-cod-bg { background: var(--color-surface); }
+  .lg-cod-bg { background: var(--color-bg); }
 
   .lg-cod-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    border-top: 2px solid var(--color-navy);
-    padding-top: 32px;
   }
   .lg-cod-tier {
+    background: var(--color-green-light);
     border-radius: var(--card-radius);
-    padding: 28px 22px;
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border: 2px solid transparent;
-    transition: var(--transition);
   }
-  .lg-cod-tier:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  /* Anton cod tier name */
   .lg-cod-name {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(13px, 1.4vw, 16px);
-    font-weight: 400;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: clamp(15px, 1.5vw, 18px);
+    font-weight: 700;
+    color: var(--color-navy);
     margin: 4px 0 0;
   }
   .lg-cod-amount {
-    font-family: 'Anton', sans-serif;
-    font-size: clamp(18px, 2.2vw, 24px);
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    font-family: var(--font-body);
+    font-size: clamp(20px, 2.2vw, 24px);
+    font-weight: 700;
+    color: var(--color-green-dark);
     margin: 0;
   }
   .lg-cod-ngn {
     font-family: var(--font-body);
-    font-size: 11.5px;
-    opacity: 0.7;
+    font-size: 12px;
+    color: var(--color-text-light);
     margin: 0;
   }
-  .lg-cod-perks { border-top: 1px solid; padding-top: 12px; margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
+  .lg-cod-perks { padding-top: 14px; margin-top: 6px; display: flex; flex-direction: column; gap: 10px; }
   .lg-cod-perk { display: flex; align-items: flex-start; gap: 8px; }
   .lg-cod-perk-text {
     font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--color-text);
+    font-size: 13px;
+    color: var(--color-navy-mid);
     line-height: 1.55;
     margin: 0;
   }
@@ -489,15 +452,19 @@ const styles = `
   /* ═══════════════════════════════════
      FORM
   ═══════════════════════════════════ */
-  .lg-form-bg { background: var(--color-surface); }
+  .lg-form-bg { background: var(--color-green-light); }
 
   .lg-form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
     align-items: start;
-    border-top: 2px solid var(--color-navy);
-    padding-top: 36px;
+  }
+  .lg-form-card {
+    background: #ffffff;
+    border: 2px solid var(--color-green);
+    border-radius: var(--card-radius);
+    padding: 32px;
   }
   .lg-form-fields { display: flex; flex-direction: column; gap: 16px; }
   .lg-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -525,55 +492,52 @@ const styles = `
   .lg-textarea { resize: vertical; min-height: 110px; }
 
   /* form right side */
-  .lg-form-side { display: flex; flex-direction: column; gap: 24px; }
+  .lg-form-side { display: flex; flex-direction: column; gap: 32px; }
   .lg-next-steps {
-    background: var(--color-primary-light);
-    border: 1px solid var(--color-navy-light);
-    border-radius: var(--card-radius);
-    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+  }
+  .lg-next-steps-title {
+    font-family: var(--font-body);
+    font-size: clamp(19px, 2vw, 24px);
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 4px;
   }
   .lg-next-step { display: flex; align-items: flex-start; gap: 14px; }
   .lg-step-num {
-    font-family: 'Anton', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--color-primary);
-    min-width: 24px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-green-dark);
+    min-width: 20px;
     flex-shrink: 0;
   }
   .lg-step-text {
     font-family: var(--font-body);
-    font-size: 13px;
+    font-size: 14px;
     color: var(--color-navy-mid);
     line-height: 1.65;
     margin: 0;
   }
   .lg-contact-box {
-    border: 1px solid var(--color-border);
-    border-radius: var(--card-radius);
-    padding: 24px;
-    background: var(--color-bg);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   .lg-contact-title {
-    font-family: 'Anton', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: clamp(18px, 1.8vw, 22px);
+    font-weight: 700;
     color: var(--color-navy);
-    margin: 0;
+    margin: 0 0 4px;
   }
   .lg-contact-link {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-primary);
+    color: var(--color-green-dark);
     font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
@@ -586,18 +550,15 @@ const styles = `
      RESPONSIVE
   ═══════════════════════════════════ */
   @media (max-width: 900px) {
-    .lg-intro-grid { grid-template-columns: 1fr; }
-    .lg-intro-divider { display: none; }
-    .lg-intro-left { padding-right: 0; margin-bottom: 32px; }
-    .lg-intro-right { padding-left: 0; }
+    .lg-intro-grid { grid-template-columns: 1fr; gap: 40px; }
     .lg-naming-grid { grid-template-columns: 1fr 1fr; }
     .lg-bricks-grid { grid-template-columns: 1fr; gap: 40px; }
     .lg-cod-grid { grid-template-columns: repeat(2, 1fr); }
     .lg-form-grid { grid-template-columns: 1fr; gap: 40px; }
   }
   @media (max-width: 560px) {
-    .lg-naming-grid { grid-template-columns: 1fr; max-width: 420px; margin: 32px auto 0; }
-    .lg-cod-grid { grid-template-columns: 1fr; max-width: 360px; margin: 32px auto 0; }
+    .lg-naming-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    .lg-cod-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
     .lg-brick-sample-grid { grid-template-columns: repeat(2, 1fr); }
     .lg-form-row { grid-template-columns: 1fr; }
     .lg-hero-btns { flex-direction: column; }
@@ -610,12 +571,9 @@ const styles = `
 const namingOpportunities = [
   {
     tier: 'Founding Benefactor',
-    amount: '$250,000+',
-    ngn: '₦400M+',
-    color: '#b45309',
-    bg: '#fef3c7',
+    amount: '$50,000+',
+    ngn: '₦75M+',
     badge: 'Highest Honor',
-    badgeColor: '#92400e',
     perks: [
       'Name a major facility or wing of the center',
       'Permanent engraved plaque at the main entrance',
@@ -625,13 +583,10 @@ const namingOpportunities = [
     ],
   },
   {
-    tier: 'Legacy Builder',
-    amount: '$100,000+',
-    ngn: '₦160M+',
-    color: 'var(--color-navy-mid)',
-    bg: 'var(--color-navy-light)',
+    tier: 'Distinguished Benefactor',
+    amount: '$20,000+',
+    ngn: '₦30M+',
     badge: 'Distinguished',
-    badgeColor: 'var(--color-navy-mid)',
     perks: [
       'Name a clinic, ward, or training room',
       'Engraved recognition plaque in the facility',
@@ -642,12 +597,9 @@ const namingOpportunities = [
   },
   {
     tier: 'Community Pillar',
-    amount: '$25,000+',
-    ngn: '₦40M+',
-    color: 'var(--color-green)',
-    bg: 'var(--color-green-light)',
+    amount: '$5,000+',
+    ngn: '₦7.5M+',
     badge: 'Honored',
-    badgeColor: 'var(--color-green-dark)',
     perks: [
       'Name a piece of medical equipment or resource center',
       'Recognition on the Legacy Donors Wall',
@@ -666,13 +618,13 @@ const brickNames = [
 ];
 
 const circleTiers = [
-  { name: 'Platinum Circle', amount: '$50,000+', ngn: '₦80M+', color: '#475569', bg: '#f1f5f9', border: '#94a3b8', icon: Star,
+  { name: 'Platinum Circle', amount: '$50,000+', ngn: '₦80M+', icon: Star,
     perks: ['Lifetime honorary membership', 'Named in all foundation communications', 'Annual personal briefing from Clara Ada Ogbaa', 'Invited to all major foundation events', 'Prominent recognition on donors wall'] },
-  { name: 'Gold Circle', amount: '$25,000+', ngn: '₦40M+', color: '#92400e', bg: '#fef3c7', border: '#d97706', icon: Star,
+  { name: 'Gold Circle', amount: '$25,000+', ngn: '₦40M+', icon: Star,
     perks: ['Founding member recognition', 'Named in annual reports', 'Invited to legacy donor reception', 'Quarterly foundation updates', 'Recognition on foundation website'] },
-  { name: 'Silver Circle', amount: '$10,000+', ngn: '₦16M+', color: '#1e3a8a', bg: '#dbeafe', border: '#3b82f6', icon: Star,
+  { name: 'Silver Circle', amount: '$10,000+', ngn: '₦16M+', icon: Star,
     perks: ['Recognition in annual report', 'Named on legacy donors wall', 'Invited to annual legacy event', 'Regular impact updates', 'Certificate of appreciation'] },
-  { name: 'Dignity Circle', amount: '$5,000+', ngn: '₦8M+', color: '#166534', bg: '#dcfce7', border: '#16a34a', icon: Heart,
+  { name: 'Dignity Circle', amount: '$5,000+', ngn: '₦8M+', icon: Heart,
     perks: ['Legacy donor recognition', 'Named in foundation newsletters', 'Annual update on your impact', 'Certificate of legacy commitment', 'Personal thank-you from Clara Ada Ogbaa'] },
 ];
 
@@ -688,13 +640,12 @@ const waysToGive = [
 ───────────────────────────────────────────────────────── */
 const LegacyHero = () => (
   <section className="lg-hero">
-    <img src={an1} alt="JoMabel Medical Center" className="lg-hero-img" />
-    <div className="lg-hero-overlay" />
-    <div className="lg-hero-content">
+    <div className="lg-hero-photo-wrap">
+      <img src={an1} alt="JoMabel Medical Center" className="lg-hero-img" />
+    </div>
+    <div>
       <span className="lg-hero-kicker">Legacy Giving</span>
-      <h1 className="lg-hero-title">
-        Leave a Legacy<br />That <span>Heals Generations</span>
-      </h1>
+      <h1 className="lg-hero-title">Leave a Legacy That Heals Generations</h1>
       <p className="lg-hero-sub">
         Your legacy gift to JoMabel Healthcare Foundation ensures that dignified,
         accessible healthcare reaches communities in Ufuma, Anambra State for generations to come.
@@ -736,7 +687,7 @@ const LegacyIntro = () => {
         </div>
         <p className="lg-divider">Two ways your legacy endures</p>
         <div className="lg-intro-grid">
-          <div className="lg-intro-left">
+          <div>
             <p className="lg-body">
               A legacy gift is one of the most profound acts of generosity — it declares that your values,
               your compassion, and your commitment to human dignity will continue to shape the world
@@ -748,9 +699,8 @@ const LegacyIntro = () => {
               that will serve thousands of families in southeastern Nigeria for generations.
             </p>
           </div>
-          <div className="lg-intro-divider" />
           <div className="lg-intro-right">
-            <p className="lg-kicker" style={{ marginBottom: 0 }}>Ways to Give a Legacy Gift</p>
+            <h3 className="lg-intro-right-title">Ways to Give a Legacy Gift</h3>
             {waysToGive.map((w, i) => {
               const Icon = w.icon;
               return (
@@ -787,26 +737,22 @@ const NamingOpportunities = () => {
           {namingOpportunities.map((opp, i) => (
             <div key={i} className="lg-naming-card">
               <div className="lg-naming-card-top">
-                <span style={{ display: 'inline-block', background: opp.bg, color: opp.badgeColor, fontSize: '10px', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '4px' }}>
-                  {opp.badge}
-                </span>
-                <h3 className="lg-naming-tier" style={{ color: opp.color }}>{opp.tier}</h3>
-                <p className="lg-naming-amount" style={{ color: opp.color }}>{opp.amount}</p>
+                <span className="lg-naming-badge">{opp.badge}</span>
+                <h3 className="lg-naming-tier">{opp.tier}</h3>
+                <p className="lg-naming-amount">{opp.amount}</p>
                 <p className="lg-naming-ngn">{opp.ngn}</p>
                 {opp.perks.map((perk, j) => (
                   <div key={j} className="lg-perk">
-                    <Check size={13} style={{ flexShrink: 0, marginTop: '2px', color: opp.color }} />
+                    <Check size={15} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--color-green-dark)' }} />
                     <p className="lg-perk-text">{perk}</p>
                   </div>
                 ))}
               </div>
               <div className="lg-naming-card-footer">
                 <button
-                  className="lg-btn-outline"
-                  style={{ borderColor: opp.color, color: opp.color }}
+                  className="lg-btn-primary"
+                  style={{ width: '100%', justifyContent: 'center' }}
                   onClick={() => document.getElementById('legacy-form')?.scrollIntoView({ behavior: 'smooth' })}
-                  onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = opp.bg; }}
-                  onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
                 >
                   Inquire About This Opportunity
                 </button>
@@ -839,11 +785,11 @@ const MemorialBricks = () => {
               and walkways — a living memorial garden where patients, families, and visitors will walk
               for generations, reading the names of those who made this center possible.
             </p>
-            {[
-              { name: 'Standard Brick',   price: '$500 / ₦800K',  desc: 'Name + dedication — installed in the Memorial Walkway' },
-              { name: 'Legacy Brick',     price: '$1,000 / ₦1.6M', desc: 'Name + dedication + family crest or symbol option' },
-              { name: 'Foundation Stone', price: '$5,000 / ₦8M',   desc: 'Prominent courtyard placement + certificate of dedication' },
-            ].map((tier, i) => (
+          {[
+  { name: 'Standard Brick',   price: '$200 / ₦300,000',   desc: 'Name + dedication — installed in the Memorial Walkway' },
+  { name: 'Legacy Brick',     price: '$500 / ₦750,000',   desc: 'Name + dedication + family crest or symbol option' },
+  { name: 'Foundation Stone', price: '$3,000 / ₦4,500,000', desc: 'Prominent courtyard placement + certificate of dedication' },
+].map((tier, i) => (
               <div key={i} className="lg-brick-tier">
                 <div>
                   <p className="lg-brick-tier-name">{tier.name}</p>
@@ -862,7 +808,7 @@ const MemorialBricks = () => {
           </div>
 
           <div>
-            <p className="lg-divider" style={{ marginBottom: '16px' }}>Preview — memorial walkway</p>
+            <h3 className="lg-intro-right-title" style={{ marginBottom: '16px' }}>Preview — Memorial Walkway</h3>
             <div className="lg-brick-sample-grid">
               {brickNames.map((name, i) => (
                 <div key={i} className={`lg-brick-tile${!name ? ' empty' : ''}`}>
@@ -894,25 +840,21 @@ const CircleOfDignity = () => {
         </div>
         <p className="lg-divider">Lifetime recognition tied to the very center your generosity helped build</p>
         <div className="lg-cod-grid">
-          {circleTiers.map((tier, i) => {
-            const Icon = tier.icon;
-            return (
-              <div key={i} className="lg-cod-tier" style={{ background: tier.bg, border: `2px solid ${tier.border}` }}>
-                <Icon size={28} style={{ color: tier.color }} />
-                <h3 className="lg-cod-name" style={{ color: tier.color }}>{tier.name}</h3>
-                <p className="lg-cod-amount" style={{ color: tier.color }}>{tier.amount}</p>
-                <p className="lg-cod-ngn" style={{ color: tier.color }}>{tier.ngn}</p>
-                <div className="lg-cod-perks" style={{ borderColor: tier.border }}>
-                  {tier.perks.map((perk, j) => (
-                    <div key={j} className="lg-cod-perk">
-                      <Check size={12} style={{ flexShrink: 0, marginTop: '3px', color: tier.color }} />
-                      <p className="lg-cod-perk-text">{perk}</p>
-                    </div>
-                  ))}
-                </div>
+          {circleTiers.map((tier, i) => (
+            <div key={i} className="lg-cod-tier">
+              <h3 className="lg-cod-name">{tier.name}</h3>
+              <p className="lg-cod-amount">{tier.amount}</p>
+              <p className="lg-cod-ngn">{tier.ngn}</p>
+              <div className="lg-cod-perks">
+                {tier.perks.map((perk, j) => (
+                  <div key={j} className="lg-cod-perk">
+                    <Check size={13} style={{ flexShrink: 0, marginTop: '3px', color: 'var(--color-green-dark)' }} />
+                    <p className="lg-cod-perk-text">{perk}</p>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -924,12 +866,11 @@ const CircleOfDignity = () => {
 ───────────────────────────────────────────────────────── */
 const LegacyQuoteStrip = () => (
   <div className="lg-quote-strip">
-    <Heart size={32} style={{ margin: '0 auto 20px', color: 'var(--color-primary)', display: 'block' }} />
     <p className="lg-quote-text">
       "Healthcare should never be a privilege reserved for a few.
       It is a human right — and it is the legacy we are called to leave."
     </p>
-    <p className="lg-quote-author">— Clara Ada Ogbaa, Ed.D., Founder</p>
+    <p className="lg-quote-author">— Dr. Clara Ada Ogbaa - Founder</p>
   </div>
 );
 
@@ -940,12 +881,74 @@ const LegacyForm = () => {
   const { ref } = useVisible();
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', giftType: '', amount: '', dedication: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const update = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleSubmit = async () => {
+    if (!form.firstName || !form.lastName || !form.email) {
+      setError('Please fill in your name and email address.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    const giftTypeLabel: Record<string, string> = {
+      bequest: 'Bequest in Will or Trust',
+      beneficiary: 'Beneficiary Designation',
+      annuity: 'Charitable Gift Annuity',
+      endowment: 'Endowment Fund',
+      brick: 'Memorial Dedication Brick',
+      naming: 'Naming Opportunity',
+      other: 'Other / Not Sure Yet',
+    };
+
+    const messageLines = [
+      `Phone: ${form.phone || 'Not provided'}`,
+      `Type of Legacy Gift: ${giftTypeLabel[form.giftType] || 'Not specified'}`,
+      `Approximate Gift Amount: ${form.amount || 'Not provided'}`,
+      `Dedication / Honoree: ${form.dedication || 'Not provided'}`,
+      '',
+      `Message: ${form.message || 'None provided'}`,
+    ].join('\n');
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('name', `${form.firstName} ${form.lastName}`);
+      formData.append('email', form.email);
+      formData.append('subject', 'Legacy Giving Intent');
+      formData.append('message', messageLines);
+
+      const response = await fetch('/contact-handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(data.message || 'Failed to send. Please try again.');
+      }
+    } catch (err) {
+      console.error('Legacy form error:', err);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (submitted) return (
     <section id="legacy-form" className="lg-section lg-form-bg">
       <div className="lg-inner" style={{ textAlign: 'center', maxWidth: 600 }}>
-        <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'var(--color-green-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+        <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
           <Check size={32} color="var(--color-green)" />
         </div>
         <h2 className="lg-headline" style={{ marginBottom: 14 }}>Thank You, {form.firstName}.</h2>
@@ -969,43 +972,44 @@ const LegacyForm = () => {
         </div>
         <p className="lg-divider">Complete this form — we will reach out personally to discuss your gift</p>
         <div className="lg-form-grid">
-          <div className="lg-form-fields">
-            <div className="lg-form-row">
-              <div className="lg-field"><label className="lg-label">First Name *</label><input className="lg-input" placeholder="Clara" value={form.firstName} onChange={e => update('firstName', e.target.value)} /></div>
-              <div className="lg-field"><label className="lg-label">Last Name *</label><input className="lg-input" placeholder="Ogbaa" value={form.lastName} onChange={e => update('lastName', e.target.value)} /></div>
+          <div className="lg-form-card">
+            <div className="lg-form-fields">
+              <div className="lg-form-row">
+                <div className="lg-field"><label className="lg-label">First Name *</label><input className="lg-input" placeholder="Clara" value={form.firstName} onChange={e => update('firstName', e.target.value)} /></div>
+                <div className="lg-field"><label className="lg-label">Last Name *</label><input className="lg-input" placeholder="Ogbaa" value={form.lastName} onChange={e => update('lastName', e.target.value)} /></div>
+              </div>
+              <div className="lg-field"><label className="lg-label">Email Address *</label><input className="lg-input" type="email" placeholder="your@email.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
+              <div className="lg-field"><label className="lg-label">Phone Number</label><input className="lg-input" placeholder="+1 (512) 000-0000" value={form.phone} onChange={e => update('phone', e.target.value)} /></div>
+              <div className="lg-field">
+                <label className="lg-label">Type of Legacy Gift</label>
+                <select className="lg-select" value={form.giftType} onChange={e => update('giftType', e.target.value)}>
+                  <option value="">Select</option>
+                  <option value="bequest">Bequest in Will or Trust</option>
+                  <option value="beneficiary">Beneficiary Designation</option>
+                  <option value="annuity">Charitable Gift Annuity</option>
+                  <option value="endowment">Endowment Fund</option>
+                  <option value="brick">Memorial Dedication Brick</option>
+                  <option value="naming">Naming Opportunity</option>
+                  <option value="other">Other / Not Sure Yet</option>
+                </select>
+              </div>
+              <div className="lg-form-row">
+                <div className="lg-field"><label className="lg-label">Approximate Gift Amount (Optional)</label><input className="lg-input" placeholder="e.g. $10,000 or ₦16,000,000" value={form.amount} onChange={e => update('amount', e.target.value)} /></div>
+                <div className="lg-field"><label className="lg-label">Dedication / Honoree Name (if applicable)</label><input className="lg-input" placeholder="In memory of / In honor of…" value={form.dedication} onChange={e => update('dedication', e.target.value)} /></div>
+              </div>
+              <div className="lg-field"><label className="lg-label">Message or Questions</label><textarea className="lg-textarea" placeholder="Tell us anything that would help us serve you better…" value={form.message} onChange={e => update('message', e.target.value)} disabled={isLoading} /></div>
+              {error && (
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#991b1b', fontWeight: 600, margin: 0 }}>{error}</p>
+              )}
+              <button className="lg-btn-dark" onClick={handleSubmit} disabled={isLoading}>
+                {isLoading ? 'Sending...' : 'Submit Legacy Intention'} {!isLoading && <ArrowRight size={15} />}
+              </button>
             </div>
-            <div className="lg-field"><label className="lg-label">Email Address *</label><input className="lg-input" type="email" placeholder="your@email.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
-            <div className="lg-field"><label className="lg-label">Phone Number</label><input className="lg-input" placeholder="+1 (512) 000-0000" value={form.phone} onChange={e => update('phone', e.target.value)} /></div>
-            <div className="lg-field">
-              <label className="lg-label">Type of Legacy Gift</label>
-              <select className="lg-select" value={form.giftType} onChange={e => update('giftType', e.target.value)}>
-                <option value="">Select an option</option>
-                <option value="bequest">Bequest in Will or Trust</option>
-                <option value="beneficiary">Beneficiary Designation</option>
-                <option value="annuity">Charitable Gift Annuity</option>
-                <option value="endowment">Endowment Fund</option>
-                <option value="brick">Memorial Dedication Brick</option>
-                <option value="naming">Naming Opportunity</option>
-                <option value="other">Other / Not Sure Yet</option>
-              </select>
-            </div>
-            <div className="lg-field"><label className="lg-label">Approximate Gift Amount (Optional)</label><input className="lg-input" placeholder="e.g. $10,000 or ₦16,000,000" value={form.amount} onChange={e => update('amount', e.target.value)} /></div>
-            <div className="lg-field"><label className="lg-label">Dedication / Honoree Name (if applicable)</label><input className="lg-input" placeholder="In memory of / In honor of…" value={form.dedication} onChange={e => update('dedication', e.target.value)} /></div>
-            <div className="lg-field"><label className="lg-label">Message or Questions</label><textarea className="lg-textarea" placeholder="Tell us anything that would help us serve you better…" value={form.message} onChange={e => update('message', e.target.value)} /></div>
-            <button className="lg-btn-dark" onClick={() => { if (!form.firstName || !form.email) return; setSubmitted(true); }}>
-              Submit Legacy Intention <ArrowRight size={15} />
-            </button>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'var(--color-text-light)', textAlign: 'center', margin: 0 }}>
-              Your information is confidential and will only be used to follow up on your legacy intentions.
-            </p>
           </div>
 
           <div className="lg-form-side">
-            <div style={{ borderRadius: 'var(--card-radius)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-              <img src={outreach3} alt="JoMabel team" style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }} />
-            </div>
             <div className="lg-next-steps">
-              <p className="lg-kicker" style={{ margin: 0 }}>What Happens Next</p>
+              <h3 className="lg-next-steps-title">What Happens Next</h3>
               {[
                 'We receive your legacy intention form confidentially.',
                 'Clara Ada Ogbaa or a team member reaches out personally within 3–5 days.',
@@ -1013,16 +1017,16 @@ const LegacyForm = () => {
                 'Your legacy is confirmed, documented, and permanently honored.',
               ].map((text, i) => (
                 <div key={i} className="lg-next-step">
-                  <span className="lg-step-num">0{i + 1}</span>
+                  <span className="lg-step-num">{i + 1}</span>
                   <p className="lg-step-text">{text}</p>
                 </div>
               ))}
             </div>
             <div className="lg-contact-box">
-              <p className="lg-contact-title">Prefer to speak directly?</p>
+              <h3 className="lg-contact-title">Prefer to Speak Directly?</h3>
               <p className="lg-body" style={{ margin: 0 }}>Clara Ada Ogbaa welcomes personal conversations about legacy giving.</p>
-              <a href="mailto:claraogbaa2022@gmail.com" className="lg-contact-link"><Mail size={14} /> claraogbaa2022@gmail.com</a>
-              <a href="tel:+15125080277" className="lg-contact-link"><Phone size={14} /> +1 (512) 508-0277</a>
+              <a href="mailto:foundation@jomabelhealthcare.org" className="lg-contact-link"><Mail size={14} /> foundation@jomabelhealthcare.org</a>
+              <a href="tel:+15125080277" className="lg-contact-link"><Phone size={14} /> (512) 508-0277</a>
             </div>
           </div>
         </div>

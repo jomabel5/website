@@ -178,7 +178,7 @@ const Impact = () => {
           font-weight: 700;
           letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
+          color: var(--color-primary);
           margin: 0 0 16px;
           display: block;
         }
@@ -223,10 +223,10 @@ const Impact = () => {
           font-weight: 700;
           letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
-          background: #EBF5FB;
+          color: var(--color-primary);
+          background: var(--color-primary-light);
           padding: 5px 14px;
-          border-radius: 4px;
+          border-radius: 999px;
           margin-bottom: 16px;
         }
 
@@ -258,29 +258,31 @@ const Impact = () => {
         }
 
         .metric-card {
-          background: #ffffff;
-          border-radius: 16px;
+          background: var(--color-bg);
+          border-top: 4px solid var(--color-primary);
+          border-radius: var(--card-radius);
           padding: 32px 20px;
           text-align: center;
-          border: 1px solid #E5E7EB;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border: 1px solid var(--color-border);
+          border-top: 4px solid var(--color-primary);
+          transition: var(--transition);
         }
 
         .metric-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+          box-shadow: var(--shadow-md);
         }
 
         .metric-icon {
           width: 56px;
           height: 56px;
           margin: 0 auto 16px;
-          background: #EBF5FB;
+          background: var(--color-primary-light);
           border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #1D8FD4;
+          color: var(--color-primary);
         }
 
         .metric-number {
@@ -288,7 +290,7 @@ const Impact = () => {
           font-size: 42px;
           font-weight: 400;
           letter-spacing: 0.01em;
-          color: #1D8FD4;
+          color: var(--color-primary);
           margin-bottom: 8px;
         }
 
@@ -296,7 +298,7 @@ const Impact = () => {
           font-family: var(--font-body);
           font-size: 14px;
           font-weight: 600;
-          color: #111827;
+          color: var(--color-navy);
         }
 
         /* ══════════════════════════════════════
@@ -304,7 +306,7 @@ const Impact = () => {
         ══════════════════════════════════════ */
         .areas-section {
           padding: 80px clamp(20px, 5vw, 64px);
-          background: #ffffff;
+          background: var(--color-bg);
         }
 
         .section-header {
@@ -319,10 +321,10 @@ const Impact = () => {
           font-weight: 700;
           letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
-          background: #EBF5FB;
+          color: var(--color-primary);
+          background: var(--color-primary-light);
           padding: 5px 14px;
-          border-radius: 4px;
+          border-radius: 999px;
           margin-bottom: 16px;
         }
 
@@ -355,16 +357,17 @@ const Impact = () => {
         .area-card {
           display: flex;
           gap: 24px;
-          background: #F9FAFB;
-          border: 1px solid #E5E7EB;
-          border-radius: 20px;
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--card-radius);
           overflow: hidden;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          transition: var(--transition);
         }
 
         .area-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+          box-shadow: var(--shadow-md);
+          border-color: var(--color-primary);
         }
 
         .area-image {
@@ -380,12 +383,12 @@ const Impact = () => {
         .area-icon {
           width: 48px;
           height: 48px;
-          background: #EBF5FB;
+          background: var(--color-primary-light);
           border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #1D8FD4;
+          color: var(--color-primary);
           margin-bottom: 16px;
         }
 
@@ -395,14 +398,14 @@ const Impact = () => {
           font-weight: 400;
           letter-spacing: 0.01em;
           text-transform: uppercase;
-          color: #111827;
+          color: var(--color-navy);
           margin-bottom: 12px;
         }
 
         .area-description {
           font-family: var(--font-body);
           font-size: 14px;
-          color: #6B7280;
+          color: var(--color-text-muted);
           line-height: 1.6;
         }
 
@@ -426,10 +429,10 @@ const Impact = () => {
           font-weight: 700;
           letter-spacing: 2.5px;
           text-transform: uppercase;
-          color: #1D8FD4;
+          color: var(--color-primary);
           background: rgba(255,255,255,0.15);
           padding: 5px 14px;
-          border-radius: 4px;
+          border-radius: 999px;
           margin-bottom: 16px;
         }
 
@@ -454,9 +457,9 @@ const Impact = () => {
         .economic-card {
           background: rgba(255,255,255,0.08);
           border: 1px solid rgba(255,255,255,0.15);
-          border-radius: 16px;
+          border-radius: var(--card-radius);
           padding: 32px 24px;
-          transition: transform 0.2s ease, background 0.2s ease;
+          transition: var(--transition);
         }
 
         .economic-card:hover {
@@ -469,7 +472,7 @@ const Impact = () => {
           font-size: 40px;
           font-weight: 400;
           letter-spacing: 0.01em;
-          color: #1D8FD4;
+          color: var(--color-primary);
           margin-bottom: 12px;
         }
 
@@ -485,8 +488,8 @@ const Impact = () => {
         .cta-section {
           padding: 80px clamp(20px, 5vw, 64px);
           text-align: center;
-          background: #ffffff;
-          border-top: 1px solid #E5E7EB;
+          background: var(--color-bg);
+          border-top: 1px solid var(--color-border);
         }
 
         .cta-title {
@@ -515,44 +518,46 @@ const Impact = () => {
         }
 
         .btn-primary {
-          background: #16A34A;
+          background: var(--color-green);
           color: #ffffff;
           border: none;
-          border-radius: 8px;
+          border-radius: var(--btn-radius);
           padding: 14px 32px;
+          font-family: var(--font-body);
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          transition: all 0.2s ease;
+          transition: var(--transition);
           letter-spacing: 0.5px;
         }
 
         .btn-primary:hover {
-          background: #15803D;
+          background: var(--color-green-dark);
           transform: translateY(-2px);
         }
 
         .btn-outline {
           background: transparent;
-          color: #1D8FD4;
-          border: 1.5px solid #1D8FD4;
-          border-radius: 8px;
+          color: var(--color-primary);
+          border: 1.5px solid var(--color-primary);
+          border-radius: var(--btn-radius);
           padding: 14px 32px;
+          font-family: var(--font-body);
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          transition: all 0.2s ease;
+          transition: var(--transition);
           letter-spacing: 0.5px;
         }
 
         .btn-outline:hover {
-          background: #EBF5FB;
+          background: var(--color-primary-light);
           transform: translateY(-2px);
         }
 
@@ -665,7 +670,7 @@ const Impact = () => {
         <h3 className="cta-title">Help Us Scale Our Impact</h3>
         <p className="cta-description">Your support enables us to reach more communities and save more lives.</p>
         <div className="cta-buttons">
-          <button className="btn-primary" onClick={() => navigate('/donate')}>
+          <button className="btn-primary" onClick={() => navigate('/donate#payment-section')}>
             Donate Now <ArrowRight size={16} />
           </button>
           <button className="btn-outline" onClick={() => navigate('/contact')}>
